@@ -1,0 +1,27 @@
+Package: cBioAutomatedTools
+Type: Package
+Title: Automated tools for analysing and comparing data that are stored on cbioportal.org
+Version: 0.99.0
+Authors@R: c(
+             person(
+               given = "Arman", family = "Shahrisa", 
+               email = "shahrisa.arman@hotmail.com",
+               role = c("aut", "cre", "cph")
+             ),
+             person(
+               given = "Maryam", family = "Tahmasebi Birgani", 
+               email = "maryam_tahmaseby@yahoo.com",
+               role = c("aut")
+             )
+           )
+Description: This package contains functions that allow analysing and comparing various
+             gene groups from different cancers/cancer subgroups easily. So far, it is
+             compatible with RNA-seq, microarray and methylation datasets that are stored
+             on cbioportal.org.
+License: Artistic-2.0
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.4.0), cgdsr, xlsxjars, xlsx, gplots, RColorBrewer, rafalib, Biobase, genefilter
+Imports: cgdsr, xlsxjars, xlsx, gplots, RColorBrewer, rafalib, Biobase, genefilter
+NeedsCompilation: no
+RoxygenNote: 6.0.1
