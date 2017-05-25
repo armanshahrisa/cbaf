@@ -9,7 +9,7 @@ Dataset.availability()
 \value{
 A matrix that contain all cancers and their available datasets. It is
 available in the global enviroment (user's workspace). For convenience, an excel
-file will also be saved in the working directory that contains the same matrix.
+file will also be generated in the working directory.
 }
 \description{
 This function checks all the cancers from cbioportal.org to determine which
