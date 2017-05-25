@@ -1,7 +1,7 @@
-#' Checking Dataset Availability for Each Cancer
+#' Checking which Datasets are available for Each Cancer
 #'
-#' This function checks all the cancers from cbioportal.org to determine which
-#' datasets they contain.
+#' This function checks all the cancers from cbioportal.org to determine
+#' datasets that they contain.
 #'
 #' @return A matrix that contain all cancers and their available datasets. It is
 #' available in the global enviroment (user's workspace). For convenience, an excel
