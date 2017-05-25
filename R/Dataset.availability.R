@@ -5,7 +5,7 @@
 #'
 #' @return A matrix that contain all cancers and their available datasets. It is
 #' available in the global enviroment (user's workspace). For convenience, an excel
-#' file will also be saved in the working directory that contains the same matrix.
+#' file will also be generated in the working directory.
 #' @details
 #' This function checks all the cancers that are registered in 'cbioportal.org' to
 #' examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA),
