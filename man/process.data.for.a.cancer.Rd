@@ -2,12 +2,12 @@
 % Please edit documentation in R/process.data.for.a.cancer.R
 \name{process.data.for.a.cancer}
 \alias{process.data.for.a.cancer}
-\title{Checking Expression/methylation Profile for various subgroups of a cancer}
+\title{Checking Expression/methylation Profile for various subgroups of a cancer study.}
 \usage{
 process.data.for.a.cancer(genes, cancername, high.throughput.data.type,
 data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median"),
 transposedHeatmap=FALSE, desired.case.list="None", genelimit="none",
-resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(10,10), cutoff="Default",
+resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(10,10), cutoff="default",
 angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE,
 resetOldExpressionProfile = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE,
 Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)
@@ -22,7 +22,7 @@ that can be found on cbioportal.org, such as \code{Acute Myeloid Leukemia (TCGA,
 'microarray.mRNA', 'microarray.microRNA' or 'methylation'.}
 
 \item{data.presented.as}{a character vector that containes the statistical precedures users prefer the function to compute.
-Default is \code{c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median")}. This will tell the function to
+default is \code{c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median")}. This will tell the function to
 compute the following:
 frequency precentage, which is the number of samples having value greather than specific cutoff divided by the total sample
 size for each cancer;
@@ -67,7 +67,7 @@ popular in genomic studies. To see the rest, please type \code{display.brewer.al
 without obtaining data from internet again. If set to false, function will use tha values from global environment
 (user's workspace) to draw heatmaps and save excel file. The default value is \code{TRUE}.}
 
-\item{round}{a logical value that, if set to be \code{TRUE}, will force the function to rounds all the calculated values to
+\item{round}{a logical value that, if set to be \code{TRUE}, will force the function to round all the calculated values to
 two decimal places.}
 
 \item{top.genes}{a logical value that, if set as \code{TRUE}, cause the function to determine which gene containes the highest
@@ -89,7 +89,7 @@ publications.}
 for \code{simplify.visulization}. It has the same unit as \code{cutoff}.}
 }
 \value{
-a list that containes some or all of the following groups, based on what user chose: \code{Validation.Results},
+a list that containes some or all of the following groups, based on what user has chosen: \code{Validation.Results},
 \code{Frequency.Percentage}, \code{Top.Genes.of.Frequency.Percentage}, \code{Frequency.Ratio}, \code{Mean.Expression},
 \code{Top.Genes.of.Mean.Expression}, \code{Median}, \code{Top.Genes.of.Median}. It also saves these groups in one excel
 file for convenience. Based on preference, three heatmaps for \code{Frequency.Percentage}, \code{Mean.Expression} and
@@ -98,9 +98,9 @@ file for convenience. Based on preference, three heatmaps for \code{Frequency.Pe
 \description{
 This function Obtaines the requested data for the given genes and subgroups of a cancer. It can check whether
 or not all genes are included in subgroups of a cancer study and, if not, looks for the alternative gene names. Tha main
-part of function calculates frequency percentage, frequency ratio, mean expression and median of sampleas greather than
-specific value in selected subgroups of the cancer. Furthermore, it looks for the genes that have exhibited the highest
-values in every cancer subgroup.
+part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than
+specific value in the selected subgroups of the cancer. Furthermore, it looks for the genes that comprise the highest
+values in each cancer subgroup.
 }
 \details{
 \tabular{lllll}{

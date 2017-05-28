@@ -2,7 +2,7 @@
 % Please edit documentation in R/process.data.for.cancers.R
 \name{process.data.for.cancers}
 \alias{process.data.for.cancers}
-\title{Checking Expression/methylation Profile for various cancers}
+\title{Checking Expression/methylation Profile for various cancer studies.}
 \usage{
 process.data.for.cancers(genes, cancers, high.throughput.data.type,
 data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median"),
@@ -24,7 +24,7 @@ cancer names while the second column must contain the desired cancer names.}
 'microarray.mRNA', 'microarray.microRNA' or 'methylation'.}
 
 \item{data.presented.as}{a character vector that containes the statistical precedures users prefer the function to compute.
-Default is \code{c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median")}. This will tell the function to
+default is \code{c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median")}. This will tell the function to
 compute the following:
 frequency precentage, which is the number of samples having value greather than specific cutoff
 divided by the total sample size for each cancer;
@@ -67,7 +67,7 @@ popular in genomic studies. To see the rest, please type \code{display.brewer.al
 without obtaining data from internet again. If set to false, function will use tha values from global environment
 (user's workspace) to draw heatmaps and save excel file. The default value is \code{TRUE}.}
 
-\item{round}{a logical value that, if set to be \code{TRUE}, will force the function to rounds all the calculated values
+\item{round}{a logical value that, if set to be \code{TRUE}, will force the function to round all the calculated values
 to two decimal places.}
 
 \item{top.genes}{a logical value that, if set as \code{TRUE}, cause the function to determine which gene containes the highest
@@ -89,7 +89,7 @@ publications.}
 for \code{simplify.visulization}. It has the same unit as \code{cutoff}.}
 }
 \value{
-a list that containes some or all of the following groups, based on what user chose: \code{Validation.Results},
+a list that containes some or all of the following groups, based on what user has chosen: \code{Validation.Results},
 \code{Frequency.Percentage}, \code{Top.Genes.of.Frequency.Percentage}, \code{Frequency.Ratio}, \code{Mean.Expression},
 \code{Top.Genes.of.Mean.Expression}, \code{Median}, \code{Top.Genes.of.Median}. It also saves these groups in one excel
 file for convenience. Based on preference, three heatmaps for \code{Frequency.Percentage}, \code{Mean.Expression} and
@@ -98,8 +98,8 @@ file for convenience. Based on preference, three heatmaps for \code{Frequency.Pe
 \description{
 This function Obtaines the requested data for the given genes and cancers. It can check whether or not all genes
 are included in cancer studies and, if not, looks for the alternative gene names. Tha main part of function calculates
-frequency percentage, frequency ratio, mean expression and median of sampleas greather than specific value in the selected
-cancers. Furthermore, it looks for the genes that have exhibited the highest values in every cancer.
+frequency percentage, frequency ratio, mean expression and median of samples greather than specific value in the selected
+cancers. Furthermore, it looks for the genes that comprise the highest values in each cancer.
 }
 \details{
 \tabular{lllll}{

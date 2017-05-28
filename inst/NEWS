@@ -1,0 +1,27 @@
+gtools 1.0.0 - 2017-05-30
+-------------------------
+
+New Functions:
+
+- New roman2int() functon to convert roman numerals to integers
+  without the range restriction of utils::as.roman().
+
+- New asc() and chr() functions to convert between ASCII codes and
+  characters. (Based on the 'Data Debrief' blog entry for 2011-03-09
+  at http://datadebrief.blogspot.com/2011/03/ascii-code-table-in-r.html).
+
+- New unByteCode() and unByteCodeAssign() functions to convert a
+  byte-code functon to an interpeted code function.
+
+- New assignEdgewise() function for making assignments into locked
+  environments. (Used by unByteCodeAssign().)
+
+Enhacements:
+
+- mixedsort() and mixedorder() now have arguments 'decreasing',
+  'na.last', and 'blank.last' arguments to control sort ordering.
+
+- mixedsort() and mixedirdeR() now support Roman numerals via the
+  arguments 'numeric.type', and 'roman.case'.  (Request by David
+  Winsemius, suggested code changes by Henrik Bengtsson.)
+

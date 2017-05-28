@@ -1,5 +1,5 @@
 Package: cBioAutomatedTools
-Type: Package
+biocViews: Software
 Title: Automated tools for analysing and comparing data that are stored on cbioportal.org
 Version: 0.99.0
 Authors@R: c(
@@ -22,6 +22,8 @@ License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.4.0), cgdsr, xlsxjars, xlsx, gplots, RColorBrewer, rafalib, Biobase, genefilter
-Imports: cgdsr, xlsxjars, xlsx, gplots, RColorBrewer, rafalib, Biobase, genefilter
 NeedsCompilation: no
 RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
