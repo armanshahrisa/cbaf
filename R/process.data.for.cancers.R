@@ -1,16 +1,126 @@
-#' Checking Expression/methylation Profile for various cancers
+#' @title Checking Expression/methylation Profile for various cancers
 #'
-#' This function checks all the cancers from cbioportal.org to determine
-#' datasets that they contain.
+#' @description This function Obtaines the requested data for the given genes and cancers. It can check whether or not all genes
+#' are included in cancer studies and, if not, looks for the alternative gene names. Tha main part of function calculates
+#' frequency percentage, frequency ratio, mean expression and median of sampleas greather than specific value in the selected
+#' cancers. Furthermore, it looks for the genes that have exhibited the highest values in every cancer.
 #'
-#' @return A matrix that contain all cancers and their available datasets. It is
-#' available in the global enviroment (user's workspace). For convenience, an excel
-#' file will also be generated in the working directory.
 #' @details
-#' This function checks all the cancers that are registered in 'cbioportal.org' to
-#' examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA),
-#' microarray(miRNA) and methylation datasets.
-#' @usage Dataset.availability()
+#' \tabular{lllll}{
+#' Package: \tab cBioAutomatedTools \cr
+#' Type: \tab Package \cr
+#' Version: \tab 0.99.0 \cr
+#' Date: \tab 2017-05-30 \cr
+#' License: \tab Artistic-2.0 \cr
+#' }
+#'
+#' @usage process.data.for.cancers(genes, cancers, high.throughput.data.type,
+#' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median"),
+#' shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8,
+#' heatmapMargines=c(24,17), cutoff=2, angle.for.heatmap.cancernames=45, heatmap.color = "RdBu",
+#' reverse.heatmap.color = TRUE, resetOldExpressionProfile = TRUE, round=TRUE, top.genes = TRUE,
+#' validate.genes = TRUE, Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE,
+#' simplifiction.cuttoff=FALSE)
+#'
+#' @param genes a list that contains at least one gene group
+#'
+#' @param cancers a character vector or a matrix that containes desired cancer names. The character vector containes standard
+#' cancer names that can be found on cbioportal.org, such as \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}. Alternatively,
+#' a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard
+#' cancer names while the second column must contain the desired cancer names.
+#'
+#' @param high.throughput.data.type a character string that is one of the following techniques: 'RNA-seq', 'microRNA-Seq',
+#' 'microarray.mRNA', 'microarray.microRNA' or 'methylation'.
+#'
+#' @param data.presented.as a character vector that containes the statistical precedures users prefer the function to compute.
+#' Default is \code{c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median")}. This will tell the function to
+#' compute the following:
+#' frequency precentage, which is the number of samples having value greather than specific cutoff
+#' divided by the total sample size for each cancer;
+#' frequency ratio, which shows the number of selected samples divided by the total number of samples that give the frequency
+#' percentage for each cancer-to know selecected and total sample sizes only;
+#' Mean Expression, that contains mean value of selected samples for each cancer;
+#' Median, which shows the median value of selected samples for each cancer.
+#'
+#' @param shorteded.cancer.names a logical vector. If the value is set as true, function will try to remove the end part of
+#' a cancer name aiming to shorten it. The removed segment usually contains the name of scientific group that has conducted
+#' the cancer study.
+#'
+#' @param genelimit If number of genes in at least one gene group is too much, this option can be use to limit the number of
+#' genes to be shown on hitmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation.
+#' The default value is \code{FALSE}.
+#'
+#' @param resolution a number. This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'.
+#' The defalut value is 600.
+#'
+#' @param RowCex a number that specifies letter size in heatmap row names.
+#'
+#' @param ColCex a number that specifies letter size in heatmap column names.
+#'
+#' @param heatmapMargines a numeric vectors that can be use to set heatmap margins. The default value is
+#' \code{heatmapMargines=c(24,17)}.
+#'
+#' @param cutoff a number that is used as limit to chose samples with values greather than this number. For methylation studies,
+#' it is \code{observed/expected ration}, for the rest, it is \code{z-score}. The default value for methylation data is 0.6 while
+#' gene expression studies use default value of 2.
+#'
+#' @param angle.for.heatmap.cancernames a number that determines the angle with which the cancer names will be shown in heatmaps.
+#' The default value is 45 degree.
+#'
+#' @param heatmap.color a character string matches standard color names. The default value is "RdBu". "redgreen" is also very
+#' popular in genomic studies. To see the rest, please type \code{display.brewer.all()}.
+#'
+#' @param reverse.heatmap.color a logical value that reverses the color gradiant for heatmap.
+#'
+#' @param resetOldExpressionProfile a logical value. This option can be used to modify heatmap, for instance change margin,
+#' without obtaining data from internet again. If set to false, function will use tha values from global environment
+#' (user's workspace) to draw heatmaps and save excel file. The default value is \code{TRUE}.
+#'
+#' @param round a logical value that, if set to be \code{TRUE}, will force the function to rounds all the calculated values
+#' to two decimal places.
+#'
+#' @param top.genes a logical value that, if set as \code{TRUE}, cause the function to determine which gene containes the highest
+#' value in each cancer.
+#'
+#' @param validate.genes a logical value that, if set to be \code{TRUE}, enables pasrt of the function that checks whether or not
+#' each gene has a record in different cancers. It also checks for alternative gene names that cbioportal might use instead of
+#' given gene names.
+#'
+#' @param Use.CancerCode.as.Name a logical value that tells the function to use abbreviated cancer names instead of complete cancer
+#' names, if set to be \code{TRUE}. For example, \code{laml_tcga_pub} is the shortened name for
+#' \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.
+#'
+#' @param simplify.visulization a logical value that tells the function whether or not to change values under
+#' \code{simplifiction.cuttoff} to zero. It is designed for eye visulization purpose only. Therefore, it is not suited for
+#' publications.
+#'
+#' @param simplifiction.cuttoff a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
+#' for \code{simplify.visulization}. It has the same unit as \code{cutoff}.
+#'
+#' @return a list that containes some or all of the following groups, based on what user chose: \code{Validation.Results},
+#' \code{Frequency.Percentage}, \code{Top.Genes.of.Frequency.Percentage}, \code{Frequency.Ratio}, \code{Mean.Expression},
+#' \code{Top.Genes.of.Mean.Expression}, \code{Median}, \code{Top.Genes.of.Median}. It also saves these groups in one excel
+#' file for convenience. Based on preference, three heatmaps for \code{Frequency.Percentage}, \code{Mean.Expression} and
+#' \code{Median} can be generated.
+#'
+#' @examples
+#' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"),
+#' K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
+#'
+#' cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
+#' "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)",
+#' "Breast Invasive Carcinoma (TCGA, Provisional)")
+#'
+#' process.data.for.cancers(genes, cancernames, "RNA-seq")
+#'
+#' process.data.for.cancers(genes, cancernames, "RNA-seq",
+#' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression"),
+#' shorteded.cancer.names = FALSE, resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5),
+#' cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
+#'
+#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
+#' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
+#'
 #' @export
 
 
@@ -21,69 +131,13 @@
 ###################################################################################################
 ###################################################################################################
 
-Expression.Data.For.Cancers <- function(genes, cancers, High.throughput.data, data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median"),
+process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median"),
 
-                                        shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(24,17), cutoff=2,
+                                        shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(24,17), cutoff="Default",
 
                                         angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE, resetOldExpressionProfile = TRUE, round=TRUE,
 
                                         top.genes = TRUE, validate.genes = TRUE, Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE){
-
-
-  ##########################################################################
-  ### Checks whether the required packages are installed and installs if not
-
-  # CRAN packages
-
-  list.of.packages <- c("cgdsr", "gplots", "RColorBrewer", "rafalib", "xlsx")
-
-  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-
-  if(length(new.packages)) install.packages(new.packages)
-
-
-
-
-  # Bioconcuctor packages
-
-  list.of.packages <- c("Biobase", "genefilter")
-
-  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-
-  if(length(new.packages)){
-
-    source("http://www.bioconductor.org/biocLite.R")
-
-    biocLite(new.packages)
-
-
-
-
-    # Configuring installed packages
-
-
-    if (Sys.getenv("JAVA_HOME")!="")
-
-      Sys.setenv(JAVA_HOME="")
-
-    library(rJava)
-
-    install.packages("xlsxjars", INSTALL_opts = "--no-multiarch")
-
-  }
-
-
-
-
-  # Notification for installing the required packages in LINUX
-
-  if(!any((installed.packages()) %in% "xlsx")){
-
-    print("If you are using Ubuntu please first install 'r-cran-rjava' and 'r-cran-xml' packages by typing 'sudo apt-get install r-cran-rjava' and 'sudo apt-get install r-cran-xml'")
-
-  }
-
-
 
 
   ##########################################################################
@@ -105,19 +159,19 @@ Expression.Data.For.Cancers <- function(genes, cancers, High.throughput.data, da
 
   }
 
-  # High.throughput.data
+  # high.throughput.data.type
 
-  if(is.character(High.throughput.data)){
+  if(is.character(high.throughput.data.type)){
 
-    if(!(High.throughput.data %in% c("RNA-seq", "microRNA-Seq", "Microarray.mRNA", "Microarray.microRNA"))){
+    if(!(high.throughput.data.type %in% c("RNA-seq", "microRNA-Seq", "Microarray.mRNA", "Microarray.microRNA"))){
 
-      stop("'High.throughput.data' must contain one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'Microarray.mRNA' or 'Microarray.microRNA'")
+      stop("'high.throughput.data.type' must contain one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'Microarray.mRNA' or 'Microarray.microRNA'")
 
     }
 
   } else {
 
-    stop("'High.throughput.data' must be entered in character string describing a technique name")
+    stop("'high.throughput.data.type' must be entered in character string describing a technique name")
 
   }
 
@@ -136,31 +190,31 @@ Expression.Data.For.Cancers <- function(genes, cancers, High.throughput.data, da
 
   # Choice of high-throughput data type
 
-  if(High.throughput.data == "RNA-seq"){
+  if(high.throughput.data.type == "RNA-seq"){
 
     L1.characteristics <- c("Tumor Samples with mRNA data (RNA Seq V2)", "Tumors with mRNA data (RNA Seq V2)", "Tumor Samples with mRNA data (RNA Seq)", "Tumors with mRNA data (RNA Seq)")
 
     L2.characteristics <- c("mRNA Expression z-Scores (RNA Seq V2 RSEM)", "mRNA Expression z-Scores (RNA Seq RPKM)")
 
-  } else if(High.throughput.data == "microRNA-Seq"){
+  } else if(high.throughput.data.type == "microRNA-Seq"){
 
     L1.characteristics <- c("Tumors with microRNA data (microRNA-Seq)")
 
     L2.characteristics <- c("microRNA expression Z-scores")
 
-  } else if(High.throughput.data == "microarray.mRNA"){
+  } else if(high.throughput.data.type == "microarray.mRNA"){
 
     L1.characteristics <- c("Tumor Samples with mRNA data (Agilent microarray)", "Tumors with mRNA data (Agilent microarray)", "Tumor Samples with mRNA data (U133 microarray only)", "Tumors with mRNA data", "Tumors with mRNA")
 
     L2.characteristics <- c("mRNA Expression z-Scores (microarray)", "mRNA Expression z-Scores (U133 microarray only)", "mRNA expression z-scores (Illumina)", "mRNA expression Z-scores (all genes)", "mRNA Expression Z-Scores vs Normals", "mRNA Expression z-Scores (combined microarray)")
 
-  } else if(High.throughput.data == "microarray.microRNA"){
+  } else if(high.throughput.data.type == "microarray.microRNA"){
 
     L1.characteristics <- c("Tumors with microRNA")
 
     L2.characteristics <- c("mRNA Expression Z-Scores vs Normals", "mRNA Expression z-Scores (combined microarray)")
 
-  } else if(High.throughput.data == "methylation"){
+  } else if(high.throughput.data.type == "methylation"){
 
     L1.characteristics <- c("Tumor Samples with methylation data (HM450)", "Tumors with methylation data (HM450)", "Tumor Samples with methylation data (HM27)", "Tumors with methylation data (HM27)", "Tumors with methylation data")
 
@@ -176,13 +230,25 @@ Expression.Data.For.Cancers <- function(genes, cancers, High.throughput.data, da
 
   # Creating a vector for cancer names
 
-  if(High.throughput.data == "methylation"){
+  if(high.throughput.data.type == "methylation"){
 
     cutoff.phrase <- "obs/exp cutoff"
+
+    if(is.character(cutoff)){
+
+      cutoff = 0.6
+
+    }
 
   } else{
 
     cutoff.phrase <- "zscore cutoff"
+
+    if(is.character(cutoff)){
+
+      cutoff = 2
+
+    }
 
   }
 
@@ -207,25 +273,9 @@ Expression.Data.For.Cancers <- function(genes, cancers, High.throughput.data, da
 
 
 
-  # Load the Required Packages
-
-  library("cgdsr")
+  # Set cgdsr
 
   mycgds = CGDS("http://www.cbioportal.org/")
-
-  library(Biobase)
-
-  library(abind)
-
-  library(gplots)
-
-  library(RColorBrewer)
-
-  library(rafalib)
-
-  library(genefilter)
-
-  library(xlsx)
 
 
 
@@ -291,7 +341,7 @@ Expression.Data.For.Cancers <- function(genes, cancers, High.throughput.data, da
 
         } else if(length(f.condition) == 0){
 
-          stop(paste(cancers[i], "doesn't contain any", High.throughput.data, "data!", sep=" "))
+          stop(paste(cancers[i], "doesn't contain any", high.throughput.data.type, "data!", sep=" "))
 
         }) ,1]
 
@@ -307,7 +357,7 @@ Expression.Data.For.Cancers <- function(genes, cancers, High.throughput.data, da
 
         } else if (length(s.condition) == 0){
 
-          stop(paste(cancers[i], "doesn't have an appropriate 'level 2' condition for", High.throughput.data, "data!", sep=" "))
+          stop(paste(cancers[i], "doesn't have an appropriate 'level 2' condition for", high.throughput.data.type, "data!", sep=" "))
 
         }) ,1]
 

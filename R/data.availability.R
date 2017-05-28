@@ -1,16 +1,31 @@
-#' Checking which Datasets are available for Each Cancer
+#' @title Checking which Datasets are available for Each Cancer
 #'
-#' This function checks all the cancers from cbioportal.org to determine
-#' datasets that they contain.
+#' @description This function checks all the cancers that are registered in 'cbioportal.org' to
+#' examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA),
+#' microarray(miRNA) and methylation datasets.
+#'
+#' @details
+#' \tabular{lllll}{
+#' Package: \tab cBioAutomatedTools \cr
+#' Type: \tab Package \cr
+#' Version: \tab 0.99.0 \cr
+#' Date: \tab 2017-05-30 \cr
+#' License: \tab Artistic-2.0 \cr
+#' }
 #'
 #' @return A matrix that contain all cancers and their available datasets. It is
 #' available in the global enviroment (user's workspace). For convenience, an excel
 #' file will also be generated in the working directory.
-#' @details
-#' This function checks all the cancers that are registered in 'cbioportal.org' to
+#'
+#' @details This function checks all the cancers that are registered in 'cbioportal.org' to
 #' examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA),
 #' microarray(miRNA) and methylation datasets.
-#' @usage Dataset.availability()
+#'
+#' @usage data.availability()
+#'
+#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
+#' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
+#'
 #' @export
 
 
@@ -21,69 +36,13 @@
 ###################################################################################################
 ###################################################################################################
 
-Dataset.availability <- function(){
-
-
-  ##########################################################################
-  ### Checks whether the required packages are installed and installs if not
-
-  # CRAN packages
-
-  list.of.packages <- c("cgdsr", "xlsx")
-
-  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-
-  if(length(new.packages)) install.packages(new.packages)
-
-
-
-
-  # Bioconcuctor packages
-
-  list.of.packages <- c("Biobase")
-
-  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-
-  if(length(new.packages)){
-
-    source("http://www.bioconductor.org/biocLite.R")
-
-    biocLite(new.packages)
-
-
-
-
-    # Configuring installed packages
-
-    if (Sys.getenv("JAVA_HOME")!="")
-
-      Sys.setenv(JAVA_HOME="")
-
-    library(rJava)
-
-    install.packages("xlsxjars", INSTALL_opts = "--no-multiarch")
-  }
-
-
-
-
-  # Notification for installing the required packages in LINUX
-
-  if(!any((installed.packages()) %in% "xlsx")){
-
-    print("If you are using Ubuntu please first install 'r-cran-rjava' and 'r-cran-xml' packages by typing 'sudo apt-get install r-cran-rjava' and 'sudo apt-get install r-cran-xml'")
-
-  }
-
-
+data.availability <- function(){
 
 
   ############################################
   # Prerequisites
 
   # Prerequisites for cBioportal
-
-  library(cgdsr)
 
   mycgds = CGDS("http://www.cbioportal.org/")
 
@@ -177,8 +136,6 @@ Dataset.availability <- function(){
 
   ################################################
   # Exporting results
-
-  library(xlsx)
 
   # Storing data matrix in the global enviornment
 
