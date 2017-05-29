@@ -14,8 +14,8 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @usage process.data.for.cancers(genes, cancers, high.throughput.data.type,
-#' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median"),
+#' @usage process.multiple.studies(genes, cancers, high.throughput.data.type,
+#' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"),
 #' shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8,
 #' heatmapMargines=c(24,17), cutoff=2, angle.for.heatmap.cancernames=45, heatmap.color = "RdBu",
 #' reverse.heatmap.color = TRUE, resetOldExpressionProfile = TRUE, round=TRUE, top.genes = TRUE,
@@ -33,10 +33,10 @@
 #' 'microarray.mRNA', 'microarray.microRNA' or 'methylation'.
 #'
 #' @param data.presented.as a character vector that containes the statistical precedures users prefer the function to compute.
-#' default is \code{c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median")}. This will tell the function to
+#' default is \code{c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median")}. This will tell the function to
 #' compute the following:
 #' frequency precentage, which is the number of samples having value greather than specific cutoff
-#' divided by the total sample size for each cancer;
+#' divided by the total sample size for each cancer study;
 #' frequency ratio, which shows the number of selected samples divided by the total number of samples that give the frequency
 #' percentage for each cancer-to know selecected and total sample sizes only;
 #' Mean Expression, that contains mean value of selected samples for each cancer;
@@ -98,10 +98,10 @@
 #' for \code{simplify.visulization}. It has the same unit as \code{cutoff}.
 #'
 #' @return a list that containes some or all of the following groups, based on what user has chosen: \code{Validation.Results},
-#' \code{Frequency.Percentage}, \code{Top.Genes.of.Frequency.Percentage}, \code{Frequency.Ratio}, \code{Mean.Expression},
-#' \code{Top.Genes.of.Mean.Expression}, \code{Median}, \code{Top.Genes.of.Median}. It also saves these groups in one excel
-#' file for convenience. Based on preference, three heatmaps for \code{Frequency.Percentage}, \code{Mean.Expression} and
-#' \code{Median} can be generated.
+#' \code{Frequency.Percentage}, \code{Top.Genes.of.Frequency.Percentage}, \code{Frequency.Ratio}, \code{Mean.Value},
+#' \code{Top.Genes.of.Mean.Value}, \code{Median}, \code{Top.Genes.of.Median}. It also saves these groups in one excel
+#' file for convenience. Based on preference, three heatmaps for \code{Frequency.Percentage}, \code{Mean.Value} and
+#' \code{Median} can be generated. If more than one gene group is entered, output for each group will be strored in a separate sub-directory.
 #'
 #' @examples
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"),
@@ -111,10 +111,10 @@
 #' "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)",
 #' "Breast Invasive Carcinoma (TCGA, Provisional)")
 #'
-#' process.data.for.cancers(genes, cancernames, "RNA-seq")
+#' process.multiple.studies(genes, cancernames, "RNA-seq")
 #'
-#' process.data.for.cancers(genes, cancernames, "RNA-seq",
-#' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression"),
+#' process.multiple.studies(genes, cancernames, "RNA-seq",
+#' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"),
 #' shorteded.cancer.names = FALSE, resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5),
 #' cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
 #'
@@ -131,7 +131,7 @@
 ###################################################################################################
 ###################################################################################################
 
-process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Expression", "Median"),
+process.multiple.studies <- function(genes, cancers, high.throughput.data.type, data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"),
 
                                         shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(24,17), cutoff="default",
 
@@ -301,7 +301,7 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
 
 
-      print(paste("[[[", "Obtaining expression data for", names(genes)[g], "genes", "]]]", sep = " "))
+      print(paste("[[[", "Obtaining and processing the requested data for", names(genes)[g], "genes", "]]]", sep = " "))
 
 
 
@@ -489,9 +489,9 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
         }
 
-        if("Mean.Expression" %in% data.presented.as){
+        if("Mean.Value" %in% data.presented.as){
 
-          Serial.ProfileData.with.Mean.Expression <- vector("numeric", length=length(ordered.Genes))
+          Serial.ProfileData.with.Mean.Value <- vector("numeric", length=length(ordered.Genes))
 
         }
 
@@ -506,7 +506,7 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
 
 
-        ### Calculating validity, frequency, Mean.Expression and Median values for each requested gene
+        ### Calculating validity, frequency, Mean.Value and Median values for each requested gene
 
         if(validate.genes == TRUE){
 
@@ -642,9 +642,9 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
           }
 
 
-          # Mean.Expression
+          # Mean.Value
 
-          if("Mean.Expression" %in% data.presented.as){
+          if("Mean.Value" %in% data.presented.as){
 
             # Check all members are under cutoff
 
@@ -652,7 +652,7 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
                is.nan(mean(as.vector(ProfileData[,j])[abs(ProfileData[,j]) >= cutoff], na.rm=TRUE))){
 
-              Serial.ProfileData.with.Mean.Expression[j] <- 0
+              Serial.ProfileData.with.Mean.Value[j] <- 0
 
               # Check all members are NaN
 
@@ -660,7 +660,7 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
                        is.nan(mean(as.vector(ProfileData[,j])[abs(ProfileData[,j]) >= cutoff], na.rm=TRUE))){
 
-              Serial.ProfileData.with.Mean.Expression[j] <- NaN
+              Serial.ProfileData.with.Mean.Value[j] <- NaN
 
               # Check all members are NA
 
@@ -668,13 +668,13 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
                        is.nan(mean(as.vector(ProfileData[,j])[abs(ProfileData[,j]) >= cutoff], na.rm=TRUE))){
 
-              Serial.ProfileData.with.Mean.Expression[j] <- NA
+              Serial.ProfileData.with.Mean.Value[j] <- NA
 
               # Mean is number
 
             } else if (!is.nan(mean(as.vector(ProfileData[,j])[abs(ProfileData[,j]) >= cutoff], na.rm=TRUE))){
 
-              Serial.ProfileData.with.Mean.Expression[j] <- mean(as.vector(ProfileData[,j])[abs(ProfileData[,j]) >= cutoff], na.rm=TRUE)
+              Serial.ProfileData.with.Mean.Value[j] <- mean(as.vector(ProfileData[,j])[abs(ProfileData[,j]) >= cutoff], na.rm=TRUE)
 
             }
 
@@ -746,9 +746,9 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
         }
 
-        if("Mean.Expression" %in% data.presented.as){
+        if("Mean.Value" %in% data.presented.as){
 
-          dim(Serial.ProfileData.with.Mean.Expression) <- c(length(ordered.Genes),1)
+          dim(Serial.ProfileData.with.Mean.Value) <- c(length(ordered.Genes),1)
 
         }
 
@@ -761,7 +761,7 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
 
 
-        # Combining serries of columns to obtain four matrixes presenting 'Frequency.Percentage', 'Frequency in ratio', 'Mean.Expression', 'Median' in a specific cancer
+        # Combining serries of columns to obtain four matrixes presenting 'Frequency.Percentage', 'Frequency in ratio', 'Mean.Value', 'Median' in a specific cancer
 
         if(i==1){
 
@@ -783,9 +783,9 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
           }
 
-          if("Mean.Expression" %in% data.presented.as){
+          if("Mean.Value" %in% data.presented.as){
 
-            Mean.Expression.Matrix <- Serial.ProfileData.with.Mean.Expression
+            Mean.Value.Matrix <- Serial.ProfileData.with.Mean.Value
 
           }
 
@@ -815,9 +815,9 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
           }
 
-          if("Mean.Expression" %in% data.presented.as){
+          if("Mean.Value" %in% data.presented.as){
 
-            Mean.Expression.Matrix <- cbind(Mean.Expression.Matrix, Serial.ProfileData.with.Mean.Expression)
+            Mean.Value.Matrix <- cbind(Mean.Value.Matrix, Serial.ProfileData.with.Mean.Value)
 
           }
 
@@ -971,17 +971,17 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
       }
 
-      if("Mean.Expression" %in% data.presented.as){
+      if("Mean.Value" %in% data.presented.as){
 
-        dimnames(Mean.Expression.Matrix) <- list(ordered.Genes, Cancer.Names)
+        dimnames(Mean.Value.Matrix) <- list(ordered.Genes, Cancer.Names)
 
-        Data.list$Mean.Expression <- t(Mean.Expression.Matrix)
+        Data.list$Mean.Value <- t(Mean.Value.Matrix)
 
         if(top.genes==TRUE){
 
           # Check if manual naming is requested
 
-          Exp.matrix <- t(Mean.Expression.Matrix)
+          Exp.matrix <- t(Mean.Value.Matrix)
 
           if(is.matrix(cancers.matrix)){
 
@@ -1003,13 +1003,13 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
           # Empty data.frame to be filled with data
 
-          Mean.Expression.top.genes.dataframe <- data.frame(Gene.with.highest.value=vector("character", length = nrow(Exp.matrix)), Mean.Expression=vector("numeric", length = nrow(Exp.matrix)), stringsAsFactors = FALSE)
+          Mean.Value.top.genes.dataframe <- data.frame(Gene.with.highest.value=vector("character", length = nrow(Exp.matrix)), Mean.Value=vector("numeric", length = nrow(Exp.matrix)), stringsAsFactors = FALSE)
 
           # Finding genes with highest value
 
           for (m in 1:nrow(Exp.matrix)){
 
-            Mean.Expression.top.genes.dataframe[m,1] <- names(which.max(Exp.matrix[m,]))
+            Mean.Value.top.genes.dataframe[m,1] <- names(which.max(Exp.matrix[m,]))
 
           }
 
@@ -1017,15 +1017,15 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
           for (n in 1:nrow(Exp.matrix)){
 
-            Mean.Expression.top.genes.dataframe[n,2] <- max(Exp.matrix[n,])
+            Mean.Value.top.genes.dataframe[n,2] <- max(Exp.matrix[n,])
 
           }
 
           # Creating data.frame for desired profile
 
-          rownames(Mean.Expression.top.genes.dataframe) <- rownames(Exp.matrix)
+          rownames(Mean.Value.top.genes.dataframe) <- rownames(Exp.matrix)
 
-          Data.list$Top.Genes.of.Mean.Expression <- Mean.Expression.top.genes.dataframe
+          Data.list$Top.Genes.of.Mean.Value <- Mean.Value.top.genes.dataframe
 
         }
 
@@ -1112,6 +1112,8 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
     ### Plotting Heatmap and preparing excel files
 
+    print("Saving the output files")
+
     List.to.Go <- get(paste(names(genes)[[g]], "Data", "List", sep = "."))
 
     # Create the appropriate directory and set it as desired folder
@@ -1166,13 +1168,13 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
       # Removing rows that contain only 0
 
-      if(Temporary.source.name %in% c("Frequency.Percentage","Mean.Expression" ,"Median") & is.matrix(heatmap.data)){
+      if(Temporary.source.name %in% c("Frequency.Percentage","Mean.Value" ,"Median") & is.matrix(heatmap.data)){
 
         heatmap.data <- heatmap.data[rowSums(heatmap.data, na.rm = TRUE)!=0,]
 
       }
 
-      if(Temporary.source.name %in% c("Frequency.Percentage","Mean.Expression" ,"Median") & is.matrix(heatmap.data)){
+      if(Temporary.source.name %in% c("Frequency.Percentage","Mean.Value" ,"Median") & is.matrix(heatmap.data)){
 
         if(nrow(heatmap.data) > 1 & ncol(heatmap.data) > 1){
 
@@ -1300,7 +1302,7 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
       # Rounding values
 
-      if(round==TRUE & Temporary.source.name %in% c("Frequency.Percentage","Mean.Expression" ,"Median")){
+      if(round==TRUE & Temporary.source.name %in% c("Frequency.Percentage","Mean.Value" ,"Median")){
 
         Exp.matrix2 <- round(Exp.matrix2, digits=2)
 
@@ -1310,7 +1312,7 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
       Save.matrix <- Exp.matrix2
 
-      if(!(Temporary.source.name %in% c("Top.Genes.of.Frequency.Percentage","Top.Genes.of.Mean.Expression" ,"Top.Genes.of.Median"))){
+      if(!(Temporary.source.name %in% c("Top.Genes.of.Frequency.Percentage","Top.Genes.of.Mean.Value" ,"Top.Genes.of.Median"))){
 
         # Replace 'NaN' values with character string
 
@@ -1322,11 +1324,11 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
       }
 
-      if(Temporary.source.name %in% c("Top.Genes.of.Frequency.Percentage","Top.Genes.of.Mean.Expression" ,"Top.Genes.of.Median")){
+      if(Temporary.source.name %in% c("Top.Genes.of.Frequency.Percentage","Top.Genes.of.Mean.Value" ,"Top.Genes.of.Median")){
 
         colnames(Save.matrix)[1:2] <- c("Gene with highest value", if(Temporary.source.name == "Top.Genes.of.Frequency.Percentage"){"Frequency Percentage"}
 
-                                        else if(Temporary.source.name == "Top.Genes.of.Mean.Expression"){"Mean Expression"}
+                                        else if(Temporary.source.name == "Top.Genes.of.Mean.Value"){"Mean Expression"}
 
                                         else if(Temporary.source.name == "Top.Genes.of.Median"){"Median"})
 
@@ -1353,11 +1355,11 @@ process.data.for.cancers <- function(genes, cancers, high.throughput.data.type, 
 
     # Print information
 
-    if(any(c("Frequency.Percentage", "Mean.Expression", "Median") %in% names(List.to.Go))){
+    if(any(c("Frequency.Percentage", "Mean.Value", "Median") %in% names(List.to.Go))){
 
       print(paste("Requested excel and PNG files were saved in", getwd(), sep = " "))
 
-    } else if(!any(c("Frequency.Percentage", "Mean.Expression", "Median") %in% names(List.to.Go))){
+    } else if(!any(c("Frequency.Percentage", "Mean.Value", "Median") %in% names(List.to.Go))){
 
       print(paste("Requested excel files were saved in", getwd(), sep = " "))
 

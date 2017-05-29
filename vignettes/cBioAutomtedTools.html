@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2017-05-29" />
+<meta name="date" content="2017-05-30" />
 
 <title>cBioAutomatedTools</title>
 
@@ -68,28 +68,38 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">cBioAutomatedTools</h1>
-<h4 class="date"><em>2017-05-29</em></h4>
+<h4 class="date"><em>2017-05-30</em></h4>
 
 
 
-<p>cBioAutomatedTools package facilitates working with high-throughput data stored on <a href="http://www.cbioportal.org/" class="uri">http://www.cbioportal.org/</a>. The official <strong>Bioconductor package</strong> to obtain data in <strong>R</strong> is <code>cgdsr</code>. To obtain data with this package, users have to pass a multi-step procidure. Besides, the index of cancers and thier subgroups might change frequently, which in turn, requires changing the R code. <code>cBioAutomatedTools</code> makes this procedure automated for <strong>RNA-seq</strong>, <strong>microRNA-seq</strong>, <strong>microarray</strong> and <strong>methylation</strong> data types. In addition, comparing the genetic data from different cancer studies/cancer study subgroups becomes much faster and easier.</p>
-<p>The package consists of three functions: <code>data.availability()</code>, <code>process.data.for.cancers()</code> and <code>process.data.for.a.cancer()</code>.</p>
-<div id="data.availability" class="section level2">
-<h2><code>data.availability()</code></h2>
-<p>This function ,requires no input, scans all the cancer studies to find which of the <strong>RNA-seq</strong>, <strong>microRNA-seq</strong>, <strong>microarray</strong> and <strong>methylation</strong> data types exist for each cancer study. The result is stored in <strong>global enviroment</strong> (user’s workspace) as <code>available.data.types</code>. For convenience, the result are also stored as an excel file in the working directory entitled <strong>Available Data Types.xlsx</strong>.</p>
-<pre><code>data.availability()</code></pre>
-<p>The following table shows how the output file looks like. Since the complete output is too large, only 5 rows are shown.</p>
+<p>cBioAutomatedTools package facilitates working with high-throughput data stored on <a href="http://www.cbioportal.org/" class="uri">http://www.cbioportal.org/</a>. The official Bioconductor package that is designed for obtaining data from cBioPorta in R, is <code>cgdsr</code>. To obtain data with this package, users have to pass a multi-step procidure. Besides, the index of cancers and thier subgroups might change frequently, which in turn, requires changing the R code. <code>cBioAutomatedTools</code> makes this procedure automated for <strong>RNA-seq</strong>, <strong>microRNA-seq</strong>, <strong>microarray</strong> and <strong>methylation</strong> data types. In addition, comparing the genetic data from different cancer studies/cancer study subgroups becomes much faster and easier. Further, the results are presented as an excel file and multiple heatmaps.</p>
+<p>The package consists of three functions: <code>available.data.types()</code>, <code>process.data.for.cancers()</code> and <code>process.data.for.a.cancer()</code>.</p>
+<div id="available.data.types" class="section level2">
+<h2>available.data.types()</h2>
+<p>This function ,requires no input, scans all the cancer studies to find which of the <em>RNA-seq</em>, <em>microRNA-seq</em>, <em>microarray</em> and <em>methylation</em> data types exist for each study. To use this function, simply type:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">available.data.types</span>()</code></pre></div>
+<p>The code starts with printing a message in the R console to inform the user it is scanning all the available cancer studies. In the next line, a progress bar will appear.</p>
+<pre><code>[1] &quot;Cheching which data types are available for each cancer&quot;
+  |                                                                 |   0%
+</code></pre>
+<p>The progress bar gradually proceeds untill it reaches 100%. Until now, 151 cancer studies are registered in cBioPortal. Therefre, the function would requires some time to finish. Upon the finishing, an additional line will be printed in the console that showes the directory in which <em>Available Data Types.xlsx</em> has been saved and the name with which the output is stored in R’s global enviroment (user’s workspace).</p>
+<pre><code>[1] &quot;Cheching which data types are available for each cancer&quot;
+  |===================================================================| 100%
+[1] &quot;An .xlsx file entitled 'Available Data Types Output.xlsx' ,which shows the availabile data types for each cancer study, was saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools . In adition, the output is available in the global enviroment as 'available.data.types.output'&quot;</code></pre>
+<p>The following table shows how the <em>Available Data Types.xlsx</em> file looks like. Since the complete output is too large, only first five rows are shown.</p>
 <table>
 <colgroup>
-<col width="45%"></col>
-<col width="9%"></col>
-<col width="10%"></col>
-<col width="13%"></col>
+<col width="2%"></col>
+<col width="47%"></col>
+<col width="6%"></col>
+<col width="8%"></col>
 <col width="12%"></col>
-<col width="7%"></col>
+<col width="13%"></col>
+<col width="8%"></col>
 </colgroup>
 <thead>
 <tr class="header">
+<th align="center"></th>
 <th align="left"></th>
 <th align="center">RNA-seq</th>
 <th align="center">MicroRNA-seq</th>
@@ -100,6 +110,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </thead>
 <tbody>
 <tr class="odd">
+<td align="center">1</td>
 <td align="left">Acinar Cell Carcinoma of the Pancreas (Johns Hopkins, J Pathol 2014)</td>
 <td align="center">-</td>
 <td align="center">-</td>
@@ -108,6 +119,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <td align="center">-</td>
 </tr>
 <tr class="even">
+<td align="center">2</td>
 <td align="left">Acute Myeloid Leukemia (TCGA, NEJM 2013)</td>
 <td align="center">Available</td>
 <td align="center">-</td>
@@ -116,6 +128,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <td align="center">Available</td>
 </tr>
 <tr class="odd">
+<td align="center">3</td>
 <td align="left">Acute Myeloid Leukemia (TCGA, Provisional)</td>
 <td align="center">Available</td>
 <td align="center">-</td>
@@ -124,6 +137,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <td align="center">Available</td>
 </tr>
 <tr class="even">
+<td align="center">4</td>
 <td align="left">Adenoid Cystic Carcinoma (FMI, Am J Surg Pathl. 2014)</td>
 <td align="center">-</td>
 <td align="center">-</td>
@@ -132,6 +146,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <td align="center">-</td>
 </tr>
 <tr class="odd">
+<td align="center">5</td>
 <td align="left">Adenoid Cystic Carcinoma (MDA, Clin Cancer Res 2015)</td>
 <td align="center">-</td>
 <td align="center">-</td>
@@ -141,12 +156,62 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tr>
 </tbody>
 </table>
+</div>
+<div id="process.multiple.studies" class="section level2">
+<h2>process.multiple.studies()</h2>
+<p>This function Obtaines the requested data for the given genes and cancers. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. Tha main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than specific value in the selected cancers. Furthermore, it looks for the genes that comprise the highest values in each cancer. The function has been divided into two main segments. The first segment obtaines and processes the desired data while the second segment generates heatmap and excel files.</p>
+<p>The function requires at least three variables:</p>
+<ul>
+<li><strong>genes</strong>, a list that contains at least one group of genes</li>
+<li><strong>cancernames</strong>, a character vector posessing names of desired cancer studies</li>
+<li><strong>high.throughput.data.type</strong>, one of the five supported high-troughput studies</li>
+</ul>
+<p>In the following example, <em>genes</em> conisists of two gene groups K.demethylases and K.acetyltransferases, <em>cancernames</em> has complete names of five cancer studies and the desired high-throuput study is RNA-seq.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">genes &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">K.demethylases =</span> <span class="kw">c</span>(<span class="st">&quot;KDM1A&quot;</span>, <span class="st">&quot;KDM1B&quot;</span>, <span class="st">&quot;KDM2A&quot;</span>), <span class="dt">K.acetyltransferases =</span> <span class="kw">c</span>(<span class="st">&quot;CLOCK&quot;</span>, <span class="st">&quot;CREBBP&quot;</span>, <span class="st">&quot;ELP3&quot;</span>, <span class="st">&quot;EP300&quot;</span>))
+
+cancernames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;</span>)
+
+<span class="kw">process.multiple.studies</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>)</code></pre></div>
+<div id="the-first-segment-of-function-obtaining-and-processing-the-requested-data" class="section level3">
+<h3>The first segment of function: Obtaining and processing the requested data</h3>
+<p>Just like the previous function, <code>process.multiple.studies()</code> starts by printing that it is obtaining and processing the the requested data. Then, a progress bar will appear in the next line.</p>
+<pre><code>[1] &quot;[[[ Obtaining and processing the requested data for K.demethylases genes ]]]&quot;
+  |                                                                 |   0%          </code></pre>
+<p>The progress bar gradually proceeds to 100%. Large number of genes or cancer studies may prolong the processing time. Upon finishing, another message in printed in console, the function creates and stores a list in the R’s global enviroment with an informative name.</p>
+<pre><code>[1] &quot;[[[ Obtaining and processing the requested data for K.demethylases genes ]]]&quot;
+  |=================================================================| 100%
+[1] &quot;Preparing a 'list' to fill with the requested data&quot;</code></pre>
+<p>Based on user’s preference, this list can include some or all of the following groups:</p>
+<ul>
+<li><strong>Validation.Results</strong>, a character matrix that shows wheather or not different cancer studies possess record for various genes. If a cancer study doesn’t have a record for a gene but uses an alternative name, it is shown in the matrix.</li>
+<li><strong>Frequency.Percentage</strong>, a numerical matrix that is obtained by dividing the number of samples with values greather than specific cutoff by the total sample size for each cancer study.</li>
+<li><strong>Top.Genes.of.Frequency.Percentage</strong>, a data.frame that showes genes with highest value in Frequency.Percentage. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
+<li><strong>Frequency.Ratio</strong>, a character matrix of fractions. Each fraction contains the number of samples with values greater than specific cutoff as a numerator and the total sample size for each cancer study as a denominator.</li>
+<li><strong>Mean.Value</strong>, a numerical matrix that shows mean value of samples greater than specific cutoff.</li>
+<li><strong>Top.Genes.of.Genes.Expression</strong>, a data.frame that showes genes with highest value in Mean.Value. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
+<li><strong>Median</strong>, a numerical matrix that shows median value of samples greater than specific cutoff.</li>
+<li><strong>Top.Genes.of.Median</strong>, a data.frame that showes genes with highest value in Median. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
+</ul>
+</div>
+<div id="the-second-segment-of-function-generating-three-heatmaps-and-one-excel-file" class="section level3">
+<h3>The second segment of function: Generating three heatmaps and one excel file</h3>
+<p>Thse second part of function generates three heatmaps according to Frequency.Percentage, Mean.Value and Median. In Addition, all parts of the list that was generated by fisrt part of the function, are exported as an excel file (each part in a separate excel tab). The progress is shown by another progress bar. Upon finishing, a message will be printed that show the directory where output files can be found.</p>
+<pre><code>[1] &quot;[[[ Obtaining and processing the requested data for K.demethylases genes ]]]&quot;
+  |=================================================================| 100%
+[1] &quot;Preparing a 'list' to fill with the requested data&quot;
+[1] &quot;Saving the output files&quot;
+  |=================================================================| 100%
+[1] &quot;Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/1. K-demethylases&quot;</code></pre>
+<p>If you want to modify characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global enviroment, generating the outputs files without using the internet. To do so, set the <code>resetOldExpressionProfile</code> to FLASE. For instancce, the following code can be used to change heatmap color to red-green color gradient:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.multiple.studies</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>, <span class="dt">resetOldExpressionProfile =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.multiple.studies</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">data.presented.as =</span> <span class="kw">c</span>(<span class="st">&quot;Frequency.Percentage&quot;</span>, <span class="st">&quot;Frequency.Ratio&quot;</span>, <span class="st">&quot;Mean.Value&quot;</span>), <span class="dt">shorteded.cancer.names =</span> <span class="ot">FALSE</span>, <span class="dt">resolution=</span><span class="dv">300</span>, <span class="dt">RowCex=</span><span class="dv">1</span>, <span class="dt">ColCex=</span><span class="dv">1</span>, <span class="dt">heatmapMargines=</span><span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">5</span>), <span class="dt">cutoff=</span><span class="fl">1.5</span>, <span class="dt">angle.for.heatmap.cancernames=</span><span class="dv">30</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>)</code></pre></div>
 <p>Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The <code>html_vignette</code> output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The <code>html_vignette</code> format:</p>
 <ul>
 <li>Never uses retina figures</li>
 <li>Has a smaller default figure size</li>
 <li>Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style</li>
 </ul>
+</div>
 </div>
 <div id="vignette-info" class="section level2">
 <h2>Vignette Info</h2>

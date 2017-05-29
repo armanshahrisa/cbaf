@@ -40,7 +40,7 @@ available.data.types <- function(){
 
   # Prerequisites for cBioportal
 
-  mycgds = CGDS("http://www.cbioportal.org/")
+  mycgds = cgdsr::CGDS("http://www.cbioportal.org/")
 
   all.cancers <- getCancerStudies(mycgds)[,2]
 
@@ -81,7 +81,9 @@ available.data.types <- function(){
 
     # Availability of RNA-seq data
 
-    available.data.matrix[se,2] <- any(All.types %in% c("Tumor Samples with mRNA data (RNA Seq V2)", "Tumors with mRNA data (RNA Seq V2)", "Tumor Samples with mRNA data (RNA Seq)", "Tumors with mRNA data (RNA Seq)"))
+    available.data.matrix[se,2] <- any(All.types %in% c("Tumor Samples with mRNA data (RNA Seq V2)", "Tumors with mRNA data (RNA Seq V2)",
+
+                                                        "Tumor Samples with mRNA data (RNA Seq)", "Tumors with mRNA data (RNA Seq)"))
 
 
 
@@ -93,19 +95,27 @@ available.data.types <- function(){
 
     # Availability of Microarray data (mRNA)
 
-    available.data.matrix[se,4] <- any(All.types %in% c("Tumor Samples with mRNA data (Agilent microarray)", "Tumors with mRNA data (Agilent microarray)", "Tumor Samples with mRNA data (U133 microarray only)", "Tumors with mRNA data"))
+    available.data.matrix[se,4] <- any(All.types %in% c("Tumor Samples with mRNA data (Agilent microarray)",
+
+                                                        "Tumors with mRNA data (Agilent microarray)", "Tumor Samples with mRNA data (U133 microarray only)",
+
+                                                        "Tumors with mRNA data"))
 
 
 
     # Availability of RNA-seq data (miRNA)
 
-    available.data.matrixx[se,5] <- any(All.types %in% c("Tumors with microRNA"))
+    available.data.matrix[se,5] <- any(All.types %in% c("Tumors with microRNA"))
 
 
 
     # Availability of methylation data
 
-    available.data.matrix[se,6] <- any(All.types %in% c("Tumor Samples with methylation data (HM450)", "Tumors with methylation data (HM450)", "Tumor Samples with methylation data (HM27)", "Tumors with methylation data (HM27)", "Tumors with methylation data"))
+    available.data.matrix[se,6] <- any(All.types %in% c("Tumor Samples with methylation data (HM450)", "Tumors with methylation data (HM450)",
+
+                                                        "Tumor Samples with methylation data (HM27)", "Tumors with methylation data (HM27)",
+
+                                                        "Tumors with methylation data"))
 
 
 
@@ -135,7 +145,7 @@ available.data.types <- function(){
 
   # Storing data matrix in the global enviornment
 
-  available.data.types <<- available.data.matrix
+  available.data.types.output <<- available.data.matrix
 
   # Converting matrix to data.frame
 
@@ -143,8 +153,10 @@ available.data.types <- function(){
 
   colnames(available.data.dataframe) <- colnames(available.data.matrix)
 
-  write.xlsx(available.data.dataframe, file="Available Data Types.xlsx")
+  write.xlsx(available.data.dataframe, file="Available Data Types Output.xlsx")
 
-  print(paste("An .xlsx file entitled 'Available Data Types.xlsx' that shows the availability of specific datasets in all cancers was saved in", getwd(), sep=" "))
+  print(paste("An excel file entitled 'Available Data Types Output.xlsx' ,which shows the availabile data types for each cancer study, was saved in",
+
+              getwd(), ".", "In adition, the output is available in the global enviroment as 'available.data.types.output'", sep=" "))
 
 }

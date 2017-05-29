@@ -8,25 +8,127 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-cBioAutomatedTools package facilitates working with high-throughput data stored on <http://www.cbioportal.org/>. The official __Bioconductor package__ to obtain data in __R__ is `cgdsr`. To obtain data with this package, users have to pass a multi-step procidure. Besides, the index of cancers and thier subgroups might change frequently, which in turn, requires changing the R code. `cBioAutomatedTools` makes this procedure automated for __RNA-seq__, __microRNA-seq__, __microarray__ and __methylation__ data types. In addition, comparing the genetic data from different cancer studies/cancer study subgroups becomes much faster and easier.
+cBioAutomatedTools package facilitates working with high-throughput data stored on <http://www.cbioportal.org/>. The official Bioconductor package that is designed for obtaining data from cBioPorta in R, is `cgdsr`. To obtain data with this package, users have to pass a multi-step procidure. Besides, the index of cancers and thier subgroups might change frequently, which in turn, requires changing the R code. `cBioAutomatedTools` makes this procedure automated for __RNA-seq__, __microRNA-seq__, __microarray__ and __methylation__ data types. In addition, comparing the genetic data from different cancer studies/cancer study subgroups becomes much faster and easier. Further, the results are presented as an excel file and multiple heatmaps.
 
-The package consists of three functions: `data.availability()`, `process.data.for.cancers()` and `process.data.for.a.cancer()`.
+The package consists of three functions: `available.data.types()`, `process.data.for.cancers()` and `process.data.for.a.cancer()`.
 
-## `data.availability()`
 
-This function ,requires no input, scans all the cancer studies to find which of the __RNA-seq__, __microRNA-seq__, __microarray__ and __methylation__ data types exist for each cancer study. The result is stored in __global enviroment__ (user's workspace) as `available.data.types`. For convenience, the result are also stored as an excel file in the working directory entitled __Available Data Types.xlsx__.
 
-    data.availability()
 
-The following table shows how the output file looks like. Since the complete output is too large, only 5 rows are shown. 
+## available.data.types()
 
-|                                                                     | RNA-seq      |	MicroRNA-seq | Microarray (mRNA) | Microarray (miRNA) |	 Methylation
-|:--------------------------------------------------------------------|:------------:|:-------------:|:------------------:|:-----------------:|:---------:|
-| Acinar Cell Carcinoma of the Pancreas (Johns Hopkins, J Pathol 2014)| 	   -       |	     -       |       	-           |         -         |  	  -     |
-| Acute Myeloid Leukemia (TCGA, NEJM 2013)                            | 	Available  |	     -       |       	-           |         -         |	Available |
-| Acute Myeloid Leukemia (TCGA, Provisional)                          | 	Available  |       -       |       	-           |         -         |	Available	|
-| Adenoid Cystic Carcinoma (FMI, Am J Surg Pathl. 2014)               | 	   -       |	     -       |       	-           |         -         |  	  -     |
-| Adenoid Cystic Carcinoma (MDA, Clin Cancer Res 2015)                | 	   -       |	     -       |       	-           |         -         |  	  -     |
+This function ,requires no input, scans all the cancer studies to find which of the _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data types exist for each study. To use this function, simply type:
+
+```{r available.data.types, eval=FALSE}
+    available.data.types()
+```    
+
+The code starts with printing a message in the R console to inform the user it is scanning all the available cancer studies. In the next line, a progress bar will appear.
+
+```
+[1] "Cheching which data types are available for each cancer"
+  |                                                                 |   0%
+
+```
+The progress bar gradually proceeds untill it reaches 100%. Until now, 151 cancer studies are registered in cBioPortal. Therefre, the function would requires some time to finish. Upon the finishing, an additional line will be printed in the console that showes the directory in which _Available Data Types.xlsx_ has been saved and the name with which the output is stored in R's global enviroment (user's workspace).
+
+```
+[1] "Cheching which data types are available for each cancer"
+  |===================================================================| 100%
+[1] "An .xlsx file entitled 'Available Data Types Output.xlsx' ,which shows the availabile data types for each cancer study, was saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools . In adition, the output is available in the global enviroment as 'available.data.types.output'"
+```
+
+The following table shows how the _Available Data Types.xlsx_ file looks like. Since the complete output is too large, only first five rows are shown. 
+
+|   |                                                                     | RNA-seq |MicroRNA-seq|Microarray (mRNA)|Microarray (miRNA)|Methylation|
+|:-:|:--------------------------------------------------------------------|:-------:|:----------:|:---------------:|:----------------:|:---------:|
+| 1 | Acinar Cell Carcinoma of the Pancreas (Johns Hopkins, J Pathol 2014)| 	 -    |	     -     |       	-        |         -        | 	   -    |
+| 2 | Acute Myeloid Leukemia (TCGA, NEJM 2013)                            |Available|	     -     |       	-        |         -        |Available  |
+| 3 | Acute Myeloid Leukemia (TCGA, Provisional)                          |Available|      -     |       	-        |         -        |Available  |
+| 4 | Adenoid Cystic Carcinoma (FMI, Am J Surg Pathl. 2014)               |	   -    |	     -     |       	-        |         -        |   	 -    |
+| 5 | Adenoid Cystic Carcinoma (MDA, Clin Cancer Res 2015)                |	   -    |	     -     |       	-        |         -        |  	   -    |
+
+## process.multiple.studies()
+
+This function Obtaines the requested data for the given genes and cancers. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. Tha main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than specific value in the selected cancers. Furthermore, it looks for the genes that comprise the highest values in each cancer. The function has been divided into two main segments. The first segment obtaines and processes the desired data while the second segment generates heatmap and excel files.
+
+The function requires at least three variables:
+
+- __genes__, a list that contains at least one group of genes
+- __cancernames__, a character vector posessing names of desired cancer studies
+- __high.throughput.data.type__, one of the five supported high-troughput studies
+
+In the following example, _genes_ conisists of two gene groups K.demethylases and K.acetyltransferases, _cancernames_  has complete names of five cancer studies and the desired high-throuput study is RNA-seq.
+
+```{r process.multiple.studies 1, eval=FALSE}
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
+
+cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)")
+
+process.multiple.studies(genes, cancernames, "RNA-seq")
+```
+
+### The first segment of function: Obtaining and processing the requested data
+
+Just like the previous function, `process.multiple.studies()` starts by printing that it is obtaining and processing the the requested data. Then, a progress bar will appear in the next line.
+
+```
+[1] "[[[ Obtaining and processing the requested data for K.demethylases genes ]]]"
+  |                                                                 |   0%          
+``` 
+  
+The progress bar gradually proceeds to 100%. Large number of genes or cancer studies may prolong the processing time. Upon finishing, another message in printed in console, the function creates and stores a list in the R's global enviroment with an informative name.
+
+```
+[1] "[[[ Obtaining and processing the requested data for K.demethylases genes ]]]"
+  |=================================================================| 100%
+[1] "Preparing a 'list' to fill with the requested data"
+```
+
+Based on user's preference, this list can include some or all of the following groups:
+
+- __Validation.Results__, a character matrix that shows wheather or not different cancer studies possess record for various genes. If a cancer study doesn't have a record for a gene but uses an alternative name, it is shown in the matrix.
+- __Frequency.Percentage__, a numerical matrix that is obtained by dividing the number of samples with values greather than specific cutoff by the total sample size for each cancer study.
+- __Top.Genes.of.Frequency.Percentage__, a data.frame that showes genes with highest value in Frequency.Percentage. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.
+- __Frequency.Ratio__, a character matrix of fractions. Each fraction contains the number of samples with values greater than specific cutoff as a numerator and the total sample size for each cancer study as a denominator. 
+- __Mean.Value__, a numerical matrix that shows mean value of samples greater than specific cutoff.
+- __Top.Genes.of.Genes.Expression__, a data.frame that showes genes with highest value in Mean.Value. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.
+- __Median__, a numerical matrix that shows median value of samples greater than specific cutoff.
+- __Top.Genes.of.Median__, a data.frame that showes genes with highest value in Median. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.
+
+
+### The second segment of function: Generating three heatmaps and one excel file 
+
+Thse second part of function generates three heatmaps according to Frequency.Percentage, Mean.Value and Median. In Addition, all parts of the list that was generated by fisrt part of the function, are exported as an excel file (each part in a separate excel tab). The progress is shown by another progress bar. Upon finishing, a message will be printed that show the directory where output files can be found.
+
+```
+[1] "[[[ Obtaining and processing the requested data for K.demethylases genes ]]]"
+  |=================================================================| 100%
+[1] "Preparing a 'list' to fill with the requested data"
+[1] "Saving the output files"
+  |=================================================================| 100%
+[1] "Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/1. K-demethylases"
+```
+
+If you want to modify characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global enviroment, generating the outputs files without using the internet. To do so, set the `resetOldExpressionProfile` to FLASE. For instancce, the following code can be used to change heatmap color to red-green color gradient:
+
+```{r process.multiple.studies 2, eval=FALSE}
+process.multiple.studies(genes, cancernames, "RNA-seq", heatmap.color = "redgreen", resetOldExpressionProfile = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r process.multiple.studies 3, eval=FALSE}
+process.multiple.studies(genes, cancernames, "RNA-seq", data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), shorteded.cancer.names = FALSE, resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
+```
 
 
 
