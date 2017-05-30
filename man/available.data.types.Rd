@@ -12,7 +12,7 @@ stored in the global enviroment (user's workspace). For convenience, an excel
 file is also generated in the working directory.
 }
 \description{
-This function checks all the cancers that are registered in 'cbioportal.org' to
+This function checks all the cancer studies that are registered in 'cbioportal.org' to
 examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA),
 microarray(miRNA) and methylation data.
 }

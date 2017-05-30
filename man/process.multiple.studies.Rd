@@ -34,10 +34,10 @@ Mean Expression, that contains mean value of selected samples for each cancer;
 Median, which shows the median value of selected samples for each cancer.}
 
 \item{shorteded.cancer.names}{a logical vector. If the value is set as true, function will try to remove the end part of
-a cancer name aiming to shorten it. The removed segment usually contains the name of scientific group that has conducted
-the cancer study.}
+cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted
+the experiment.}
 
-\item{genelimit}{If number of genes in at least one gene group is too much, this option can be use to limit the number of
+\item{genelimit}{if large number of genes exists in at least one gene group, this option can be use to limit the number of
 genes to be shown on hitmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation.
 The default value is \code{FALSE}.}
 
@@ -49,41 +49,43 @@ The defalut value is 600.}
 \item{ColCex}{a number that specifies letter size in heatmap column names.}
 
 \item{heatmapMargines}{a numeric vectors that can be use to set heatmap margins. The default value is
-\code{heatmapMargines=c(24,17)}.}
+\code{heatmapMargines=c(15,07)}.}
 
-\item{cutoff}{a number that is used as limit to chose samples with values greather than this number. For methylation studies,
-it is \code{observed/expected ration}, for the rest, it is \code{z-score}. The default value for methylation data is 0.6 while
-gene expression studies use default value of 2.}
+\item{cutoff}{a number used to limit samples to those that are greather than specific number (cutoff). The default value for
+methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is
+\code{observed/expected ratio}, for the rest, it is \code{z-score} - Function can understand the correct unit. TO change the
+cutoff to any desired number, change the option to \code{cutoff = desiredNumber} in which \code{desiredNumber} is the number
+of interest.}
 
-\item{angle.for.heatmap.cancernames}{a number that determines the angle with which the cancer names will be shown in heatmaps.
+\item{angle.for.heatmap.cancernames}{a number that determines the angle with which the cancer names are shown in heatmaps.
 The default value is 45 degree.}
 
-\item{heatmap.color}{a character string matches standard color names. The default value is "RdBu". "redgreen" is also very
-popular in genomic studies. To see the rest, please type \code{display.brewer.all()}.}
+\item{heatmap.color}{a character string matches standard color names. The default value is "RdBu". "redgreen" is also a popular
+color in genomic studies. To see the rest of colors, please type \code{display.brewer.all()}.}
 
 \item{reverse.heatmap.color}{a logical value that reverses the color gradiant for heatmap.}
 
 \item{resetOldExpressionProfile}{a logical value. This option can be used to modify heatmap, for instance change margin,
-without obtaining data from internet again. If set to false, function will use tha values from global environment
-(user's workspace) to draw heatmaps and save excel file. The default value is \code{TRUE}.}
+without obtaining data from internet again. If set to false, function will use the values previously stored in the
+global environment to draw heatmaps and save excel file. The default value is \code{TRUE}.}
 
 \item{round}{a logical value that, if set to be \code{TRUE}, will force the function to round all the calculated values
-to two decimal places.}
+to two decimal places. The default value is \code{TRUE}.}
 
-\item{top.genes}{a logical value that, if set as \code{TRUE}, cause the function to determine which gene containes the highest
-value in each cancer.}
+\item{top.genes}{a logical value that, if set as \code{TRUE}, cause the function to create three data.frame that contain the
+gene names with the highest values for each cancer. To get all the three data.frames, `Frequency.Percentage`, `Mean.Value` and
+`Median` must have been included for \code{data.presented.as}.}
 
-\item{validate.genes}{a logical value that, if set to be \code{TRUE}, enables pasrt of the function that checks whether or not
-each gene has a record in different cancers. It also checks for alternative gene names that cbioportal might use instead of
-given gene names.}
+\item{validate.genes}{a logical value that, if set to be \code{TRUE}, function will checks each cancer study to finds whether
+or not each gene has a record. If a cancer study doesn't have a record for specific gene, it checks for alternative gene names
+that cbioportal might use instead of the given gene name.}
 
-\item{Use.CancerCode.as.Name}{a logical value that tells the function to use abbreviated cancer names instead of complete cancer
-names, if set to be \code{TRUE}. For example, \code{laml_tcga_pub} is the shortened name for
-\code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.}
+\item{Use.CancerCode.as.Name}{a logical value that tells the function to use sandard abbreviated cancer names instead of complete cancer
+names, if set to be \code{TRUE}. For example, \code{laml_tcga_pub} is the shortened name for \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.}
 
 \item{simplify.visulization}{a logical value that tells the function whether or not to change values under
-\code{simplifiction.cuttoff} to zero. It is designed for eye visulization purpose only. Therefore, it is not suited for
-publications.}
+\code{simplifiction.cuttoff} to zero. It only affects heatmaps to assist finding the candidate genes faster. Therefore, it is
+not suited for publications.}
 
 \item{simplifiction.cuttoff}{a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 for \code{simplify.visulization}. It has the same unit as \code{cutoff}.}
@@ -93,7 +95,7 @@ a list that containes some or all of the following groups, based on what user ha
 \code{Frequency.Percentage}, \code{Top.Genes.of.Frequency.Percentage}, \code{Frequency.Ratio}, \code{Mean.Value},
 \code{Top.Genes.of.Mean.Value}, \code{Median}, \code{Top.Genes.of.Median}. It also saves these groups in one excel
 file for convenience. Based on preference, three heatmaps for \code{Frequency.Percentage}, \code{Mean.Value} and
-\code{Median} can be generated. If more than one gene group is entered, output for each group will be strored in a separate sub-directory.
+\code{Median} can be generated. If more than one group of genes is entered, output for each group will be strored in a separate sub-directory.
 }
 \description{
 This function Obtaines the requested data for the given genes and cancers. It can check whether or not all genes

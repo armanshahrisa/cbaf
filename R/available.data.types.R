@@ -1,6 +1,6 @@
 #' @title Checking which Datasets are available for Each Cancer study.
 #'
-#' @description This function checks all the cancers that are registered in 'cbioportal.org' to
+#' @description This function checks all the cancer studies that are registered in 'cbioportal.org' to
 #' examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA),
 #' microarray(miRNA) and methylation data.
 #'

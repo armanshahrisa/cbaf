@@ -47,7 +47,7 @@
 #' @param desired.case.list a numeric vector that contains the index of rdesired cancer subgroups. If set to be \code{FALSE},
 #' function will ask the user to enter them during the process. The default value is \code{FALSE}.
 #'
-#' @param genelimit If number of genes in at least one gene group is too much, this option can be use to limit the number of
+#' @param genelimit if large number of genes exists in at least one gene group, this option can be use to limit the number of
 #' genes to be shown on hitmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation.
 #' The default value is \code{FALSE}.
 #'
@@ -59,41 +59,44 @@
 #' @param ColCex a number that specifies letter size in heatmap column names.
 #'
 #' @param heatmapMargines a numeric vectors that can be use to set heatmap margins. The default value is
-#' \code{heatmapMargines=c(24,17)}.
+#' \code{heatmapMargines=c(10,10)}.
 #'
-#' @param cutoff a number that is used as limit to chose samples with values greather than this number. For methylation studies,
-#'  it is \code{observed/expected ration}, for the rest, it is \code{z-score}. The default value for methylation data is 0.6 while
-#'  gene expression studies use default value of 2.
+#' @param cutoff a number used to limit samples to those that are greather than specific number (cutoff). The default value for
+#' methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is
+#' \code{observed/expected ratio}, for the rest, it is \code{z-score} - Function can understand the correct unit. TO change the
+#' cutoff to any desired number, change the option to \code{cutoff = desiredNumber} in which \code{desiredNumber} is the number
+#' of interest.
 #'
-#' @param angle.for.heatmap.cancernames a number that determines the angle with which the cancer names will be shown in heatmaps.
+#' @param angle.for.heatmap.cancernames a number that determines the angle with which the cancer names are shown in heatmaps.
 #' The default value is 45 degree.
 #'
-#' @param heatmap.color a character string matches standard color names. The default value is "RdBu". "redgreen" is also very
-#' popular in genomic studies. To see the rest, please type \code{display.brewer.all()}.
+#' @param heatmap.color a character string matches standard color names. The default value is "RdBu". "redgreen" is also a popular
+#' color in genomic studies. To see the rest of colors, please type \code{display.brewer.all()}.
 #'
 #' @param reverse.heatmap.color a logical value that reverses the color gradiant for heatmap.
 #'
 #' @param resetOldExpressionProfile a logical value. This option can be used to modify heatmap, for instance change margin,
-#' without obtaining data from internet again. If set to false, function will use tha values from global environment
-#' (user's workspace) to draw heatmaps and save excel file. The default value is \code{TRUE}.
+#' without obtaining data from internet again. If set to false, function will use the values previously stored in the
+#' global environment to draw heatmaps and save excel file. The default value is \code{TRUE}.
 #'
-#' @param round a logical value that, if set to be \code{TRUE}, will force the function to round all the calculated values to
-#' two decimal places.
+#' @param round a logical value that, if set to be \code{TRUE}, will force the function to round all the calculated values
+#' to two decimal places. The default value is \code{TRUE}.
 #'
-#' @param top.genes a logical value that, if set as \code{TRUE}, cause the function to determine which gene containes the highest
-#' value in each cancer subgroup.
+#' @param top.genes a logical value that, if set as \code{TRUE}, cause the function to create three data.frame that contain the
+#' gene names with the highest values for each cancer. To get all the three data.frames, `Frequency.Percentage`, `Mean.Value` and
+#' `Median` must have been included for \code{data.presented.as}.
 #'
-#' @param validate.genes a logical value that, if set to be \code{TRUE}, enables pasrt of the function that checks whether or not
-#' each gene has a record in different cancers. It also checks for alternative gene names that cbioportal might use instead of given
-#' gene names.
+#' @param validate.genes a logical value that, if set to be \code{TRUE}, function will checks each cancer study to finds whether
+#' or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene
+#' names that cbioportal might use instead of the given gene name.
 #'
 #' @param Use.CancerCode.as.Name a logical value that tells the function to use abbreviated cancer names instead of complete
 #' cancer names, if set to be \code{TRUE}. For example, \code{laml_tcga_pub} is the shortened name for
 #' \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.
 #'
 #' @param simplify.visulization a logical value that tells the function whether or not to change values under
-#' \code{simplifiction.cuttoff} to zero. It is designed for eye visulization purpose only. Therefore, it is not suited for
-#' publications.
+#' \code{simplifiction.cuttoff} to zero. It only affects heatmaps to assist finding the candidate genes faster. Therefore, it is
+#' not suited for publications.
 #'
 #' @param simplifiction.cuttoff a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 #' for \code{simplify.visulization}. It has the same unit as \code{cutoff}.
