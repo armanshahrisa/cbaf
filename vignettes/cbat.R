@@ -15,12 +15,5 @@
 #  process.multiple.studies(genes, cancernames, "RNA-seq", data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), shorteded.cancer.names = FALSE, resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
 
 ## ----process.multiple.studies 3, eval=FALSE------------------------------
-#  process.multiple.studies(genes, cancernames, "RNA-seq", heatmap.color = "redgreen", resetOldExpressionProfile = FALSE)
-
-## ---- fig.show='hold'----------------------------------------------------
-plot(1:10)
-plot(10:1)
-
-## ---- echo=FALSE, results='asis'-----------------------------------------
-knitr::kable(head(mtcars, 10))
+#  process.multiple.studies(genes, cancernames, "RNA-seq", heatmap.color = "redgreen", rewrite.output.list = FALSE)
 

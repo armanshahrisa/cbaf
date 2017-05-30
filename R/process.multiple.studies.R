@@ -1,16 +1,16 @@
 #' @title Checking Expression/methylation Profile for various cancer studies.
 #'
-#' @description This function Obtaines the requested data for the given genes and cancers. It can check whether or not all genes
-#' are included in cancer studies and, if not, looks for the alternative gene names. Tha main part of function calculates
-#' frequency percentage, frequency ratio, mean expression and median of samples greather than specific value in the selected
-#' cancers. Furthermore, it looks for the genes that comprise the highest values in each cancer.
+#' @description This function Obtaines the requested data for the given genes across multiple cancer studies. It can check
+#' whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. Tha main part
+#' of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than specific
+#' value in the selected cancers. Furthermore, it looks for the genes that comprise the highest values in each cancer.
 #'
 #' @details
 #' \tabular{lllll}{
 #' Package: \tab cBioAutomatedTools \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-05-30 \cr
+#' Date: \tab 2017-05-31 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -18,7 +18,7 @@
 #' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"),
 #' shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8,
 #' heatmapMargines=c(24,17), cutoff=2, angle.for.heatmap.cancernames=45, heatmap.color = "RdBu",
-#' reverse.heatmap.color = TRUE, resetOldExpressionProfile = TRUE, round=TRUE, top.genes = TRUE,
+#' reverse.heatmap.color = TRUE, rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE,
 #' validate.genes = TRUE, Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE,
 #' simplifiction.cuttoff=FALSE)
 #'
@@ -74,7 +74,7 @@
 #'
 #' @param reverse.heatmap.color a logical value that reverses the color gradiant for heatmap.
 #'
-#' @param resetOldExpressionProfile a logical value. This option can be used to modify heatmap, for instance change margin,
+#' @param rewrite.output.list a logical value. This option can be used to modify heatmap, for instance change margin,
 #' without obtaining data from internet again. If set to false, function will use the values previously stored in the
 #' global environment to draw heatmaps and save excel file. The default value is \code{TRUE}.
 #'
@@ -137,7 +137,7 @@ process.multiple.studies <- function(genes, cancers, high.throughput.data.type, 
 
                                         shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(15,07), cutoff="default",
 
-                                        angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE, resetOldExpressionProfile = TRUE, round=TRUE,
+                                        angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE, rewrite.output.list = TRUE, round=TRUE,
 
                                         top.genes = TRUE, validate.genes = TRUE, Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE){
 
@@ -298,7 +298,7 @@ process.multiple.studies <- function(genes, cancers, high.throughput.data.type, 
 
 
 
-    if(resetOldExpressionProfile == TRUE){
+    if(rewrite.output.list == TRUE){
 
 
 

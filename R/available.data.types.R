@@ -9,7 +9,7 @@
 #' Package: \tab cBioAutomatedTools \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-05-30 \cr
+#' Date: \tab 2017-05-31 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'

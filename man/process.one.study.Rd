@@ -9,14 +9,14 @@ data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "
 transposedHeatmap=FALSE, desired.case.list="None", genelimit="none",
 resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(10,10), cutoff="default",
 angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE,
-resetOldExpressionProfile = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE,
+rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE,
 Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)
 }
 \arguments{
 \item{genes}{a list that contains at least one gene group}
 
-\item{cancername}{a character string showing the desired cancer name. It containes standard cancer names
-that can be found on cbioportal.org, such as \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.}
+\item{cancername}{a character string showing the desired cancer name. It is an standard cancer name that can be found on
+cbioportal.org, such as \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.}
 
 \item{high.throughput.data.type}{a character string that is one of the following techniques: 'RNA-seq', 'microRNA-Seq',
 'microarray.mRNA', 'microarray.microRNA' or 'methylation'.}
@@ -65,7 +65,7 @@ color in genomic studies. To see the rest of colors, please type \code{display.b
 
 \item{reverse.heatmap.color}{a logical value that reverses the color gradiant for heatmap.}
 
-\item{resetOldExpressionProfile}{a logical value. This option can be used to modify heatmap, for instance change margin,
+\item{rewrite.output.list}{a logical value. This option can be used to modify heatmap, for instance change margin,
 without obtaining data from internet again. If set to false, function will use the values previously stored in the
 global environment to draw heatmaps and save excel file. The default value is \code{TRUE}.}
 
@@ -99,18 +99,18 @@ file for convenience. Based on preference, three heatmaps for \code{Frequency.Pe
 \code{Median} can be generated. If more than one gene group is entered, output for each group will be strored in a separate sub-directory.
 }
 \description{
-This function Obtaines the requested data for the given genes and subgroups of a cancer. It can check whether
-or not all genes are included in subgroups of a cancer study and, if not, looks for the alternative gene names. Tha main
-part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than
-specific value in the selected subgroups of the cancer. Furthermore, it looks for the genes that comprise the highest
-values in each cancer subgroup.
+This function Obtaines the requested data for the given genes across multiple subgroups of a cancer. It can
+check whether or not all genes are included in subgroups of a cancer study and, if not, looks for the alternative gene names.
+Tha main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than
+specific value in the selected subgroups of the cancer. Furthermore, it looks for the genes that comprise the highest values
+in each cancer subgroup.
 }
 \details{
 \tabular{lllll}{
 Package: \tab cBioAutomatedTools \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-05-30 \cr
+Date: \tab 2017-05-31 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
