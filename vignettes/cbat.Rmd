@@ -19,7 +19,7 @@ The package consists of three functions: `available.data.types()`, `process.data
 
 This function ,requires no input, scans all the cancer studies to find which of the _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data types exist for each study. To use this function, simply type:
 
-```{r available.data.types, eval=FALSE}
+```
     available.data.types()
 ```    
 
@@ -53,7 +53,7 @@ The following table shows how the _Available Data Types.xlsx_ file looks like. S
 This function Obtains the requested data for the given genes across the multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. The main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greater than specific value. Furthermore, it looks for the genes that comprise the highest values in each cancer. The function has been divided into two main segments. The first segment obtains and processes the desired data while the second segment generates heatmap and excel files.
 
 The function code along with all available options:
-```{r process.multiple.studies 1, eval=FALSE}
+```
 process.multiple.studies(genes, cancers, high.throughput.data.type, data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"), shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(24,17), cutoff=2, angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE, rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE,  validate.genes = TRUE, Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)
 ```
 
@@ -87,7 +87,7 @@ Function contains other options that can be used for a verity of needs:
 
 In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _cancernames_  has complete names of five cancer studies and the desired high-throughput study is RNA-seq.
 
-```{r process.multiple.studies 2, eval=FALSE}
+```
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 
 cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)")
@@ -96,12 +96,12 @@ process.multiple.studies(genes, cancernames, "RNA-seq")
 ```
 
 The following code shows how to create a matrix with desired names for `cancernames`:
-```{r process.multiple.studies 3, eval=FALSE}
+```
 cancernames <- matrix(c("Acute Myeloid Leukemia (TCGA, Provisional)", "acute myeloid leukemia", "Adrenocortical Carcinoma (TCGA, Provisional)", "adrenocortical carcinoma", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "bladder urothelial carcinoma", "Brain Lower Grade Glioma (TCGA, Provisional)", "brain lower grade glioma", "Breast Invasive Carcinoma (TCGA, Provisional)",  "breast invasive carcinoma"), nrow = 5, ncol=2 , byrow = TRUE)
 ```
 
 An example of how more options for `process.multiple.studies()` can be altered:
-```{r process.multiple.studies 4, eval=FALSE}
+```
 process.multiple.studies(genes, cancernames, "RNA-seq", data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), shorteded.cancer.names = FALSE, resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
 ```
 
@@ -159,7 +159,7 @@ The two mentioned steps, then, start for `K.acetyltransferases` gene group, ulti
 
 If users intend to modify the characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global environment, generating the outputs files without using the internet. To do so, set the `rewrite.output.list` to FLASE. For instance, the following code can be used to change heatmap color to red-green color gradient:
 
-```{r process.multiple.studies 5, eval=FALSE}
+```
 process.multiple.studies(genes, cancernames, "RNA-seq", heatmap.color = "redgreen", rewrite.output.list = FALSE)
 ```
 
@@ -169,7 +169,7 @@ process.multiple.studies(genes, cancernames, "RNA-seq", heatmap.color = "redgree
 This function Obtains the requested data for the given genes across the multiple subgroups of a cancer study. It is very similar in what it does, to `process.multiple.studies()` as well as using a two-step procedure.
 
 The function code along with all available options:
-```{r process.one.study 1, eval=FALSE}
+```
 process.one.study(genes, cancername, high.throughput.data.type, data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"), transposedHeatmap=FALSE, desired.case.list="None", genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(10,10), cutoff="default", angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE, rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)
 ```
 
@@ -201,7 +201,7 @@ Function contains other options, many of whom are the same as previous function:
 - __simplifiction.cuttoff__ a logical value that, if `simplify.visulization = TRUE`, needs to be set as a desired cutoff for `simplify.visulization`. It has the same unit as `cutoff`.
 
 In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _cancername_ is `Breast Invasive Carcinoma (TCGA, Cell 2015)`. and the desired high-throughput study is RNA-seq.
-```{r process.one.study 2, eval=FALSE}
+```
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 
 process.one.study(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq")
@@ -209,7 +209,7 @@ process.one.study(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq
 
 
 Here is example of how more options for `process.multiple.studies()` can be altered, including index of desired subgroups for `desired.case.list`:
-```{r process.one.study 3, eval=FALSE}
+```
 process.one.study(genes, cancernames, "RNA-seq", desired.case.list = c(3,4,5), data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
 ```
 
@@ -235,7 +235,7 @@ Then, `assuming desired.case.list = "none"`, all subgroups of the requested canc
 [21] "21. Tumor Samples with mRNA data (RNA Seq V2)"         "22. Tumor Samples with RPPA data"                     
 [23] "23. Tumor Samples with sequencing and CNA data"
 ```
-```{r process.one.study 4, eval=FALSE}
+```
 Enter the numeric index(es):                  2,3,4,5
 ```  
   
@@ -296,7 +296,7 @@ Enter the numeric index(es):                  2,3,4,5
 
 If users intend to modify the characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global environment, generating the outputs files without using the internet. To do so, set the `rewrite.output.list` to FLASE. For instance, the following code can be used to change heatmap color to red-green color gradient:
 
-```{r process.one.study 5, eval=FALSE}
+```
 process.one.study(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", heatmap.color = "redgreen", rewrite.output.list = FALSE)
 ```
 
