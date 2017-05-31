@@ -1,8 +1,8 @@
 #' @title Checking Expression/methylation Profile for various subgroups of a cancer study.
 #'
-#' @description This function Obtaines the requested data for the given genes across multiple subgroups of a cancer. It can
+#' @description This function Obtains the requested data for the given genes across multiple subgroups of a cancer. It can
 #' check whether or not all genes are included in subgroups of a cancer study and, if not, looks for the alternative gene names.
-#' Tha main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than
+#' The main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than
 #' specific value in the selected subgroups of the cancer. Furthermore, it looks for the genes that comprise the highest values
 #' in each cancer subgroup.
 #'
@@ -21,11 +21,11 @@
 #' resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(10,10), cutoff="default",
 #' angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE,
 #' rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE,
-#' Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)
+#' simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)
 #'
 #' @param genes a list that contains at least one gene group
 #'
-#' @param cancername a character string showing the desired cancer name. It is an standard cancer name that can be found on
+#' @param cancername a character string showing the desired cancer name. It is an standard cancer study name that can be found on
 #' cbioportal.org, such as \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.
 #'
 #' @param high.throughput.data.type a character string that is one of the following techniques: 'RNA-seq', 'microRNA-Seq',
@@ -42,14 +42,15 @@
 #' Mean Expression, that contains mean value of selected samples for each cancer;
 #' Median, which shows the median value of selected samples for each cancer.
 #'
-#' @param transposedHeatmap a logical value that can exchange the rows and columns of heatmaps.
+#' @param transposedHeatmap a logical value that can transpose the rows and columns of heatmaps.
 #'
-#' @param desired.case.list a numeric vector that contains the index of rdesired cancer subgroups. If set to be \code{FALSE},
-#' function will ask the user to enter them during the process. The default value is \code{FALSE}.
+#' @param desired.case.list a numeric vector that contains the index of rdesired cancer subgroups, if user knows index of desired
+#' subgroups. If set to be \code{none}, function will ask the user to enter them during the process. The default value is
+#' \code{none}.
 #'
 #' @param genelimit if large number of genes exists in at least one gene group, this option can be use to limit the number of
 #' genes to be shown on hitmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation.
-#' The default value is \code{FALSE}.
+#' The default value is \code{none}.
 #'
 #' @param resolution a number. This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The
 #' defalut value is 600.
@@ -90,10 +91,6 @@
 #' or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene
 #' names that cbioportal might use instead of the given gene name.
 #'
-#' @param Use.CancerCode.as.Name a logical value that tells the function to use abbreviated cancer names instead of complete
-#' cancer names, if set to be \code{TRUE}. For example, \code{laml_tcga_pub} is the shortened name for
-#' \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.
-#'
 #' @param simplify.visulization a logical value that tells the function whether or not to change values under
 #' \code{simplifiction.cuttoff} to zero. It only affects heatmaps to assist finding the candidate genes faster. Therefore, it is
 #' not suited for publications.
@@ -108,12 +105,9 @@
 #' \code{Median} can be generated. If more than one gene group is entered, output for each group will be strored in a separate sub-directory.
 #'
 #' @examples
-#' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"),
-#' K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
+#' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 #'
 #' cancername <- "Breast Invasive Carcinoma (TCGA, Cell 2015)"
-#'
-#' process.one.study(genes, cancername, "RNA-seq")
 #'
 #' process.one.study(genes, cancername, "RNA-seq", desired.case.list = c(3,4,5),
 #' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"),
@@ -139,9 +133,9 @@ process.one.study <- function(genes, cancername, high.throughput.data.type, data
 
                                          heatmapMargines=c(10,10), cutoff="default", angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE,
 
-                                         rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE, Use.CancerCode.as.Name = FALSE,
+                                         rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE, simplify.visulization=FALSE,
 
-                                         simplify.visulization=FALSE, simplifiction.cuttoff=FALSE){
+                                         simplifiction.cuttoff=FALSE){
 
 
   ##########################################################################
@@ -1254,13 +1248,13 @@ process.one.study <- function(genes, cancername, high.throughput.data.type, data
 
           if(transposedHeatmap==FALSE){
 
-            heatmap.2(heatmap.data, labCol=tissue, na.color="light gray", trace="none", symbreaks = T, col=hmcol, cexRow = RowCex, cexCol= ColCex,
+            heatmap.2(heatmap.data, labCol=tissue, na.color="light gray", trace="none", symbreaks = TRUE, col=hmcol, cexRow = RowCex, cexCol= ColCex,
 
                       margins = heatmapMargines, srtCol = angle.for.heatmap.cancernames)
 
           } else if(transposedHeatmap==TRUE){
 
-            heatmap.2(t(heatmap.data), labCol=tissue, na.color="light gray", trace="none", symbreaks = T, col=hmcol, cexRow = RowCex, cexCol= ColCex,
+            heatmap.2(t(heatmap.data), labCol=tissue, na.color="light gray", trace="none", symbreaks = TRUE, col=hmcol, cexRow = RowCex, cexCol= ColCex,
 
                       margins = heatmapMargines, srtCol = angle.for.heatmap.cancernames)
 

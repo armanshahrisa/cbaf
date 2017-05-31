@@ -13,7 +13,7 @@
 
 <meta name="date" content="2017-05-31" />
 
-<title>cBioAutomatedTools</title>
+<title>cbat</title>
 
 
 
@@ -67,12 +67,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">cBioAutomatedTools</h1>
+<h1 class="title toc-ignore">cbat</h1>
 <h4 class="date"><em>2017-05-31</em></h4>
 
 
 
-<p>cBioAutomatedTools package facilitates working with high-throughput data stored on <a href="http://www.cbioportal.org/" class="uri">http://www.cbioportal.org/</a>. The official Bioconductor package that is designed for obtaining data from cBioPorta in R, is <code>cgdsr</code>. To obtain data with this package, users have to pass a multi-step procidure. Besides, the index of cancers and thier subgroups might change frequently, which in turn, requires changing the R code. <code>cBioAutomatedTools</code> makes this procedure automated for <strong>RNA-seq</strong>, <strong>microRNA-seq</strong>, <strong>microarray</strong> and <strong>methylation</strong> data types. In addition, comparing the genetic data from different cancer studies/cancer study subgroups becomes much faster and easier. Further, the results are presented as an excel file and multiple heatmaps.</p>
+<p>cbat package facilitates working with high-throughput data stored on <a href="http://www.cbioportal.org/" class="uri">http://www.cbioportal.org/</a>. The official Bioconductor package that is designed for obtaining data from cBioPortal in R, is <code>cgdsr</code>. To obtain data with this package, users have to pass a multi-step procedure. Besides, the index of cancers and their subgroups might change frequently, which in turn, requires changing the R code. <code>cbat</code> makes this procedure automated for <strong>RNA-seq</strong>, <strong>microRNA-seq</strong>, <strong>microarray</strong> and <strong>methylation</strong> data types. In addition, comparing the genetic data from different cancer studies/cancer study subgroups becomes much faster and easier. Further, the results are presented as an excel file and multiple heatmaps.</p>
 <p>The package consists of three functions: <code>available.data.types()</code>, <code>process.data.for.cancers()</code> and <code>process.data.for.a.cancer()</code>.</p>
 <div id="available.data.types" class="section level2">
 <h2>available.data.types()</h2>
@@ -82,7 +82,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <pre><code>[1] &quot;Cheching which data types are available for each cancer&quot;
   |                                                                 |   0%
 </code></pre>
-<p>The progress bar gradually proceeds untill it reaches 100%. Until now, 151 cancer studies are registered in cBioPortal. Therefre, the function would requires some time to finish. Upon the finishing, an additional line will be printed in the console that showes the directory in which <em>Available Data Types.xlsx</em> has been saved and the name with which the output is stored in R’s global enviroment (user’s workspace).</p>
+<p>The progress bar gradually proceeds until it reaches 100%. Until now, 159 cancer studies are registered in cBioPortal. Therefore, the function would requires some time to finish. Upon the finishing, an additional line will be printed in the console that shows the directory in which <em>Available Data Types.xlsx</em> has been saved and the name with which the output is stored in R’s global environment (user’s workspace).</p>
 <pre><code>[1] &quot;Cheching which data types are available for each cancer&quot;
   |===================================================================| 100%
 [1] &quot;An .xlsx file entitled 'Available Data Types Output.xlsx' ,which shows the availabile data types for each cancer study, was saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools . In adition, the output is available in the global enviroment as 'available.data.types.output'&quot;</code></pre>
@@ -159,14 +159,37 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="process.multiple.studies" class="section level2">
 <h2>process.multiple.studies()</h2>
-<p>This function Obtains the requested data for the given genes across the multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. The main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than specific value. Furthermore, it looks for the genes that comprise the highest values in each cancer. The function has been divided into two main segments. The first segment obtaines and processes the desired data while the second segment generates heatmap and excel files.</p>
+<p>This function Obtains the requested data for the given genes across the multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. The main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greater than specific value. Furthermore, it looks for the genes that comprise the highest values in each cancer. The function has been divided into two main segments. The first segment obtains and processes the desired data while the second segment generates heatmap and excel files.</p>
+<p>The function code along with all available options:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.multiple.studies</span>(genes, cancers, high.throughput.data.type, <span class="dt">data.presented.as =</span> <span class="kw">c</span>(<span class="st">&quot;Frequency.Percentage&quot;</span>, <span class="st">&quot;Frequency.Ratio&quot;</span>, <span class="st">&quot;Mean.Value&quot;</span>, <span class="st">&quot;Median&quot;</span>), <span class="dt">shorteded.cancer.names =</span> <span class="ot">TRUE</span>, <span class="dt">genelimit=</span><span class="st">&quot;none&quot;</span>, <span class="dt">resolution=</span><span class="dv">600</span>, <span class="dt">RowCex=</span><span class="fl">0.8</span>, <span class="dt">ColCex=</span><span class="fl">0.8</span>, <span class="dt">heatmapMargines=</span><span class="kw">c</span>(<span class="dv">24</span>,<span class="dv">17</span>), <span class="dt">cutoff=</span><span class="dv">2</span>, <span class="dt">angle.for.heatmap.cancernames=</span><span class="dv">45</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;RdBu&quot;</span>, <span class="dt">reverse.heatmap.color =</span> <span class="ot">TRUE</span>, <span class="dt">rewrite.output.list =</span> <span class="ot">TRUE</span>, <span class="dt">round=</span><span class="ot">TRUE</span>, <span class="dt">top.genes =</span> <span class="ot">TRUE</span>,  <span class="dt">validate.genes =</span> <span class="ot">TRUE</span>, <span class="dt">Use.CancerCode.as.Name =</span> <span class="ot">FALSE</span>, <span class="dt">simplify.visulization=</span><span class="ot">FALSE</span>, <span class="dt">simplifiction.cuttoff=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p>The function requires at least three variables:</p>
 <ul>
-<li><strong>genes</strong>, a list that contains at least one group of genes</li>
-<li><strong>cancernames</strong>, a character vector or a matrix posessing names of desired cancer studies. The character vector containes standard cancer names that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>. Alternatively, a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.</li>
-<li><strong>high.throughput.data.type</strong>, one of the five supported high-troughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation</li>
+<li><strong>genes</strong>, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</li>
+<li><strong>cancernames</strong>, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>. Alternatively, a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.</li>
+<li><strong>high.throughput.data.type</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.</li>
 </ul>
-<p>In the following example, <em>genes</em> conisists of two gene groups K.demethylases and K.acetyltransferases, <em>cancernames</em> has complete names of five cancer studies and the desired high-throuput study is RNA-seq.</p>
+<p>Function contains other options that can be used for a verity of needs:</p>
+<ul>
+<li><strong>data.presented.as</strong> tells the function what to compute. The default is <code>c(&quot;Frequency.Percentage&quot;, &quot;Frequency.Ratio&quot;, &quot;Mean.Value&quot;, &quot;Median&quot;)</code> which causes the function to consider all the four possible statistical procedures. Alternatively, users can decrease the number of requested statistical procedures as long as at least one procedure is given to the function.</li>
+<li><strong>shorteded.cancer.names</strong> is used to remove the end part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.</li>
+<li><strong>genelimit</strong> can be employed if large number of genes exists in at least one gene group. This option limits the number of genes to be shown on heatmap. For instance, <code>genelimit=50</code> will limit the heatmap to show 50 genes showing the most variation. The default value is <code>none</code>.</li>
+<li><strong>resolution</strong> adjusts the resolution of the output heatmaps as <em>dot per inch</em>. The default value is 600.</li>
+<li><strong>RowCex</strong> specifies letter size in heatmap row names.</li>
+<li><strong>ColCex</strong> specifies letter size in heatmap column names.</li>
+<li><strong>heatmapMargines</strong> sets heatmap margins. The default value is <code>heatmapMargines=c(15,07)</code>.</li>
+<li><strong>cutoff</strong> used to limit samples to those that are greater than specific number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, the unit is <code>observed/expected ratio</code>, for the rest, it is <code>z-score</code>- function can understand the correct unit. TO change the cutoff to any desired number, change the option to <code>cutoff = desiredNumber</code> in which <em>desiredNumber</em> is the number of interest.</li>
+<li><strong>angle.for.heatmap.cancernames</strong> determines the angle with which the cancer names are shown in heatmaps. The default value is 45 degree.</li>
+<li><strong>heatmap.color</strong> can be used to set heatmap colors. The default value is “RdBu”. “redgreen” is also a popular color in genomic studies. To see the rest of colors, please type <code>display.brewer.all()</code>.</li>
+<li><strong>reverse.heatmap.color</strong> can reverse the color gradient for heatmap.</li>
+<li><strong>rewrite.output.list</strong> This option can be used to modify heatmap, e.g. change margin, without obtaining data from internet again. If set to <code>false</code>, function will use the values previously stored in the global environment (user’s workspace) to draw heatmaps and save an excel file. The default value is <code>TRUE</code>.</li>
+<li><strong>round</strong> forces the function to round all the calculated values to two decimal places. The default value is <code>TRUE</code>.</li>
+<li><strong>top.genes</strong>, if set as <code>TRUE</code>, cause the function to create three data.frame that contain the gene names with the highest values for each cancer. To get all the three data.frames, <code>Frequency.Percentage</code>, <code>Mean.Value</code> and <code>Median</code> must have been included for <code>data.presented.as</code>.</li>
+<li><strong>validate.genes</strong>, if set to be <code>TRUE</code>, function will checks each cancer study to finds whether or not each gene has a record. If a cancer study doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</li>
+<li><strong>Use.CancerCode.as.Name</strong>, if set as <code>TRUE</code>, function will use the standard abbreviated cancer names instead of complete cancer names. For example, <code>laml_tcga_pub</code> is the shortened name for <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
+<li><strong>simplify.visulization</strong>, if <code>TRUE</code>, function alters the values under <code>simplifiction.cuttoff</code> to zero. It only affects heatmaps to assist finding the candidate genes faster. Therefore, it is not suited for publications.</li>
+<li><strong>simplifiction.cuttoff</strong> a logical value that, if <code>simplify.visulization = TRUE</code>, needs to be set as a desired cutoff for <code>simplify.visulization</code>. It has the same unit as <code>cutoff</code>.</li>
+</ul>
+<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>cancernames</em> has complete names of five cancer studies and the desired high-throughput study is RNA-seq.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">genes &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">K.demethylases =</span> <span class="kw">c</span>(<span class="st">&quot;KDM1A&quot;</span>, <span class="st">&quot;KDM1B&quot;</span>, <span class="st">&quot;KDM2A&quot;</span>), <span class="dt">K.acetyltransferases =</span> <span class="kw">c</span>(<span class="st">&quot;CLOCK&quot;</span>, <span class="st">&quot;CREBBP&quot;</span>, <span class="st">&quot;ELP3&quot;</span>, <span class="st">&quot;EP300&quot;</span>))
 
 cancernames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;</span>)
@@ -174,27 +197,6 @@ cancernames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class=
 <span class="kw">process.multiple.studies</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>)</code></pre></div>
 <p>The following code shows how to create a matrix with desired names for <code>cancernames</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cancernames &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="st">&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;</span>, <span class="st">&quot;acute myeloid leukemia&quot;</span>, <span class="st">&quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;adrenocortical carcinoma&quot;</span>, <span class="st">&quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;bladder urothelial carcinoma&quot;</span>, <span class="st">&quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;brain lower grade glioma&quot;</span>, <span class="st">&quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;</span>,  <span class="st">&quot;breast invasive carcinoma&quot;</span>), <span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">ncol=</span><span class="dv">2</span> , <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p>Function containes other options that can be used for a veriety of needs:</p>
-<ul>
-<li><strong>data.presented.as</strong> tells the function what to compute. The default is <code>c(&quot;Frequency.Percentage&quot;, &quot;Frequency.Ratio&quot;, &quot;Mean.Value&quot;, &quot;Median&quot;)</code> which causes the function to consider all the four possible statistical procedures. Alternatively, users can decrease the number of requested statistical procedures as long as at least one procedure is given to the function.</li>
-<li><strong>shorteded.cancer.names</strong> is used to remove the end part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.</li>
-<li><strong>genelimit</strong> can be employed if large number of genes exists in at least one gene group. This option limits the number of genes to be shown on hitmap. For instance, <code>genelimit=50</code> will limit the heatmap to show 50 genes showing the most variation. The default value is <code>FALSE</code>.</li>
-<li><strong>resolution</strong> adjusts the resolution of the output heatmaps as <em>dot per inch</em>. The defalut value is 600.</li>
-<li><strong>RowCex</strong> specifies letter size in heatmap row names.</li>
-<li><strong>ColCex</strong> specifies letter size in heatmap column names.</li>
-<li><strong>heatmapMargines</strong> sets heatmap margins. The default value is <code>heatmapMargines=c(15,07)</code>.</li>
-<li><strong>cutoff</strong> used to limit samples to those that are greather than specific number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, the unit is <code>observed/expected ratio</code>, for the rest, it is <code>z-score</code>- function can understand the correct unit. TO change the cutoff to any desired number, change the option to <code>cutoff = desiredNumber</code> in which <em>desiredNumber</em> is the number of interest.</li>
-<li><strong>angle.for.heatmap.cancernames</strong> determines the angle with which the cancer names are shown in heatmaps. The default value is 45 degree.</li>
-<li><strong>heatmap.color</strong> can be used to set hratmap colors. The default value is “RdBu”. “redgreen” is also a popular color in genomic studies. To see the rest of colors, please type <code>display.brewer.all()</code>.</li>
-<li><strong>reverse.heatmap.color</strong> can reverse the color gradiant for heatmap.</li>
-<li><strong>rewrite.output.list</strong> This option can be used to modify heatmap, e.g. change margin, without obtaining data from internet again. If set to <code>false</code>, function will use the values previously stored in the global environment (user’s workspace) to draw heatmaps and save an excel file. The default value is <code>TRUE</code>.</li>
-<li><strong>round</strong> forces the function to round all the calculated values to two decimal places. The default value is <code>TRUE</code>.</li>
-<li><strong>top.genes</strong>, if set as <code>TRUE</code>, cause the function to create three data.frame that contain the gene names with the highest values for each cancer. To get all the three data.frames, <code>Frequency.Percentage</code>, <code>Mean.Value</code> and <code>Median</code> must have been included for <code>data.presented.as</code>.</li>
-<li><strong>validate.genes</strong>, if set to be <code>TRUE</code>, function will checks each cancer study to finds whether or not each gene has a record. If a cancer study doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</li>
-<li><strong>Use.CancerCode.as.Name</strong>, if set as <code>TRUE</code>, function will use the sandard abbreviated cancer names instead of complete cancer names. For example, <code>laml_tcga_pub</code> is the shortened name for <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
-<li><strong>simplify.visulization</strong>, if <code>TRUE</code>, function alters the values under <code>simplifiction.cuttoff</code> to zero. It only affects heatmaps to assist finding the candidate genes faster. Therefore, it is not suited for publications.</li>
-<li><strong>simplifiction.cuttoff</strong> a logical value that, if <code>simplify.visulization = TRUE</code>, needs to be set as a desired cuttoff for <code>simplify.visulization</code>. It has the same unit as <code>cutoff</code>.</li>
-</ul>
 <p>An example of how more options for <code>process.multiple.studies()</code> can be altered:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.multiple.studies</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">data.presented.as =</span> <span class="kw">c</span>(<span class="st">&quot;Frequency.Percentage&quot;</span>, <span class="st">&quot;Frequency.Ratio&quot;</span>, <span class="st">&quot;Mean.Value&quot;</span>), <span class="dt">shorteded.cancer.names =</span> <span class="ot">FALSE</span>, <span class="dt">resolution=</span><span class="dv">300</span>, <span class="dt">RowCex=</span><span class="dv">1</span>, <span class="dt">ColCex=</span><span class="dv">1</span>, <span class="dt">heatmapMargines=</span><span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">5</span>), <span class="dt">cutoff=</span><span class="fl">1.5</span>, <span class="dt">angle.for.heatmap.cancernames=</span><span class="dv">30</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>)</code></pre></div>
 <div id="first-segment-of-function-obtaining-and-processing-the-requested-data" class="section level3">
@@ -202,46 +204,143 @@ cancernames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class=
 <p>Just like the previous function, <code>process.multiple.studies()</code> starts by printing that it is obtaining and processing the the requested data. Then, a progress bar will appear in the next line.</p>
 <pre><code>[1] &quot;[[[ Obtaining and processing the requested data for K.demethylases genes ]]]&quot;
   |                                                                 |   0%          </code></pre>
-<p>The progress bar gradually proceeds to 100%. Large number of genes or cancer studies may prolong the processing time. Upon finishing, another message is printed on console, the function creates and stores a list in the R’s global enviroment with an informative name.</p>
+<p>The progress bar gradually proceeds to 100%. Large number of genes or cancer studies may prolong the processing time. Upon finishing, another message is printed on console, the function creates and stores a list in the R’s global environment with an informative name.</p>
 <pre><code>[1] &quot;[[[ Obtaining and processing the requested data for K.demethylases genes ]]]&quot;
   |=================================================================| 100%
 [1] &quot;Preparing a 'list' to fill with the requested data&quot;</code></pre>
 <p>Based on user’s preference, this list can include some or all of the following groups:</p>
 <ul>
-<li><strong>Validation.Results</strong>, a character matrix that shows wheather or not different cancer studies possess record for various genes. If a cancer study doesn’t have a record for a gene but uses an alternative name, it is shown in the matrix.</li>
-<li><strong>Frequency.Percentage</strong>, a numerical matrix that is obtained by dividing the number of samples with values greather than specific cutoff by the total sample size for each cancer study.</li>
-<li><strong>Top.Genes.of.Frequency.Percentage</strong>, a data.frame that showes genes with highest value in Frequency.Percentage. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
+<li><strong>Validation.Results</strong>, a character matrix that shows whether or not different cancer studies possess record for various genes. If a cancer study doesn’t have a record for a gene but uses an alternative name, it is shown in the matrix.</li>
+<li><strong>Frequency.Percentage</strong>, a numerical matrix that is obtained by dividing the number of samples with values greater than specific cutoff by the total sample size for each cancer study.</li>
+<li><strong>Top.Genes.of.Frequency.Percentage</strong>, a data.frame that shows genes with highest value in Frequency.Percentage. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
 <li><strong>Frequency.Ratio</strong>, a character matrix of fractions. Each fraction contains the number of samples with values greater than specific cutoff as a numerator and the total sample size for each cancer study as a denominator.</li>
 <li><strong>Mean.Value</strong>, a numerical matrix that shows mean value of samples greater than specific cutoff.</li>
-<li><strong>Top.Genes.of.Genes.Expression</strong>, a data.frame that showes genes with highest value in Mean.Value. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
+<li><strong>Top.Genes.of.Genes.Expression</strong>, a data.frame that shows genes with highest value in Mean.Value. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
 <li><strong>Median</strong>, a numerical matrix that shows median value of samples greater than specific cutoff.</li>
-<li><strong>Top.Genes.of.Median</strong>, a data.frame that showes genes with highest value in Median. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
+<li><strong>Top.Genes.of.Median</strong>, a data.frame that shows genes with highest value in Median. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
 </ul>
 </div>
 <div id="second-segment-of-function-generating-three-heatmaps-and-one-excel-file" class="section level3">
 <h3>Second segment of function: generating three heatmaps and one excel file</h3>
-<p>Thse second part of function saves all subgroups of the list, generated by first part of the function, in the different tabs of an excel file. In addition, three heatmaps are generated for Frequency.Percentage, Mean.Value and Median subgroups of the list; based on user’s preference. During the process, a progress bar informs the user about the amount of work that have performed. When finished, a message appears on console that shows the directory where output files can be found.</p>
-<pre><code>[1] &quot;[[[ Obtaining and processing the requested data for K.demethylases genes ]]]&quot;
+<p>The second part of function saves all subgroups of the list, generated by first part of the function, in the different tabs of an excel file. In addition, three heatmaps are generated for Frequency.Percentage, Mean.Value and Median subgroups of the list; based on user’s preference. During the process, a progress bar informs the user about the amount of work that have performed. When finished, a message appears on console that shows the directory where output files can be found.</p>
+<pre><code>[1] &quot;Saving the output files&quot;
+  |=================================================================| 100%
+[1] &quot;Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/1. K-demethylases&quot;</code></pre>
+<hr />
+<p>The two mentioned steps, then, start for <code>K.acetyltransferases</code> gene group, ultimately saving the output files in a separate folder.</p>
+<pre><code>[1] &quot;[[[ Obtaining and processing the requested data for K.acetyltransferases genes ]]]&quot;
   |=================================================================| 100%
 [1] &quot;Preparing a 'list' to fill with the requested data&quot;
 [1] &quot;Saving the output files&quot;
   |=================================================================| 100%
-[1] &quot;Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/1. K-demethylases&quot;</code></pre>
-<p>If users intend to modify the characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global enviroment, generating the outputs files without using the internet. To do so, set the <code>rewrite.output.list</code> to FLASE. For instancce, the following code can be used to change heatmap color to red-green color gradient:</p>
+[1] &quot;Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/2. K.acetyltransferases&quot;</code></pre>
+<p>If users intend to modify the characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global environment, generating the outputs files without using the internet. To do so, set the <code>rewrite.output.list</code> to FLASE. For instance, the following code can be used to change heatmap color to red-green color gradient:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.multiple.studies</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>, <span class="dt">rewrite.output.list =</span> <span class="ot">FALSE</span>)</code></pre></div>
 </div>
 </div>
 <div id="process.one.study" class="section level2">
 <h2>process.one.study()</h2>
 <p>This function Obtains the requested data for the given genes across the multiple subgroups of a cancer study. It is very similar in what it does, to <code>process.multiple.studies()</code> as well as using a two-step procedure.</p>
+<p>The function code along with all available options:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.one.study</span>(genes, cancername, high.throughput.data.type, <span class="dt">data.presented.as =</span> <span class="kw">c</span>(<span class="st">&quot;Frequency.Percentage&quot;</span>, <span class="st">&quot;Frequency.Ratio&quot;</span>, <span class="st">&quot;Mean.Value&quot;</span>, <span class="st">&quot;Median&quot;</span>), <span class="dt">transposedHeatmap=</span><span class="ot">FALSE</span>, <span class="dt">desired.case.list=</span><span class="st">&quot;None&quot;</span>, <span class="dt">genelimit=</span><span class="st">&quot;none&quot;</span>, <span class="dt">resolution=</span><span class="dv">600</span>, <span class="dt">RowCex=</span><span class="fl">0.8</span>, <span class="dt">ColCex=</span><span class="fl">0.8</span>, <span class="dt">heatmapMargines=</span><span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">10</span>), <span class="dt">cutoff=</span><span class="st">&quot;default&quot;</span>, <span class="dt">angle.for.heatmap.cancernames=</span><span class="dv">45</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;RdBu&quot;</span>, <span class="dt">reverse.heatmap.color =</span> <span class="ot">TRUE</span>, <span class="dt">rewrite.output.list =</span> <span class="ot">TRUE</span>, <span class="dt">round=</span><span class="ot">TRUE</span>, <span class="dt">top.genes =</span> <span class="ot">TRUE</span>, <span class="dt">validate.genes =</span> <span class="ot">TRUE</span>, <span class="dt">simplify.visulization=</span><span class="ot">FALSE</span>, <span class="dt">simplifiction.cuttoff=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p>The function requires at least three variables:</p>
 <ul>
-<li><strong>genes</strong>, a list that contains at least one group of genes</li>
-<li><strong>cancername</strong>, a character string showing the desired cancer name. It is an standard cancer name that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
-<li><strong>high.throughput.data.type</strong>, one of the five supported high-troughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation</li>
+<li><strong>genes</strong>, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</li>
+<li><strong>cancername</strong>, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
+<li><strong>high.throughput.data.type</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.</li>
 </ul>
-<p>In the following example, <em>genes</em> conisists of two gene groups K.demethylases and K.acetyltransferases, <em>cancername</em> has complete names of five cancer studies and the desired high-throuput study is RNA-seq.</p>
-<p>The difference lies in asking the user to chose the desired subroups while the function is working. alternatively, if user knows index of desired subgroups,</p>
+<p>Function contains other options, many of whom are the same as previous function:</p>
+<ul>
+<li><strong>data.presented.as</strong> tells the function what to compute. The default is <code>c(&quot;Frequency.Percentage&quot;, &quot;Frequency.Ratio&quot;, &quot;Mean.Value&quot;, &quot;Median&quot;)</code> which causes the function to consider all the four possible statistical procedures. Alternatively, users can decrease the number of requested statistical procedures as long as at least one procedure is given to the function.</li>
+<li><strong>transposedHeatmap</strong>, if TRUE, function transposes the rows and columns of heatmaps.</li>
+<li><strong>desired.case.list</strong> a numeric vector that contains the index of desired cancer subgroups, if user knows index of desired subgroups. If set to be <code>FALSE</code>, function will ask the user to enter them during the process. The default value is <code>none</code>.</li>
+<li><strong>genelimit</strong> can be employed if large number of genes exists in at least one gene group. This option limits the number of genes to be shown on heatmap. For instance, <code>genelimit=50</code> will limit the heatmap to show 50 genes showing the most variation. The default value is <code>none</code>.</li>
+<li><strong>resolution</strong> adjusts the resolution of the output heatmaps as <em>dot per inch</em>. The default value is 600.</li>
+<li><strong>RowCex</strong> specifies letter size in heatmap row names.</li>
+<li><strong>ColCex</strong> specifies letter size in heatmap column names.</li>
+<li><strong>heatmapMargines</strong> sets heatmap margins. The default value is <code>heatmapMargines=c(15,07)</code>.</li>
+<li><strong>cutoff</strong> used to limit samples to those that are greater than specific number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, the unit is <code>observed/expected ratio</code>, for the rest, it is <code>z-score</code>- function can understand the correct unit. TO change the cutoff to any desired number, change the option to <code>cutoff = desiredNumber</code> in which <em>desiredNumber</em> is the number of interest.</li>
+<li><strong>angle.for.heatmap.cancernames</strong> determines the angle with which the cancer names are shown in heatmaps. The default value is 45 degree.</li>
+<li><strong>heatmap.color</strong> can be used to set heatmap colors. The default value is “RdBu”. “redgreen” is also a popular color in genomic studies. To see the rest of colors, please type <code>display.brewer.all()</code>.</li>
+<li><strong>reverse.heatmap.color</strong> can reverse the color gradient for heatmap.</li>
+<li><strong>rewrite.output.list</strong> This option can be used to modify heatmap, e.g. change margin, without obtaining data from internet again. If set to <code>false</code>, function will use the values previously stored in the global environment (user’s workspace) to draw heatmaps and save an excel file. The default value is <code>TRUE</code>.</li>
+<li><strong>round</strong> forces the function to round all the calculated values to two decimal places. The default value is <code>TRUE</code>.</li>
+<li><strong>top.genes</strong>, if set as <code>TRUE</code>, cause the function to create three data.frame that contain the gene names with the highest values for each cancer. To get all the three data.frames, <code>Frequency.Percentage</code>, <code>Mean.Value</code> and <code>Median</code> must have been included for <code>data.presented.as</code>.</li>
+<li><strong>validate.genes</strong>, if set to be <code>TRUE</code>, function will checks each cancer study to finds whether or not each gene has a record. If a cancer study doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</li>
+<li><strong>simplify.visulization</strong>, if <code>TRUE</code>, function alters the values under <code>simplifiction.cuttoff</code> to zero. It only affects heatmaps to assist finding the candidate genes faster. Therefore, it is not suited for publications.</li>
+<li><strong>simplifiction.cuttoff</strong> a logical value that, if <code>simplify.visulization = TRUE</code>, needs to be set as a desired cutoff for <code>simplify.visulization</code>. It has the same unit as <code>cutoff</code>.</li>
+</ul>
+<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>cancername</em> is <code>Breast Invasive Carcinoma (TCGA, Cell 2015)</code>. and the desired high-throughput study is RNA-seq.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">genes &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">K.demethylases =</span> <span class="kw">c</span>(<span class="st">&quot;KDM1A&quot;</span>, <span class="st">&quot;KDM1B&quot;</span>, <span class="st">&quot;KDM2A&quot;</span>), <span class="dt">K.acetyltransferases =</span> <span class="kw">c</span>(<span class="st">&quot;CLOCK&quot;</span>, <span class="st">&quot;CREBBP&quot;</span>, <span class="st">&quot;ELP3&quot;</span>, <span class="st">&quot;EP300&quot;</span>))
+
+<span class="kw">process.one.study</span>(genes, <span class="st">&quot;Breast Invasive Carcinoma (TCGA, Cell 2015)&quot;</span>, <span class="st">&quot;RNA-seq&quot;</span>)</code></pre></div>
+<p>Here is example of how more options for <code>process.multiple.studies()</code> can be altered, including index of desired subgroups for <code>desired.case.list</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.one.study</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">desired.case.list =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>), <span class="dt">data.presented.as =</span> <span class="kw">c</span>(<span class="st">&quot;Frequency.Percentage&quot;</span>, <span class="st">&quot;Frequency.Ratio&quot;</span>, <span class="st">&quot;Mean.Value&quot;</span>), <span class="dt">resolution=</span><span class="dv">300</span>, <span class="dt">RowCex=</span><span class="dv">1</span>, <span class="dt">ColCex=</span><span class="dv">1</span>, <span class="dt">heatmapMargines=</span><span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">5</span>), <span class="dt">cutoff=</span><span class="fl">1.5</span>, <span class="dt">angle.for.heatmap.cancernames=</span><span class="dv">30</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>)</code></pre></div>
+<div id="first-segment-of-function-obtaining-and-processing-the-requested-data-1" class="section level3">
+<h3>First segment of function: obtaining and processing the requested data</h3>
+<p><code>process.multiple.studies()</code> starts by printing that it is obtaining and processing the the requested data.</p>
+<pre><code>[1] &quot;[[[ Obtaining and processing the requested data for K.demethylases genes ]]]&quot;</code></pre>
+<p>Then, <code>assuming desired.case.list = &quot;none&quot;</code>, all subgroups of the requested cancer study appear on console, asking the user to chose the index of desired subgroups:</p>
+<pre><code>[1] &quot;Please enter the numeric index of desired case list(s) for Breast Invasive Carcinoma (TCGA, Cell 2015) separated by comma. For instance two indexes 1 and 2 should be enterd as 1, 2&quot;
+ [1] &quot;1. All Complete Tumors&quot;                                &quot;2. All Tumors&quot;                                        
+ [3] &quot;3. ER+ breast tumors&quot;                                  &quot;4. ER- breast tumors&quot;                                 
+ [5] &quot;5. Her2-positive breast tumors&quot;                        &quot;6. Invasive Ductal Cancer (Luminal A)&quot;                
+ [7] &quot;7. Invasive Ductal Cancer (PAM50 Basal-like)&quot;          &quot;8. Invasive Ductal Cancer (PAM50 Her2-enriched)&quot;      
+ [9] &quot;9. Invasive Ductal Cancer (PAM50 Luminal B)&quot;           &quot;10. Invasive Lobular Cancer&quot;                          
+[11] &quot;11. Invasive Lobular Cancer (Luminal A)&quot;               &quot;12. Mixed IDC/ILC breast cancer&quot;                      
+[13] &quot;13. Other histologies breast cancer&quot;                   &quot;14. Sequenced Tumors&quot;                                 
+[15] &quot;15. TCGA Freeze 2015&quot;                                  &quot;16. Triple-negative breast tumors&quot;                    
+[17] &quot;17. Tumor Samples with CNA data&quot;                       &quot;18. Tumor Samples with methylation data (HM27)&quot;       
+[19] &quot;19. Tumor Samples with methylation data (HM450)&quot;       &quot;20. Tumor Samples with mRNA data (Agilent microarray)&quot;
+[21] &quot;21. Tumor Samples with mRNA data (RNA Seq V2)&quot;         &quot;22. Tumor Samples with RPPA data&quot;                     
+[23] &quot;23. Tumor Samples with sequencing and CNA data&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Enter the numeric <span class="kw">index</span>(es):<span class="st">                  </span><span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span></code></pre></div>
+<p>Then, a progress bar will appear in the next line. The progress bar gradually proceeds to 100%. Large number of genes may prolong the processing time. Upon finishing, another message is printed on console, the function creates and stores a list in the R’s global environment with an informative name.</p>
+<pre><code>  |==================================================================| 100%
+[1] &quot;Preparing a 'list' to fill with the requested data&quot;</code></pre>
+<p>Based on user’s preference, this list can include some or all of the following groups:</p>
+<ul>
+<li><strong>Validation.Results</strong>, a character matrix that shows whether or not different cancer studies possess record for various genes. If a cancer study doesn’t have a record for a gene but uses an alternative name, it is shown in the matrix.</li>
+<li><strong>Frequency.Percentage</strong>, a numerical matrix that is obtained by dividing the number of samples with values greater than specific cutoff by the total sample size for each cancer study.</li>
+<li><strong>Top.Genes.of.Frequency.Percentage</strong>, a data.frame that shows genes with highest value in Frequency.Percentage. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
+<li><strong>Frequency.Ratio</strong>, a character matrix of fractions. Each fraction contains the number of samples with values greater than specific cutoff as a numerator and the total sample size for each cancer study as a denominator.</li>
+<li><strong>Mean.Value</strong>, a numerical matrix that shows mean value of samples greater than specific cutoff.</li>
+<li><strong>Top.Genes.of.Genes.Expression</strong>, a data.frame that shows genes with highest value in Mean.Value. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
+<li><strong>Median</strong>, a numerical matrix that shows median value of samples greater than specific cutoff.</li>
+<li><strong>Top.Genes.of.Median</strong>, a data.frame that shows genes with highest value in Median. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.</li>
+</ul>
+</div>
+<div id="second-segment-of-function-generating-three-heatmaps-and-one-excel-file-1" class="section level3">
+<h3>Second segment of function: generating three heatmaps and one excel file</h3>
+<p>The second part of function saves all subgroups of the list, generated by first part of the function, in the different tabs of an excel file. In addition, three heatmaps are generated for Frequency.Percentage, Mean.Value and Median subgroups of the list; based on user’s preference. During the process, a progress bar informs the user about the amount of work that have performed. When finished, a message appears on console that shows the directory where output files can be found.</p>
+<pre><code>[1] &quot;Saving the output files&quot;
+  |==================================================================| 100%
+[1] &quot;Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/1. K-demethylases&quot;&quot;</code></pre>
+<hr />
+<p>The two mentioned steps, then, starts for <code>K.acetyltransferases</code> gene group, saving the output files in a separate folder in the end.</p>
+<pre><code>[1] &quot;[[[ Obtaining expression data for K.acetyltransferases genes ]]]&quot;
+[1] &quot;Please enter the numeric index of desired case list(s) for Breast Invasive Carcinoma (TCGA, Cell 2015) separated by comma. For instance two indexes 1 and 2 should be enterd as 1, 2&quot;
+ [1] &quot;1. All Complete Tumors&quot;                                &quot;2. All Tumors&quot;                                        
+ [3] &quot;3. ER+ breast tumors&quot;                                  &quot;4. ER- breast tumors&quot;                                 
+ [5] &quot;5. Her2-positive breast tumors&quot;                        &quot;6. Invasive Ductal Cancer (Luminal A)&quot;                
+ [7] &quot;7. Invasive Ductal Cancer (PAM50 Basal-like)&quot;          &quot;8. Invasive Ductal Cancer (PAM50 Her2-enriched)&quot;      
+ [9] &quot;9. Invasive Ductal Cancer (PAM50 Luminal B)&quot;           &quot;10. Invasive Lobular Cancer&quot;                          
+[11] &quot;11. Invasive Lobular Cancer (Luminal A)&quot;               &quot;12. Mixed IDC/ILC breast cancer&quot;                      
+[13] &quot;13. Other histologies breast cancer&quot;                   &quot;14. Sequenced Tumors&quot;                                 
+[15] &quot;15. TCGA Freeze 2015&quot;                                  &quot;16. Triple-negative breast tumors&quot;                    
+[17] &quot;17. Tumor Samples with CNA data&quot;                       &quot;18. Tumor Samples with methylation data (HM27)&quot;       
+[19] &quot;19. Tumor Samples with methylation data (HM450)&quot;       &quot;20. Tumor Samples with mRNA data (Agilent microarray)&quot;
+[21] &quot;21. Tumor Samples with mRNA data (RNA Seq V2)&quot;         &quot;22. Tumor Samples with RPPA data&quot;                     
+[23] &quot;23. Tumor Samples with sequencing and CNA data&quot;       
+Enter the numeric index(es):                  2,3,4,5
+  |==================================================================| 100%
+[1] &quot;Preparing a 'list' to fill with the requested data&quot;
+[1] &quot;Saving the output files&quot;
+  |==================================================================| 100%
+[1] &quot;Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/2. K-acetyltransferases&quot;</code></pre>
+<p>If users intend to modify the characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global environment, generating the outputs files without using the internet. To do so, set the <code>rewrite.output.list</code> to FLASE. For instance, the following code can be used to change heatmap color to red-green color gradient:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.one.study</span>(genes, <span class="st">&quot;Breast Invasive Carcinoma (TCGA, Cell 2015)&quot;</span>, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>, <span class="dt">rewrite.output.list =</span> <span class="ot">FALSE</span>)</code></pre></div>
+</div>
 </div>
 
 

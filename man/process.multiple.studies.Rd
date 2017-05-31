@@ -39,7 +39,7 @@ the experiment.}
 
 \item{genelimit}{if large number of genes exists in at least one gene group, this option can be use to limit the number of
 genes to be shown on hitmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation.
-The default value is \code{FALSE}.}
+The default value is \code{none}.}
 
 \item{resolution}{a number. This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'.
 The defalut value is 600.}
@@ -98,10 +98,10 @@ file for convenience. Based on preference, three heatmaps for \code{Frequency.Pe
 \code{Median} can be generated. If more than one group of genes is entered, output for each group will be strored in a separate sub-directory.
 }
 \description{
-This function Obtaines the requested data for the given genes across multiple cancer studies. It can check
+This function Obtains the requested data for the given genes across multiple cancer studies. It can check
 whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. Tha main part
 of function calculates frequency percentage, frequency ratio, mean expression and median of samples greather than specific
-value in the selected cancers. Furthermore, it looks for the genes that comprise the highest values in each cancer.
+value in the selected cancer studies. Furthermore, it looks for the genes that comprise the highest values in each cancer study.
 }
 \details{
 \tabular{lllll}{
@@ -113,14 +113,11 @@ License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"),
-K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
+genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 
 cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
 "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)",
 "Breast Invasive Carcinoma (TCGA, Provisional)")
-
-process.multiple.studies(genes, cancernames, "RNA-seq")
 
 process.multiple.studies(genes, cancernames, "RNA-seq",
 data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"),

@@ -18,6 +18,7 @@
 #' file is also generated in the working directory.
 #'
 #' @usage available.data.types()
+#' @example available.data.types()
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

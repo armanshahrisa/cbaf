@@ -1,8 +1,11 @@
 Package: cbat
-biocViews: Software
+biocViews: ResearchField
 Title: cBioAutomatedTools (Automated tools for analysing and comparing data that are stored on cbioportal.org)
 Version: 0.99.0
-Authors: Arman Shahrisa <shahrisa.arman@hotmail.com> [aut, cre, cph], Maryam Tahmasebi Birgani <maryam_tahmaseby@yahoo.com> [aut]
+Authors@R: c(person("Arman", "Shahrisa", role = c("aut", "cre", "cph"),
+                     email = "shahrisa.arman@hotmail.com"),
+            person("Maryam", "Tahmasebi Birgani", role = "aut",
+                     email = "tahmasebi-ma@ajums.ac.ir"))
 Description: This package contains functions that allow analysing and comparing various
              gene groups from different cancers/cancer subgroups easily. So far, it is
              compatible with RNA-seq, microarray and methylation datasets that are stored

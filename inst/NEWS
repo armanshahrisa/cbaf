@@ -3,25 +3,25 @@ cbat 1.0.0 - 2017-05-31
 
 New Functions:
 
-- New roman2int() functon to convert roman numerals to integers
-  without the range restriction of utils::as.roman().
+- New available.data.types() functon to check all the cancer studies from
+  cbioportal.org to examine whether or not they contain RNA-seq, microRNA-seq,
+  microarray(mRNA), microarray(miRNA) and methylation data.
 
-- New asc() and chr() functions to convert between ASCII codes and
-  characters. (Based on the 'Data Debrief' blog entry for 2011-03-09
-  at http://datadebrief.blogspot.com/2011/03/ascii-code-table-in-r.html).
 
-- New unByteCode() and unByteCodeAssign() functions to convert a
-  byte-code functon to an interpeted code function.
+- New process.multiple.studies() function to Obtain the requested data for
+  the given genes across multiple cancer studies. It can check whether or not
+  all genes are included in cancer studies and, if not, looks for the alternative
+  gene names. Tha main part of function calculates frequency percentage, frequency
+  ratio, mean expression and median of samples greather than specific value in the
+  selected cancer studiess. Furthermore, it looks for the genes that comprise the
+  highest values in each cancer study.
 
-- New assignEdgewise() function for making assignments into locked
-  environments. (Used by unByteCodeAssign().)
+- New process.one.study() functions to Obtain the requested data for the given
+  genes across multiple subgroups of a cancer. It can check whether or not all
+  genes are included in subgroups of a cancer study and, if not, looks for the
+  alternative gene names. The main part of function calculates frequency percentage,
+  frequency ratio, mean expression and median of samples greather than specific value
+  in the selected subgroups of the cancer. Furthermore, it looks for the genes that
+  comprise the highest values in each cancer subgroup.
 
-Enhacements:
-
-- mixedsort() and mixedorder() now have arguments 'decreasing',
-  'na.last', and 'blank.last' arguments to control sort ordering.
-
-- mixedsort() and mixedirdeR() now support Roman numerals via the
-  arguments 'numeric.type', and 'roman.case'.  (Request by David
-  Winsemius, suggested code changes by Henrik Bengtsson.)
 
