@@ -7,9 +7,9 @@
 available.data.types()
 }
 \value{
-A matrix that contain all cancers versus available data types. It is
-stored in the global enviroment (user's workspace). For convenience, an excel
-file is also generated in the working directory.
+A matrix that contain all cancers versus available data types. It is stored in the
+global enviroment (user's workspace) as 'available.data.types.output'. For convenience, an
+excel file - 'Available Data Types Output.xlsx' - is also generated in the working directory.
 }
 \description{
 This function checks all the cancer studies that are registered in 'cbioportal.org' to
@@ -21,9 +21,22 @@ microarray(miRNA) and methylation data.
 Package: \tab cBioAutomatedTools \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-05-31 \cr
+Date: \tab 2017-06-01 \cr
 License: \tab Artistic-2.0 \cr
 }
+}
+\examples{
+# Simple function with no argument, list all cancer studies and their available data types.
+available.data.types()
+
+# Name of desired cancer studies can be selected by subsetting the first column of 'available.data.types.output'
+cancernames <- available.data.types.output[c(3,9,15,17,24),1]
+
+# The mentioned above is more convenient, however, users can also create a character vector of study names.
+cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
+"Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)",
+"Breast Invasive Carcinoma (TCGA, Provisional)")
+
 }
 \author{
 Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]

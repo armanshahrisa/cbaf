@@ -10,9 +10,11 @@
 #' Package: \tab cBioAutomatedTools \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-05-31 \cr
+#' Date: \tab 2017-06-01 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
+#'
+#' @import cgdsr xlsxjars xlsx gplots RColorBrewer rafalib Biobase genefilter
 #'
 #' @usage process.multiple.studies(genes, cancers, high.throughput.data.type,
 #' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"),
@@ -106,12 +108,15 @@
 #' \code{Median} can be generated. If more than one group of genes is entered, output for each group will be strored in a separate sub-directory.
 #'
 #' @examples
+#' # Creating a list that contains one gene group: 'K.acetyltransferases'
 #' genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 #'
+#' # creating a character vector of study names. alternatively, To see how to subset cancer names, please type '?available.cancer.types'
 #' cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
 #' "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)",
 #' "Breast Invasive Carcinoma (TCGA, Provisional)")
 #'
+#' # Running the function to obtain and process the selected data
 #' process.multiple.studies(genes, cancernames, "RNA-seq",
 #' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"),
 #' shorteded.cancer.names = FALSE, resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5),

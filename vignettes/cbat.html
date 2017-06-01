@@ -11,50 +11,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2017-05-31" />
+<meta name="date" content="2017-06-01" />
 
 <title>cbat</title>
 
 
 
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-</style>
 
 
 
@@ -68,7 +30,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">cbat</h1>
-<h4 class="date"><em>2017-05-31</em></h4>
+<h4 class="date"><em>2017-06-01</em></h4>
 
 
 
@@ -77,7 +39,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="available.data.types" class="section level2">
 <h2>available.data.types()</h2>
 <p>This function ,requires no input, scans all the cancer studies to find which of the <em>RNA-seq</em>, <em>microRNA-seq</em>, <em>microarray</em> and <em>methylation</em> data types exist for each study. To use this function, simply type:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">available.data.types</span>()</code></pre></div>
+<pre><code>    available.data.types()</code></pre>
 <p>The code starts with printing a message in the R console to inform the user it is scanning all the available cancer studies. In the next line, a progress bar will appear.</p>
 <pre><code>[1] &quot;Cheching which data types are available for each cancer&quot;
   |                                                                 |   0%
@@ -161,7 +123,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>process.multiple.studies()</h2>
 <p>This function Obtains the requested data for the given genes across the multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. The main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greater than specific value. Furthermore, it looks for the genes that comprise the highest values in each cancer. The function has been divided into two main segments. The first segment obtains and processes the desired data while the second segment generates heatmap and excel files.</p>
 <p>The function code along with all available options:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.multiple.studies</span>(genes, cancers, high.throughput.data.type, <span class="dt">data.presented.as =</span> <span class="kw">c</span>(<span class="st">&quot;Frequency.Percentage&quot;</span>, <span class="st">&quot;Frequency.Ratio&quot;</span>, <span class="st">&quot;Mean.Value&quot;</span>, <span class="st">&quot;Median&quot;</span>), <span class="dt">shorteded.cancer.names =</span> <span class="ot">TRUE</span>, <span class="dt">genelimit=</span><span class="st">&quot;none&quot;</span>, <span class="dt">resolution=</span><span class="dv">600</span>, <span class="dt">RowCex=</span><span class="fl">0.8</span>, <span class="dt">ColCex=</span><span class="fl">0.8</span>, <span class="dt">heatmapMargines=</span><span class="kw">c</span>(<span class="dv">24</span>,<span class="dv">17</span>), <span class="dt">cutoff=</span><span class="dv">2</span>, <span class="dt">angle.for.heatmap.cancernames=</span><span class="dv">45</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;RdBu&quot;</span>, <span class="dt">reverse.heatmap.color =</span> <span class="ot">TRUE</span>, <span class="dt">rewrite.output.list =</span> <span class="ot">TRUE</span>, <span class="dt">round=</span><span class="ot">TRUE</span>, <span class="dt">top.genes =</span> <span class="ot">TRUE</span>,  <span class="dt">validate.genes =</span> <span class="ot">TRUE</span>, <span class="dt">Use.CancerCode.as.Name =</span> <span class="ot">FALSE</span>, <span class="dt">simplify.visulization=</span><span class="ot">FALSE</span>, <span class="dt">simplifiction.cuttoff=</span><span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>process.multiple.studies(genes, cancers, high.throughput.data.type, data.presented.as = c(&quot;Frequency.Percentage&quot;, &quot;Frequency.Ratio&quot;, &quot;Mean.Value&quot;, &quot;Median&quot;), shorteded.cancer.names = TRUE, genelimit=&quot;none&quot;, resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(24,17), cutoff=2, angle.for.heatmap.cancernames=45, heatmap.color = &quot;RdBu&quot;, reverse.heatmap.color = TRUE, rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE,  validate.genes = TRUE, Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)</code></pre>
 <p>The function requires at least three variables:</p>
 <ul>
 <li><strong>genes</strong>, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</li>
@@ -190,15 +152,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><strong>simplifiction.cuttoff</strong> a logical value that, if <code>simplify.visulization = TRUE</code>, needs to be set as a desired cutoff for <code>simplify.visulization</code>. It has the same unit as <code>cutoff</code>.</li>
 </ul>
 <p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>cancernames</em> has complete names of five cancer studies and the desired high-throughput study is RNA-seq.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">genes &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">K.demethylases =</span> <span class="kw">c</span>(<span class="st">&quot;KDM1A&quot;</span>, <span class="st">&quot;KDM1B&quot;</span>, <span class="st">&quot;KDM2A&quot;</span>), <span class="dt">K.acetyltransferases =</span> <span class="kw">c</span>(<span class="st">&quot;CLOCK&quot;</span>, <span class="st">&quot;CREBBP&quot;</span>, <span class="st">&quot;ELP3&quot;</span>, <span class="st">&quot;EP300&quot;</span>))
+<pre><code>genes &lt;- list(K.demethylases = c(&quot;KDM1A&quot;, &quot;KDM1B&quot;, &quot;KDM2A&quot;), K.acetyltransferases = c(&quot;CLOCK&quot;, &quot;CREBBP&quot;, &quot;ELP3&quot;, &quot;EP300&quot;))
 
-cancernames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;</span>)
+cancernames &lt;- c(&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;, &quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;, &quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;, &quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;, &quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;)
 
-<span class="kw">process.multiple.studies</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>)</code></pre></div>
+process.multiple.studies(genes, cancernames, &quot;RNA-seq&quot;)</code></pre>
 <p>The following code shows how to create a matrix with desired names for <code>cancernames</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cancernames &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="st">&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;</span>, <span class="st">&quot;acute myeloid leukemia&quot;</span>, <span class="st">&quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;adrenocortical carcinoma&quot;</span>, <span class="st">&quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;bladder urothelial carcinoma&quot;</span>, <span class="st">&quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;</span>, <span class="st">&quot;brain lower grade glioma&quot;</span>, <span class="st">&quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;</span>,  <span class="st">&quot;breast invasive carcinoma&quot;</span>), <span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">ncol=</span><span class="dv">2</span> , <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>cancernames &lt;- matrix(c(&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;, &quot;acute myeloid leukemia&quot;, &quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;, &quot;adrenocortical carcinoma&quot;, &quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;, &quot;bladder urothelial carcinoma&quot;, &quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;, &quot;brain lower grade glioma&quot;, &quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;,  &quot;breast invasive carcinoma&quot;), nrow = 5, ncol=2 , byrow = TRUE)</code></pre>
 <p>An example of how more options for <code>process.multiple.studies()</code> can be altered:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.multiple.studies</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">data.presented.as =</span> <span class="kw">c</span>(<span class="st">&quot;Frequency.Percentage&quot;</span>, <span class="st">&quot;Frequency.Ratio&quot;</span>, <span class="st">&quot;Mean.Value&quot;</span>), <span class="dt">shorteded.cancer.names =</span> <span class="ot">FALSE</span>, <span class="dt">resolution=</span><span class="dv">300</span>, <span class="dt">RowCex=</span><span class="dv">1</span>, <span class="dt">ColCex=</span><span class="dv">1</span>, <span class="dt">heatmapMargines=</span><span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">5</span>), <span class="dt">cutoff=</span><span class="fl">1.5</span>, <span class="dt">angle.for.heatmap.cancernames=</span><span class="dv">30</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>)</code></pre></div>
+<pre><code>process.multiple.studies(genes, cancernames, &quot;RNA-seq&quot;, data.presented.as = c(&quot;Frequency.Percentage&quot;, &quot;Frequency.Ratio&quot;, &quot;Mean.Value&quot;), shorteded.cancer.names = FALSE, resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = &quot;redgreen&quot;)</code></pre>
 <div id="first-segment-of-function-obtaining-and-processing-the-requested-data" class="section level3">
 <h3>First segment of function: obtaining and processing the requested data</h3>
 <p>Just like the previous function, <code>process.multiple.studies()</code> starts by printing that it is obtaining and processing the the requested data. Then, a progress bar will appear in the next line.</p>
@@ -235,14 +197,14 @@ cancernames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class=
   |=================================================================| 100%
 [1] &quot;Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/2. K.acetyltransferases&quot;</code></pre>
 <p>If users intend to modify the characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global environment, generating the outputs files without using the internet. To do so, set the <code>rewrite.output.list</code> to FLASE. For instance, the following code can be used to change heatmap color to red-green color gradient:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.multiple.studies</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>, <span class="dt">rewrite.output.list =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>process.multiple.studies(genes, cancernames, &quot;RNA-seq&quot;, heatmap.color = &quot;redgreen&quot;, rewrite.output.list = FALSE)</code></pre>
 </div>
 </div>
 <div id="process.one.study" class="section level2">
 <h2>process.one.study()</h2>
 <p>This function Obtains the requested data for the given genes across the multiple subgroups of a cancer study. It is very similar in what it does, to <code>process.multiple.studies()</code> as well as using a two-step procedure.</p>
 <p>The function code along with all available options:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.one.study</span>(genes, cancername, high.throughput.data.type, <span class="dt">data.presented.as =</span> <span class="kw">c</span>(<span class="st">&quot;Frequency.Percentage&quot;</span>, <span class="st">&quot;Frequency.Ratio&quot;</span>, <span class="st">&quot;Mean.Value&quot;</span>, <span class="st">&quot;Median&quot;</span>), <span class="dt">transposedHeatmap=</span><span class="ot">FALSE</span>, <span class="dt">desired.case.list=</span><span class="st">&quot;None&quot;</span>, <span class="dt">genelimit=</span><span class="st">&quot;none&quot;</span>, <span class="dt">resolution=</span><span class="dv">600</span>, <span class="dt">RowCex=</span><span class="fl">0.8</span>, <span class="dt">ColCex=</span><span class="fl">0.8</span>, <span class="dt">heatmapMargines=</span><span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">10</span>), <span class="dt">cutoff=</span><span class="st">&quot;default&quot;</span>, <span class="dt">angle.for.heatmap.cancernames=</span><span class="dv">45</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;RdBu&quot;</span>, <span class="dt">reverse.heatmap.color =</span> <span class="ot">TRUE</span>, <span class="dt">rewrite.output.list =</span> <span class="ot">TRUE</span>, <span class="dt">round=</span><span class="ot">TRUE</span>, <span class="dt">top.genes =</span> <span class="ot">TRUE</span>, <span class="dt">validate.genes =</span> <span class="ot">TRUE</span>, <span class="dt">simplify.visulization=</span><span class="ot">FALSE</span>, <span class="dt">simplifiction.cuttoff=</span><span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>process.one.study(genes, cancername, high.throughput.data.type, data.presented.as = c(&quot;Frequency.Percentage&quot;, &quot;Frequency.Ratio&quot;, &quot;Mean.Value&quot;, &quot;Median&quot;), transposedHeatmap=FALSE, desired.case.list=&quot;None&quot;, genelimit=&quot;none&quot;, resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(10,10), cutoff=&quot;default&quot;, angle.for.heatmap.cancernames=45, heatmap.color = &quot;RdBu&quot;, reverse.heatmap.color = TRUE, rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)</code></pre>
 <p>The function requires at least three variables:</p>
 <ul>
 <li><strong>genes</strong>, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</li>
@@ -271,11 +233,11 @@ cancernames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class=
 <li><strong>simplifiction.cuttoff</strong> a logical value that, if <code>simplify.visulization = TRUE</code>, needs to be set as a desired cutoff for <code>simplify.visulization</code>. It has the same unit as <code>cutoff</code>.</li>
 </ul>
 <p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>cancername</em> is <code>Breast Invasive Carcinoma (TCGA, Cell 2015)</code>. and the desired high-throughput study is RNA-seq.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">genes &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">K.demethylases =</span> <span class="kw">c</span>(<span class="st">&quot;KDM1A&quot;</span>, <span class="st">&quot;KDM1B&quot;</span>, <span class="st">&quot;KDM2A&quot;</span>), <span class="dt">K.acetyltransferases =</span> <span class="kw">c</span>(<span class="st">&quot;CLOCK&quot;</span>, <span class="st">&quot;CREBBP&quot;</span>, <span class="st">&quot;ELP3&quot;</span>, <span class="st">&quot;EP300&quot;</span>))
+<pre><code>genes &lt;- list(K.demethylases = c(&quot;KDM1A&quot;, &quot;KDM1B&quot;, &quot;KDM2A&quot;), K.acetyltransferases = c(&quot;CLOCK&quot;, &quot;CREBBP&quot;, &quot;ELP3&quot;, &quot;EP300&quot;))
 
-<span class="kw">process.one.study</span>(genes, <span class="st">&quot;Breast Invasive Carcinoma (TCGA, Cell 2015)&quot;</span>, <span class="st">&quot;RNA-seq&quot;</span>)</code></pre></div>
+process.one.study(genes, &quot;Breast Invasive Carcinoma (TCGA, Cell 2015)&quot;, &quot;RNA-seq&quot;)</code></pre>
 <p>Here is example of how more options for <code>process.multiple.studies()</code> can be altered, including index of desired subgroups for <code>desired.case.list</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.one.study</span>(genes, cancernames, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">desired.case.list =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>), <span class="dt">data.presented.as =</span> <span class="kw">c</span>(<span class="st">&quot;Frequency.Percentage&quot;</span>, <span class="st">&quot;Frequency.Ratio&quot;</span>, <span class="st">&quot;Mean.Value&quot;</span>), <span class="dt">resolution=</span><span class="dv">300</span>, <span class="dt">RowCex=</span><span class="dv">1</span>, <span class="dt">ColCex=</span><span class="dv">1</span>, <span class="dt">heatmapMargines=</span><span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">5</span>), <span class="dt">cutoff=</span><span class="fl">1.5</span>, <span class="dt">angle.for.heatmap.cancernames=</span><span class="dv">30</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>)</code></pre></div>
+<pre><code>process.one.study(genes, cancernames, &quot;RNA-seq&quot;, desired.case.list = c(3,4,5), data.presented.as = c(&quot;Frequency.Percentage&quot;, &quot;Frequency.Ratio&quot;, &quot;Mean.Value&quot;), resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = &quot;redgreen&quot;)</code></pre>
 <div id="first-segment-of-function-obtaining-and-processing-the-requested-data-1" class="section level3">
 <h3>First segment of function: obtaining and processing the requested data</h3>
 <p><code>process.multiple.studies()</code> starts by printing that it is obtaining and processing the the requested data.</p>
@@ -294,7 +256,7 @@ cancernames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class=
 [19] &quot;19. Tumor Samples with methylation data (HM450)&quot;       &quot;20. Tumor Samples with mRNA data (Agilent microarray)&quot;
 [21] &quot;21. Tumor Samples with mRNA data (RNA Seq V2)&quot;         &quot;22. Tumor Samples with RPPA data&quot;                     
 [23] &quot;23. Tumor Samples with sequencing and CNA data&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Enter the numeric <span class="kw">index</span>(es):<span class="st">                  </span><span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span></code></pre></div>
+<pre><code>Enter the numeric index(es):                  2,3,4,5</code></pre>
 <p>Then, a progress bar will appear in the next line. The progress bar gradually proceeds to 100%. Large number of genes may prolong the processing time. Upon finishing, another message is printed on console, the function creates and stores a list in the R’s global environment with an informative name.</p>
 <pre><code>  |==================================================================| 100%
 [1] &quot;Preparing a 'list' to fill with the requested data&quot;</code></pre>
@@ -339,7 +301,7 @@ Enter the numeric index(es):                  2,3,4,5
   |==================================================================| 100%
 [1] &quot;Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/2. K-acetyltransferases&quot;</code></pre>
 <p>If users intend to modify the characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global environment, generating the outputs files without using the internet. To do so, set the <code>rewrite.output.list</code> to FLASE. For instance, the following code can be used to change heatmap color to red-green color gradient:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">process.one.study</span>(genes, <span class="st">&quot;Breast Invasive Carcinoma (TCGA, Cell 2015)&quot;</span>, <span class="st">&quot;RNA-seq&quot;</span>, <span class="dt">heatmap.color =</span> <span class="st">&quot;redgreen&quot;</span>, <span class="dt">rewrite.output.list =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>process.one.study(genes, &quot;Breast Invasive Carcinoma (TCGA, Cell 2015)&quot;, &quot;RNA-seq&quot;, heatmap.color = &quot;redgreen&quot;, rewrite.output.list = FALSE)</code></pre>
 </div>
 </div>
 

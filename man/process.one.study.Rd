@@ -107,16 +107,16 @@ in each cancer subgroup.
 Package: \tab cBioAutomatedTools \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-05-31 \cr
+Date: \tab 2017-06-01 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
+# Creating a list that contains one gene group: 'K.demethylases'
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 
-cancername <- "Breast Invasive Carcinoma (TCGA, Cell 2015)"
-
-process.one.study(genes, cancername, "RNA-seq", desired.case.list = c(3,4,5),
+# Running the function to obtain and process the selected data
+process.one.study(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", desired.case.list = c(3,4,5),
 data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"),
 resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5),
 cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
