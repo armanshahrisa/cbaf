@@ -7,7 +7,7 @@
 process.multiple.studies(genes, cancers, high.throughput.data.type,
 data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"),
 shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8,
-heatmapMargines=c(24,17), cutoff=2, angle.for.heatmap.cancernames=45, heatmap.color = "RdBu",
+heatmapMargines=c(15,07), cutoff=NULL, angle.for.heatmap.cancernames=45, heatmap.color = "RdBu",
 reverse.heatmap.color = TRUE, rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE,
 validate.genes = TRUE, Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE,
 simplifiction.cuttoff=FALSE)
@@ -116,7 +116,7 @@ License: \tab Artistic-2.0 \cr
 # Creating a list that contains one gene group: 'K.acetyltransferases'
 genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 
-# creating a character vector of study names. alternatively, To see how to subset cancer names, please type '?available.cancer.types'
+# creating a character vector of study names.
 cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
 "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)",
 "Breast Invasive Carcinoma (TCGA, Provisional)")
@@ -124,8 +124,7 @@ cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical C
 # Running the function to obtain and process the selected data
 process.multiple.studies(genes, cancernames, "RNA-seq",
 data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"),
-shorteded.cancer.names = FALSE, resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5),
-cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
+heatmapMargines=c(15,5), heatmap.color = "redgreen")
 
 }
 \author{

@@ -90,7 +90,13 @@ In the following example, _genes_ consists of two gene groups K.demethylases and
 ```
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 
+
 cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)")
+
+# or
+
+cancernames <- available.data.types.output[c(3,9,15,17,24),1]
+
 
 process.multiple.studies(genes, cancernames, "RNA-seq")
 ```

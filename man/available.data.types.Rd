@@ -26,13 +26,9 @@ License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-# Simple function with no argument, list all cancer studies and their available data types.
-available.data.types()
-
-# Name of desired cancer studies can be selected by subsetting the first column of 'available.data.types.output'
-cancernames <- available.data.types.output[c(3,9,15,17,24),1]
-
-# The mentioned above is more convenient, however, users can also create a character vector of study names.
+# After viewing 'available.data.types.output', users can create a character vector of desired study names
+# for process.multiple.studies() or pick one study for process.one.study(). For mor information,
+# please type '?process.multiple.studies' and '?process.one.study'.
 cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
 "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)",
 "Breast Invasive Carcinoma (TCGA, Provisional)")

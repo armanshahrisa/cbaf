@@ -7,7 +7,7 @@
 process.one.study(genes, cancername, high.throughput.data.type,
 data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"),
 transposedHeatmap=FALSE, desired.case.list="None", genelimit="none",
-resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(10,10), cutoff="default",
+resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(10,10), cutoff=NULL,
 angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE,
 rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE,
 simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)
@@ -117,9 +117,7 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 
 # Running the function to obtain and process the selected data
 process.one.study(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", desired.case.list = c(3,4,5),
-data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"),
-resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5),
-cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
+data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), heatmap.color = "redgreen")
 
 }
 \author{

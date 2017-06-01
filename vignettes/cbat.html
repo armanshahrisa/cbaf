@@ -154,7 +154,13 @@
 <p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>cancernames</em> has complete names of five cancer studies and the desired high-throughput study is RNA-seq.</p>
 <pre><code>genes &lt;- list(K.demethylases = c(&quot;KDM1A&quot;, &quot;KDM1B&quot;, &quot;KDM2A&quot;), K.acetyltransferases = c(&quot;CLOCK&quot;, &quot;CREBBP&quot;, &quot;ELP3&quot;, &quot;EP300&quot;))
 
+
 cancernames &lt;- c(&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;, &quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;, &quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;, &quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;, &quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;)
+
+# or
+
+cancernames &lt;- available.data.types.output[c(3,9,15,17,24),1]
+
 
 process.multiple.studies(genes, cancernames, &quot;RNA-seq&quot;)</code></pre>
 <p>The following code shows how to create a matrix with desired names for <code>cancernames</code>:</p>
