@@ -169,3 +169,130 @@ available.data.types <- function(){
               getwd(), ".", "In adition, the output is available in the global enviroment as 'available.data.types.output'", sep=" "))
 
 }
+
+
+
+
+
+
+
+
+
+
+The function has three parts -- find all studies, get case lists, output
+to Excel. I revised it into three separate functions, which might be
+documented on the same page. The first gets all studies
+
+available.studies <- function() {
+  mycgds <- cgdsr::CGDS("http://www.cbioportal.org/")
+  getCancerStudies(mycgds)
+}
+
+I revised available.data.types as
+
+available.data.types <- function(studies = available.studies()) {
+  ## relevant descriptions
+  RNASeq <- c(
+    "Tumor Samples with mRNA data (RNA Seq V2)",
+    "Tumors with mRNA data (RNA Seq V2)",
+    "Tumor Samples with mRNA data (RNA Seq)",
+    "Tumors with mRNA data (RNA Seq)"
+  )
+  microRNA <- "Tumors with microRNA data (microRNA-Seq)"
+  mRNA <- c(
+    "Tumor Samples with mRNA data (Agilent microarray)",
+    "Tumors with mRNA data (Agilent microarray)",
+    "Tumor Samples with mRNA data (U133 microarray only)",
+    "Tumors with mRNA data"
+  )
+  miRNA <- "Tumors with microRNA"
+  methylation <- c(
+    "Tumor Samples with methylation data (HM450)",
+    "Tumors with methylation data (HM450)",
+    "Tumor Samples with methylation data (HM27)",
+    "Tumors with methylation data (HM27)",
+    "Tumors with methylation data"
+  )
+
+  ## query each study
+  mycgds <- CGDS("http://www.cbioportal.org/")
+  pb <- txtProgressBar(min = 0, max = nrow(studies), style = 3)
+  i <- 0
+  available <- sapply(studies[, "cancer_study_id"], function(se, cgds) {
+    description <- getCaseLists(cgds, se)[, "case_list_description"]
+    i <<- i + 1
+    setTxtProgressBar(pb, i)
+    c(RNASeq = any(description %in% RNASeq),
+      microRNA = any(description %in% microRNA),
+      microarray_mRNA = any(description %in% mRNA),
+      microarray_miRNA = any(description %in% miRNA),
+      methylation = any(description %in% methylation))
+  }, mycgds)
+  close(pb)
+
+  cbind(studies, t(available))
+}
+
+The main changes are
+
+1. provide an argument with default value, preserving original behavior
+
+2. collect constant strings to an 'initialization' section of the function
+
+3. use sapply() to manage memory, rather than allocating and filling a
+matrix
+
+4. respect R's notion of data types, e.g., logical() values rather than
+"TRUE" / "FALSE" character strings; using a data.frame (because columns
+are of different type) rather than matrix.
+
+5. avoid querying the web service for getCancerStudies() on each iteration
+
+6. not printing the result to an Excel file
+
+7. returning the result to the user for subsequent processing, without
+writing to the global environment.
+
+I created a third function to write to Excel. It expects a file name
+from the user and will not overwrite an existing file. It returns the
+file name where the output can be found
+
+write.xls <- function(data.types, file) {
+stopifnot(!file.exists(file)))
+## your implementation here
+file
+}
+
+
+On the help page I might illustrate this as
+
+studies <- available.studies()
+head(studies)
+
+then use a subset of the data for the next function
+
+data.types <- available.data.types(head(studies))
+data.types
+
+and finally write the output to a temporary file
+
+xls.file <- write.xls(data.types, tempfile(fileext=".xls"))
+xls.file    # open in Excel
+
+You might wish to write a final function that integrates these steps
+
+all.available.data.types <- function(file) {
+stopifnot(!file.exists(file))
+studies = available.studies()
+data.types = available.data.types(studies)
+write.xls(data.types, file)
+}
+
+and include this as Michael suggests
+
+\dontrun{
+all.available.data.types("my.xls")
+}
+
+Bioconductor style would strongly discourage '.'-separated function
+names, instead preferring camelCase() or snake_case().
