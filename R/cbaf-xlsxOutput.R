@@ -30,19 +30,34 @@ xlsxOutput <- function(pocessedDatabase){
 
   List.to.Go <- get(paste(names(genes)[[g]], "Data", "List", sep = "."))
 
+  if(is.list(pocessedDatabase)){
+
+    tabsNumber <- length(pocessedDatabase)
+
+  } else{
+
+    tabsNumber <- 1
+
+  }
+
+
   # Create progress bar
 
-  xlsxProgressBar <- txtProgressBar(min = 0, max = length(xlsxFileName), style = 3)
+  xlsxProgressBar <- txtProgressBar(min = 0, max = tabsNumber, style = 3)
 
   ## 'for' to prepare ouputs
 
-  for(segment in 1:length(names(List.to.Go))){
+  for(segment in 1:tabsNumber){
 
     ## Subsetting matrixes from List by 'for' control structure
 
-    Temporary.source <- List.to.Go[[segment]]
+    if(is.list(pocessedDatabase)){
 
-    Temporary.source.name <- names(List.to.Go)[[segment]]
+      Temporary.source <- pocessedDatabase[[segment]]
+
+      Temporary.source.name <- names(pocessedDatabase)[[segment]]
+
+    }
 
   ## Exporting the expression profile
 

@@ -141,43 +141,6 @@ process.one.study <- function(genes, cancername, high.throughput.data.type, data
   ##########################################################################
   ### Checking Input data
 
-  # Genes
-
-  if(!is.list(genes)){
-
-    stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
-
-  }
-
-  # cancers
-
-  if(!is.character(cancername)){
-
-    stop("'cancername' must be entered as a character string")
-
-  }
-
-  # high.throughput.data.type
-
-  if(is.character(high.throughput.data.type)){
-
-    if(!(high.throughput.data.type %in% c("RNA-seq", "microRNA-Seq", "Microarray.mRNA", "Microarray.microRNA"))){
-
-      stop("'high.throughput.data.type' must contain one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'Microarray.mRNA' or 'Microarray.microRNA'")
-
-    }
-
-  } else {
-
-    stop("'high.throughput.data.type' must be entered in character string describing a technique name")
-
-  }
-
-
-
-
-  ##########################################################################
-  ### Prerequisites
 
   # Get directory address
 
@@ -185,46 +148,13 @@ process.one.study <- function(genes, cancername, high.throughput.data.type, data
 
 
 
+  # Genes
 
-  # Choice of high-throughput data type
+  if(!is.list(genes)){
 
-  if(high.throughput.data.type == "RNA-seq"){
-
-    L1.characteristics <- c("Tumor Samples with mRNA data (RNA Seq V2)", "Tumors with mRNA data (RNA Seq V2)", "Tumor Samples with mRNA data (RNA Seq)", "Tumors with mRNA data (RNA Seq)")
-
-    L2.characteristics <- c("mRNA Expression z-Scores (RNA Seq V2 RSEM)", "mRNA Expression z-Scores (RNA Seq RPKM)")
-
-  } else if(high.throughput.data.type == "microRNA-Seq"){
-
-    L1.characteristics <- c("Tumors with microRNA data (microRNA-Seq)")
-
-    L2.characteristics <- c("microRNA expression Z-scores")
-
-  } else if(high.throughput.data.type == "microarray.mRNA"){
-
-    L1.characteristics <- c("Tumor Samples with mRNA data (Agilent microarray)", "Tumors with mRNA data (Agilent microarray)", "Tumor Samples with mRNA data (U133 microarray only)", "Tumors with mRNA data", "Tumors with mRNA")
-
-    L2.characteristics <- c("mRNA Expression z-Scores (microarray)", "mRNA Expression z-Scores (U133 microarray only)", "mRNA expression z-scores (Illumina)", "mRNA expression Z-scores (all genes)", "mRNA Expression Z-Scores vs Normals", "mRNA Expression z-Scores (combined microarray)")
-
-  } else if(high.throughput.data.type == "microarray.microRNA"){
-
-    L1.characteristics <- c("Tumors with microRNA")
-
-    L2.characteristics <- c("mRNA Expression Z-Scores vs Normals", "mRNA Expression z-Scores (combined microarray)")
-
-  } else if(high.throughput.data.type == "methylation"){
-
-    L1.characteristics <- c("Tumor Samples with methylation data (HM450)", "Tumors with methylation data (HM450)", "Tumor Samples with methylation data (HM27)", "Tumors with methylation data (HM27)", "Tumors with methylation data")
-
-    L2.characteristics <- c("Methylation (HM450)", "Methylation (HM27)", "Methylation")
-
-  } else{
-
-    stop("High-throughput.data field can not be left empety. It should be chosen as 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA'or 'methylation'")
+    stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
 
   }
-
-
 
   # Creating a vector for cancer names
 
@@ -279,6 +209,36 @@ process.one.study <- function(genes, cancername, high.throughput.data.type, data
 
 
     if(rewrite.output.list == TRUE){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
