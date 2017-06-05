@@ -127,7 +127,7 @@
 #########################################################################
 #########################################################################
 
-obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE){
+obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE, shortenStudyName = TRUE){
 
   ##########################################################################
   ########## Prerequisites
@@ -147,13 +147,13 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
   if(!is.character(studyName)){
 
-    stop("'cancername' must be entered as a character string")
+    stop("'studyName' must be entered as a character string")
 
   }
 
   # Shorten cancer name
 
-  Shortened.cancername <- gsub(" ", ".", sapply(strsplit(as.character(studyName), split=" (", fixed=TRUE), function(x) (x[1])))
+  shortenedCancername <- gsub(" ", ".", sapply(strsplit(as.character(studyName), split=" (", fixed=TRUE), function(x) (x[1])))
 
 
 
@@ -227,7 +227,7 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
   # Report
 
-  print(paste("***", "Obtaining expression data for", submissionName, "genes", "***", sep = " "))
+  print(paste("***", "Obtaining the requested data for", submissionName, "genes", "***", sep = " "))
 
 
 
@@ -285,6 +285,13 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
   }) ,1]
 
 
+  # Shorten studyName
+
+  if(shortenStudyName == TRUE){
+
+    studyName <- gsub(" ", ".", sapply(strsplit(as.character(studyName), split=" (", fixed=TRUE), function(x) (x[1])))
+
+  }
 
 
   # Creating a list to store obtained data
@@ -316,6 +323,10 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
     # Obtaining Expression x-scores fore the requested genes
 
+    # Assaign data to specific list member
+
+    obtainedData$subgroup <- data.matrix(getProfileData(mycgds,genesNames[order(genesNames)],mygeneticprofile,mycaselist))
+
     # Correcting possible errors of list names
 
     ind <- gsub(ind, pattern = "\\+", replacement = " possitive", ignore.case = TRUE)
@@ -324,7 +335,7 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
     ind <- gsub(ind, pattern = " ", replacement = "_", ignore.case = TRUE)
 
-    obtainedData$sungroup <- data.matrix(getProfileData(mycgds,genesNames[order(genesNames)],mygeneticprofile,mycaselist))
+    # Correcting list name
 
     names(obtainedData)[i] <- ind
 
@@ -336,6 +347,6 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
   # Export the obtained data as list
 
-  assign(paste("obtainedData", "", submissionName, sep = ""), obtainedData)
+  assign(paste("obtainedData", ":", submissionName, "-", studyName, sep = ""), obtainedData)
 
 }
