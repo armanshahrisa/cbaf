@@ -347,6 +347,6 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
   # Export the obtained data as list
 
-  assign(paste("obtainedData", ":", submissionName, "-", studyName, sep = ""), obtainedData)
+  assign(paste("obtainedData", ":", submissionName, sep = ""), obtainedData)
 
 }
