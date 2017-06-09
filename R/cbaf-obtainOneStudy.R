@@ -127,16 +127,16 @@
 #########################################################################
 #########################################################################
 
-obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE, shortenStudyName = TRUE){
+obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE){
 
   ##########################################################################
   ########## Prerequisites
 
   # Check genes
 
-  if(is.list(genesNames)){
+  if(!is.list(genesList)){
 
-    stop("'genesNames' must be entered as a character vector")
+    stop("'genesList' must be entered as a list that containes at least one group of genes")
 
   }
 
@@ -150,11 +150,6 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
     stop("'studyName' must be entered as a character string")
 
   }
-
-  # Shorten cancer name
-
-  shortenedCancername <- gsub(" ", ".", sapply(strsplit(as.character(studyName), split=" (", fixed=TRUE), function(x) (x[1])))
-
 
 
 
@@ -227,8 +222,7 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
   # Report
 
-  print(paste("***", "Obtaining the requested data for", submissionName, "genes", "***", sep = " "))
-
+  print(paste("***", "Obtaining the requested data for", submissionName, "***", sep = " "))
 
 
 
@@ -285,24 +279,33 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
   }) ,1]
 
 
-  # Shorten studyName
+  # Shorten studyName - Temporarily inactive
 
-  if(shortenStudyName == TRUE){
+  #  if(shortenStudyName == TRUE){
 
-    studyName <- gsub(" ", ".", sapply(strsplit(as.character(studyName), split=" (", fixed=TRUE), function(x) (x[1])))
+  #  studyName <- gsub(" ", ".", sapply(strsplit(as.character(studyName), split=" (", fixed=TRUE), function(x) (x[1])))
+
+  #  }
+
+
+  # Create parent list for storing final results in the global environment
+
+  rawList <- list()
+
+  # Creating child lists
+
+  for(nname in 1:length(genesList)){
+
+    rawList[[nname]] <- list()
+
+    names(rawList)[nname] <- names(genesList)[nname]
 
   }
-
-
-  # Creating a list to store obtained data
-
-  obtainedData <-  list()
 
 
   # Creating progress bar
 
   obtainOneStudyProgressBar <- txtProgressBar(min = 0, max = length(inputCases), style = 3)
-
 
 
 
@@ -312,6 +315,20 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
   for(i in 1:length(inputCases)){
 
+    # Determining name for list subset of study name
+
+    groupName <- inputCases.names[i]
+
+    # Correcting possible errors of list names
+
+    groupName <- gsub(groupName, pattern = "\\+ ", replacement = " possitive ", ignore.case = TRUE)
+
+    groupName <- gsub(groupName, pattern = "\\- ", replacement = " negative ", ignore.case = TRUE)
+
+    groupName <- gsub(groupName, pattern = " ", replacement = "_", ignore.case = TRUE)
+
+
+
     # Setting the first characteristics of data according to the desired case list
 
     ind <- getCaseLists(mycgds,mycancerstudy)[inputCases[i] ,2]
@@ -320,24 +337,27 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
 
 
+    # obtaining data for every genegroup
 
-    # Obtaining Expression x-scores fore the requested genes
+    for(group in 1:length(genesList)){
 
-    # Assaign data to specific list member
+      # Chose one group of genes
 
-    obtainedData$subgroup <- data.matrix(getProfileData(mycgds,genesNames[order(genesNames)],mygeneticprofile,mycaselist))
+      genesNames <- genesList[[group]]
 
-    # Correcting possible errors of list names
 
-    ind <- gsub(ind, pattern = "\\+", replacement = " possitive", ignore.case = TRUE)
 
-    ind <- gsub(ind, pattern = "\\-", replacement = " negative", ignore.case = TRUE)
+      # Obtaining Expression x-scores fore the requested genes
 
-    ind <- gsub(ind, pattern = " ", replacement = "_", ignore.case = TRUE)
+      # Assaign data to specific list member
 
-    # Correcting list name
+      rawList[[group]][[i]] <- data.matrix(getProfileData(mycgds,genesNames[order(genesNames)],mygeneticprofile,mycaselist))
 
-    names(obtainedData)[i] <- ind
+      names(rawList[[group]])[i] <- groupName
+
+    }
+
+    # Update progressbar
 
     setTxtProgressBar(obtainOneStudyProgressBar, i)
 
@@ -347,6 +367,6 @@ obtainOneStudy <- function(genesNames, submissionName, studyName, desiredTechniq
 
   # Export the obtained data as list
 
-  assign(paste("obtainedData", ":", submissionName, sep = ""), obtainedData)
+  assign(paste("obS", ":", submissionName, sep = ""),  rawList, envir = globalenv())
 
 }

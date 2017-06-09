@@ -134,18 +134,16 @@
 #########################################################################
 #########################################################################
 
-obtainMultipleStudies <- function(genesNames, submissionName, studiesNames, desiredTechnique, shortenStudiesNames = TRUE,
-
-                                  cancerCode = FALSE){
+obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE){
 
   ##########################################################################
   ########## Prerequisites
 
   # Check genes
 
-  if(is.list(genesNames)){
+  if(!is.list(genesList)){
 
-    stop("'genesNames' must be entered as a character vector")
+    stop("'genesList' must be entered as a list that containes at least one group of genes")
 
   }
 
@@ -223,26 +221,6 @@ obtainMultipleStudies <- function(genesNames, submissionName, studiesNames, desi
 
 
 
-
-  # Creating a vector for cancer names
-
-  if(!is.matrix(studiesNames)){
-
-    studiesNames <- studiesNames[order(studiesNames)]
-
-    studiesNamesMatrix <- studiesNames
-
-  } else if(is.matrix(studiesNames)){
-
-    studiesNamesMatrix <- studiesNames[order(studiesNames[,1]),]
-
-    studiesNames <- studiesNamesMatrix[,1]
-
-  }
-
-
-
-
   ##########################################################################
   ########## Set the function ready to work
 
@@ -252,18 +230,45 @@ obtainMultipleStudies <- function(genesNames, submissionName, studiesNames, desi
 
 
 
+  # Creating a vector for cancer names and subsequent list sebset name
+
+  if(!is.matrix(studiesNames)){
+
+    studiesNames <- studiesNames[order(studiesNames)]
+
+    studiesNamesMatrix <- studiesNames
+
+
+
+    if(cancerCode == TRUE){
+
+      groupNames <- getCancerStudies(mycgds)[which(getCancerStudies(mycgds)[,2] %in% as.character(studiesNames)),1]
+
+    } else if(cancerCode == FALSE){
+
+      groupNames <- as.character(studiesNames)
+
+    }
+
+
+  } else if(is.matrix(studiesNames)){
+
+    studiesNamesMatrix <- studiesNames[order(studiesNames[,1]),]
+
+    studiesNames <- studiesNamesMatrix[,2]
+
+    groupNames <- studiesNames
+
+  }
+
 
   ##########################################################################
   ########## Core segment
 
   # Report
 
-  print(paste("***", "Obtaining the requested data for", submissionName, "genes", "***", sep = " "))
+  print(paste("***", "Obtaining the requested data for", submissionName, "***", sep = " "))
 
-
-  # Creating a list to store obtained data
-
-  obtainedData <-  list()
 
 
   # create progress bar
@@ -272,12 +277,43 @@ obtainMultipleStudies <- function(genesNames, submissionName, studiesNames, desi
 
 
 
+  # Create parent list for storing final results in the global environment
+
+  rawList <- list()
+
+  # Creating child lists
+
+  for(nname in 1:length(genesList)){
+
+       rawList[[nname]] <- list()
+
+       names(rawList)[nname] <- names(genesList)[nname]
+
+  }
+
+
 
   ## Getting the required gene expresssion profile ...
 
   # 'for' control structure for obtaining data and calculating the requested parameters
 
   for(c in 1:length(studiesNames)){
+
+    # Determining name for list subset of study name
+
+    groupName <- groupNames[c]
+
+    # Correcting possible errors of list names
+
+    groupName <- gsub(groupName, pattern = "\\+ ", replacement = " possitive ", ignore.case = TRUE)
+
+    groupName <- gsub(groupName, pattern = "\\- ", replacement = " negative ", ignore.case = TRUE)
+
+    groupName <- gsub(groupName, pattern = " ", replacement = "_", ignore.case = TRUE)
+
+
+
+
 
     ##--## print(as.character(studiesNames[c]))
 
@@ -316,58 +352,40 @@ obtainMultipleStudies <- function(genesNames, submissionName, studiesNames, desi
     }) ,1]
 
 
-    # Obtaining Expression x-scores fore the requested genes
 
-    # Assaign data to specific list member
+    # obtaining data for every genegroup
 
-    obtainedData$subgroup <- data.matrix(getProfileData(mycgds,genesNames[order(genesNames)],mygeneticprofile,mycaselist))
+    for(group in 1:length(genesList)){
+
+      # Chose one group of genes
+
+      genesNames <- genesList[[group]]
 
 
 
-    # shorten studyNames, desired studyNames and cancerCode
+      # Obtaining Expression x-scores fore the requested genes
 
-    if(shortenStudiesNames == TRUE){
+      # Assaign data to specific list member
 
-      groupName <- sapply(strsplit(as.character(studiesNames[c]), split=" (", fixed=TRUE), function(x) (x[1]))
+      rawList[[group]][[c]] <- data.matrix(getProfileData(mycgds,genesNames[order(genesNames)],mygeneticprofile,mycaselist))
 
-    } else if(shortenStudiesNames == FALSE & cancerCode == FALSE & !is.matrix(studiesNames)){
-
-      groupName <- as.character(studiesNames[c])
-
-    } else if(cancerCode == TRUE & !is.matrix(studiesNames)){
-
-      groupName <- getCancerStudies(mycgds)[which(getCancerStudies(mycgds)[,2]==as.character(studiesNames[c])),1]
-
-    } else if(is.matrix(studiesNames)){
-
-      studiesNamesMatrix <- studiesNames[order(studiesNames[,1]),]
-
-      studiesNames <- studiesNamesMatrix[,1]
+      names(rawList[[group]])[c] <- groupName
 
     }
 
-
-
-    # Correcting possible errors of list names
-
-    groupName <- gsub(groupName, pattern = "\\+", replacement = " possitive", ignore.case = TRUE)
-
-    groupName <- gsub(groupName, pattern = "\\-", replacement = " negative", ignore.case = TRUE)
-
-    groupName <- gsub(groupName, pattern = " ", replacement = "_", ignore.case = TRUE)
-
-    # Correcting list name
-
-    names(obtainedData)[c] <- groupName
+    # Update progressbar
 
     setTxtProgressBar(obtainMultipleStudiesProgressBar, c)
 
+
   }
+
+  # Closing progress bar
 
   close(obtainMultipleStudiesProgressBar)
 
   # Export the obtained data as list
 
-  assign(paste("obtainedData", ":", submissionName, sep = ""), obtainedData)
+  assign(paste("ObM", ":", submissionName, sep = ""), rawList, envir = globalenv())
 
 }
