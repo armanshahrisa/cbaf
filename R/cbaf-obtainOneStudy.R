@@ -234,7 +234,9 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     print(paste(1:length(Choices), Choices, sep=". "))
 
-    print(paste("Please enter the numeric index of desired case list(s) for ", studyName, ", seperated by comma. For instance, 1 and 2 must be enterd as: 1, 2", sep=""))
+    writeLines("")
+
+    print(paste("Please enter the numeric index of desired case list(s) for ", studyName, ", seperated by comma. For instance, 1 and 2 must be enterd as: 1, 2.", sep=""))
 
     inputCases <- readline(prompt = "Enter the numeric index(es): ")
 
