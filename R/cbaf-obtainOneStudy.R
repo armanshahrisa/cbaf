@@ -136,9 +136,22 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
   if(!is.list(genesList)){
 
-    stop("'genesList' must be entered as a list that containes at least one group of genes")
+    stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
+
+  } else if(is.list(genesList) & exists("formerGeneList")){
+
+    oldList <- unname(sort(unlist(formerGeneList)))
+
+    newList <- unname(sort(unlist(genesList)))
+
+    if(identical(newList, oldList)){
+
+      return("--- Function 'obtainMultipleStudies()' was skipped: Data for the requested genes already exist ---")
+
+    }
 
   }
+
 
 
 
@@ -167,7 +180,7 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
   } else {
 
-    stop("'desiredTechnique' must be entered in character string describing a technique name")
+    stop("'desiredTechnique' must be entered as a character string describing a technique name")
 
   }
 
@@ -367,8 +380,12 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
   close(obtainOneStudyProgressBar)
 
+  # Store name of the genes
+
+  formerGeneList <<-  genesList
+
   # Export the obtained data as list
 
-  assign(paste("obS", ":", submissionName, sep = ""),  rawList, envir = globalenv())
+  assign(paste("obS", ":", submissionName, sep = ""), rawList, envir = globalenv())
 
 }

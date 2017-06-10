@@ -143,9 +143,22 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
   if(!is.list(genesList)){
 
-    stop("'genesList' must be entered as a list that containes at least one group of genes")
+    stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
+
+  } else if(is.list(genesList) & exists("formerGeneList")){
+
+    oldList <- unname(sort(unlist(formerGeneList)))
+
+    newList <- unname(sort(unlist(genesList)))
+
+    if(identical(newList, oldList)){
+
+       return("--- Function 'obtainMultipleStudies()' was skipped: Data for the requested genes already exist ---")
+
+    }
 
   }
+
 
 
 
@@ -174,7 +187,7 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
   } else {
 
-    stop("'desiredTechnique' must be entered in character string describing a technique name")
+    stop("'desiredTechnique' must be entered as a character string describing a technique name")
 
   }
 
@@ -383,6 +396,10 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
   # Closing progress bar
 
   close(obtainMultipleStudiesProgressBar)
+
+  # Store name of the genes
+
+  formerGeneList <<-  genesList
 
   # Export the obtained data as list
 
