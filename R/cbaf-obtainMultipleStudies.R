@@ -134,7 +134,7 @@
 #########################################################################
 #########################################################################
 
-obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE){
+obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE, validateGenes = TRUE){
 
   ##########################################################################
   ########## Prerequisites
@@ -145,9 +145,9 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
     stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
 
-  } else if(is.list(genesList) & exists("formerGeneList")){
+  } else if(is.list(genesList) & exists(paste("gM", ".", submissionName, sep = ""))){
 
-    oldList <- unname(sort(unlist(formerGeneList)))
+    oldList <- unname(sort(unlist(get(paste("gM", ".", submissionName, sep = ""), genesList, envir = globalenv()))))
 
     newList <- unname(sort(unlist(genesList)))
 
@@ -298,11 +298,29 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
   for(nname in 1:length(genesList)){
 
-       rawList[[nname]] <- list()
+    rawList[[nname]] <- list()
 
-       names(rawList)[nname] <- names(genesList)[nname]
+    names(rawList)[nname] <- names(genesList)[nname]
 
   }
+
+  # Creating a list for gene validation results
+
+  if(validateGenes == TRUE){
+
+    validationResult <- list()
+
+    for(nname in 1:length(genesList)){
+
+      validationResult[[nname]] <- "x"
+
+      names(validationResult)[nname] <- names(genesList)[nname]
+
+    }
+
+  }
+
+
 
 
 
@@ -384,6 +402,141 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
       names(rawList[[group]])[c] <- groupName
 
+
+      # Find whether alternative gene names are used
+
+      # Alter c.genes to be compatible with gene names in cBioPortal output
+
+      alteredGeneNames <- sort(gsub("-", ".", genesNames))
+
+      # Obtain name of genes that are absent in requested cancer
+
+      absentGenes <- alteredGeneNames[!alteredGeneNames %in% colnames(rawList[[group]][[c]])]
+
+      # For loop for determining changed genes
+
+      alternativeGeneNames <- vector("character", length = length(absentGenes))
+
+      # For loop
+
+      for(ab in 1:length(absentGenes)){
+
+        absentGeneProfileData <- colnames(data.matrix(getProfileData(mycgds, absentGenes[ab], mygeneticprofile,mycaselist)))
+
+        # Check wheter gene has an alternative name or missed in the database
+
+        if(length(absentGeneProfileData) == 1){
+
+          alternativeGeneNames[ab] <- absentGeneProfileData
+
+        } else if(length(absentGeneProfileData) != 1){
+
+          alternativeGeneNames[ab] <- "-"
+
+        }
+
+      }
+
+      # Naming Alternative.gene.names
+
+      names(alternativeGeneNames) <- absentGenes
+
+      # Seperating genes with alternative names from those that are absent
+
+      genesLackData <- alternativeGeneNames[alternativeGeneNames == "-"]
+
+      genesWithData <- alternativeGeneNames[alternativeGeneNames != "-"]
+
+
+
+      # modifying gene names containing an alternative name
+
+      for(re in 1:length(genesWithData)){
+
+        colnames(rawList[[group]][[c]])[colnames(rawList[[group]][[c]]) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+
+      }
+
+
+
+
+
+      # validateGenes
+
+      if(validateGenes == TRUE){
+
+        # Empty validation matrix
+
+        validationMatrix <- matrix(, ncol = length(genesNames), nrow = 1)
+
+        # Naming empty matrix
+
+        if(length(genesLackData) != 0){
+
+        dimnames(validationMatrix) <- list(groupNames[c], c(colnames(rawList[[group]][[c]]), names(genesLackData)))
+
+        } else{
+
+          dimnames(validationMatrix) <- list(groupNames[c], colnames(rawList[[group]][[c]]))
+
+        }
+
+
+
+        # modifying gene names containing an alternative name
+
+        for(re in 1:length(genesWithData)){
+
+          colnames(validationMatrix)[colnames(validationMatrix) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+
+        }
+
+
+
+
+
+        # Puting value for genes lacking data
+
+        validationMatrix[,colnames(validationMatrix) %in% names(genesLackData)] <- "-"
+
+
+
+        for(eval in 1:ncol(rawList[[group]][[c]])){
+
+          ## Validating Genes
+
+          # Correct those that are not found
+
+          if(length(((rawList[[group]][[c]])[,eval])[!is.nan((rawList[[group]][[c]])[,eval])]) > 0 & all(!is.finite((rawList[[group]][[c]])[,eval])) &
+
+             is.nan(mean(as.vector((rawList[[group]][[c]])[,eval])[abs((rawList[[group]][[c]])[,eval])], na.rm=TRUE))){
+
+            validationMatrix[1, eval] <- "-"
+
+          } else {
+
+            validationMatrix[1, eval] <- "Found"
+
+          }
+
+        }
+
+        # Storing the results in validation result
+
+        validationMatrix <- validationMatrix[,sort(colnames(validationMatrix)), drop=FALSE]
+
+        if(c == 1){
+
+          validationResult[[group]]    <- validationMatrix
+
+        } else if(c > 1){
+
+          validationResult[[group]]    <- rbind(validationResult[[group]], validationMatrix)
+
+        }
+
+      }
+
     }
 
     # Update progressbar
@@ -399,10 +552,18 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
   # Store name of the genes
 
-  formerGeneList <<-  genesList
+  assign(paste("gM", ".", submissionName, sep = ""), genesList, envir = globalenv())
 
-  # Export the obtained data as list
+  # Export the obtained data as a list
 
-  assign(paste("ObM", ":", submissionName, sep = ""), rawList, envir = globalenv())
+  assign(paste("ObM", ".", submissionName, sep = ""), rawList, envir = globalenv())
+
+  # Export the validation data as a list
+
+  if(validateGenes == TRUE){
+
+    assign(paste("vaM", ".", submissionName, sep = ""), validationResult, envir = globalenv())
+
+  }
 
 }

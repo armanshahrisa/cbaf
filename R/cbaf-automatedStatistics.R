@@ -126,7 +126,7 @@
 #########################################################################
 #########################################################################
 
-automatedStatistics<- function(submissionName, calculate = c("FrequencyPercentage", "Frequency.Ratio", "MeanValue", "Median"),
+automatedStatistics<- function(databaseType, submissionName, calculate = c("FrequencyPercentage", "Frequency.Ratio", "MeanValue", "Median"),
 
                               cutoff=NULL, round=TRUE, topGenes = TRUE, validateGenes = TRUE){
 
@@ -137,6 +137,8 @@ automatedStatistics<- function(submissionName, calculate = c("FrequencyPercentag
 
   sourceDataList <- get(paste("obData", ":", submissionName, sep = ""))
 
+
+  *************exists(validation)***********************
 
 
   # Create a progressbar

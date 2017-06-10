@@ -138,15 +138,15 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
 
-  } else if(is.list(genesList) & exists("formerGeneList")){
+  } else if(is.list(genesList) & exists(paste("gS", ".", submissionName, sep = ""))){
 
-    oldList <- unname(sort(unlist(formerGeneList)))
+    oldList <- unname(sort(unlist(get(paste("gS", ".", submissionName, sep = ""), genesList, envir = globalenv()))))
 
     newList <- unname(sort(unlist(genesList)))
 
     if(identical(newList, oldList)){
 
-      return("--- Function 'obtainMultipleStudies()' was skipped: Data for the requested genes already exist ---")
+      return("--- Function 'obtainOneStudy()' was skipped: Data for the requested genes already exist ---")
 
     }
 
@@ -309,13 +309,32 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
   # Creating child lists
 
-  for(nname in 1:length(genesList)){
+  for(nname in 1:length(inputCases.names)){
 
     rawList[[nname]] <- list()
 
-    names(rawList)[nname] <- names(genesList)[nname]
+    names(rawList)[nname] <- inputCases.names[nname]
 
   }
+
+  # Creating a list for gene validation results
+
+  if(validateGenes == TRUE){
+
+    validationResult <- list()
+
+    for(nname in 1:length(genesList)){
+
+      validationResult[[nname]] <- "x"
+
+      names(validationResult)[nname] <- names(genesList)[nname]
+
+    }
+
+  }
+
+
+
 
 
   # Creating progress bar
@@ -370,6 +389,140 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
       names(rawList[[group]])[i] <- groupName
 
+      # Find whether alternative gene names are used
+
+      # Alter c.genes to be compatible with gene names in cBioPortal output
+
+      alteredGeneNames <- sort(gsub("-", ".", genesNames))
+
+      # Obtain name of genes that are absent in requested cancer
+
+      absentGenes <- alteredGeneNames[!alteredGeneNames %in% colnames(rawList[[group]][[i]])]
+
+      # For loop for determining changed genes
+
+      alternativeGeneNames <- vector("character", length = length(absentGenes))
+
+      # For loop
+
+      for(ab in 1:length(absentGenes)){
+
+        absentGeneProfileData <- colnames(data.matrix(getProfileData(mycgds, absentGenes[ab], mygeneticprofile,mycaselist)))
+
+        # Check wheter gene has an alternative name or missed in the database
+
+        if(length(absentGeneProfileData) == 1){
+
+          alternativeGeneNames[ab] <- absentGeneProfileData
+
+        } else if(length(absentGeneProfileData) != 1){
+
+          alternativeGeneNames[ab] <- "-"
+
+        }
+
+      }
+
+      # Naming Alternative.gene.names
+
+      names(alternativeGeneNames) <- absentGenes
+
+      # Seperating genes with alternative names from those that are absent
+
+      genesLackData <- alternativeGeneNames[alternativeGeneNames == "-"]
+
+      genesWithData <- alternativeGeneNames[alternativeGeneNames != "-"]
+
+
+
+      # modifying gene names containing an alternative name
+
+      for(re in 1:length(genesWithData)){
+
+        colnames(rawList[[group]][[i]])[colnames(rawList[[group]][[i]]) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+
+      }
+
+
+
+
+
+      # validateGenes
+
+      if(validateGenes == TRUE){
+
+        # Empty validation matrix
+
+        validationMatrix <- matrix(, ncol = length(genesNames), nrow = 1)
+
+        # Naming empty matrix
+
+        if(length(genesLackData) != 0){
+
+          dimnames(validationMatrix) <- list(inputCases.names[i], c(colnames(rawList[[group]][[i]]), names(genesLackData)))
+
+        } else{
+
+          dimnames(validationMatrix) <- list(inputCases.names[i], colnames(rawList[[group]][[i]]))
+
+        }
+
+
+
+        # modifying gene names containing an alternative name
+
+        for(re in 1:length(genesWithData)){
+
+          colnames(validationMatrix)[colnames(validationMatrix) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+
+        }
+
+
+
+
+
+        # Puting value for genes lacking data
+
+        validationMatrix[,colnames(validationMatrix) %in% names(genesLackData)] <- "-"
+
+
+
+        for(eval in 1:ncol(rawList[[group]][[i]])){
+
+          ## Validating Genes
+
+          # Correct those that are not found
+
+          if(length(((rawList[[group]][[i]])[,eval])[!is.nan((rawList[[group]][[i]])[,eval])]) > 0 & all(!is.finite((rawList[[group]][[i]])[,eval])) &
+
+             is.nan(mean(as.vector((rawList[[group]][[i]])[,eval])[abs((rawList[[group]][[i]])[,eval])], na.rm=TRUE))){
+
+            validationMatrix[1, eval] <- "-"
+
+          } else {
+
+            validationMatrix[1, eval] <- "Found"
+
+          }
+
+        }
+
+        # Storing the results in validation result
+
+        validationMatrix <- validationMatrix[,sort(colnames(validationMatrix)), drop=FALSE]
+
+        if(i == 1){
+
+          validationResult[[group]]    <- validationMatrix
+
+        } else if(i > 1){
+
+          validationResult[[group]]    <- rbind(validationResult[[group]], validationMatrix)
+
+        }
+
+      }
+
     }
 
     # Update progressbar
@@ -378,14 +531,24 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
   }
 
+  # Closing progress bar
+
   close(obtainOneStudyProgressBar)
 
   # Store name of the genes
 
-  formerGeneList <<-  genesList
+  assign(paste("gS", ".", submissionName, sep = ""), genesList, envir = globalenv())
 
-  # Export the obtained data as list
+  # Export the obtained data as a list
 
-  assign(paste("obS", ":", submissionName, sep = ""), rawList, envir = globalenv())
+  assign(paste("obS", ".", submissionName, sep = ""), rawList, envir = globalenv())
+
+  # Export the validation data as a list
+
+  if(validateGenes == TRUE){
+
+    assign(paste("vaS", ".", submissionName, sep = ""), validationResult, envir = globalenv())
+
+  }
 
 }
