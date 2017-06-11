@@ -126,7 +126,7 @@
 #########################################################################
 #########################################################################
 
-automatedStatistics<- function(databaseType, submissionName, calculate = c("FrequencyPercentage", "Frequency.Ratio", "MeanValue", "Median"),
+automatedStatistics<- function(obtainedDataType = "multiple studies", databaseType, submissionName, calculate = c("FrequencyPercentage", "Frequency.Ratio", "MeanValue", "Median"),
 
                               cutoff=NULL, round=TRUE, topGenes = TRUE, validateGenes = TRUE){
 
@@ -135,7 +135,133 @@ automatedStatistics<- function(databaseType, submissionName, calculate = c("Freq
 
   # Obtain the unprocessed data list
 
-  sourceDataList <- get(paste("obData", ":", submissionName, sep = ""))
+  if(obtainedDataType == "multiple studies"){
+
+    databaseSymbol <- "obM"
+
+    validationSymbol <- "vaM"
+
+    haultType <- "ohaultM"
+
+  } else if(obtainedDataType == "single study"){
+
+    databaseSymbol <- "obS"
+
+    validationSymbol <- "vaS"
+
+    haultType <- "ohaultS"
+
+  }
+
+
+
+  # high-throughput data type
+
+  if(is.character(desiredTechnique)){
+
+    if(!(desiredTechnique %in% c("RNA-seq", "microRNA-Seq", "Microarray.mRNA", "Microarray.microRNA", "methylation")) | length(desiredTechnique)!= 1){
+
+      stop("'desiredTechnique' must contain one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'Microarray.mRNA', 'Microarray.microRNA' or
+
+           'methylation'")
+
+    }
+
+  } else {
+
+    stop("'desiredTechnique' must be entered as a character string describing a technique name")
+
+  }
+
+
+
+  # setting the calue for cutoff
+
+  if(high.throughput.data.type == "methylation"){
+
+    cutoff.phrase <- "obs/exp cutoff"
+
+    if(is.null(cutoff)){
+
+      cutoff <- 0.6
+
+    }
+
+  } else{
+
+    cutoff.phrase <- "zscore cutoff"
+
+    if(is.null(cutoff)){
+
+      cutoff <- 2
+
+    }
+
+  }
+
+
+
+  # Check hault older
+
+  if(exists(paste(paste(haultType, ".", submissionName, sep = "")))){
+
+
+    if(exists(paste(paste(cut, ".", submissionName, sep = "")))){
+
+      oldCutoff <- get(paste(paste(cut, ".", submissionName, sep = "")))
+
+      if(identical(oldCutoff, cutoff)){
+
+        haultDecision1 <- NULL
+
+      }
+
+    }
+
+
+
+    if(exists(paste(paste(cal, ".", submissionName, sep = "")))){
+
+      oldCalculate <- sort(get(paste(paste(cal, ".", submissionName, sep = ""))))
+
+      newCalculate <- sort(calculate)
+
+
+      if(identical(oldCalculate, newCalculate)){
+
+        haultDecision2 <- NULL
+
+      }
+
+    }
+
+
+
+    # Halt the function
+
+    if(all(exists("haultDecision1"), exists("haultDecision2"))){
+
+      return("--- Function 'automatedStatistics()' was skipped: The requested statistical parameters are already calculated ---")
+
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  sourceDataList <- get(paste(databaseSymbol, ".", submissionName, sep = ""))
 
 
   *************exists(validation)***********************
@@ -881,8 +1007,14 @@ if("Median" %in% data.presented.as){
 }
 
 
+assign(paste(paste(cut, ".", submissionName, sep = "")), cutoff, envir = globalenv())
+
+assign(paste(paste(cal, ".", submissionName, sep = "")), calculate, envir = globalenv())
+
 
 # Saving data list to enviroment with an informative name
+
+
 
 assign(paste(names(genes)[[g]], ".", "Data.List",  "_", "for", "_", Shortened.cancername, sep=""), Data.list, envir = globalenv())
 
