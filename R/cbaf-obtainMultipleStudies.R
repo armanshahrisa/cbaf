@@ -79,6 +79,16 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
 
 
+  # Check submissionName
+
+  if(!is.character(submissionName)){
+
+    stop("'submissionName' must be entered as a character string for naming the process")
+
+  }
+
+
+
   # studiesNames names
 
   if(!is.character(studiesNames)){
@@ -521,7 +531,7 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
   # Store studies names
 
-  assign(paste("cM", ".", submissionName, sep = ""), studyName, envir = globalenv())
+  assign(paste("cM", ".", submissionName, sep = ""), studiesNames, envir = globalenv())
 
   # Export the obtained data as a list
 
@@ -534,5 +544,7 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
     assign(paste("vaM", ".", submissionName, sep = ""), validationResult, envir = globalenv())
 
   }
+
+  assign(paste("ohaultM", ".", submissionName, sep = ""), NULL, envir = globalenv())
 
 }

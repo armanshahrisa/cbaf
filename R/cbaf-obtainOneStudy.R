@@ -77,6 +77,16 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
 
 
+  # Check submissionName
+
+  if(!is.character(submissionName)){
+
+    stop("'submissionName' must be entered as a character string for naming the process")
+
+  }
+
+
+
   # cancer name
 
   if(!is.character(studyName)){
@@ -290,11 +300,11 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
   # Creating child lists
 
-  for(nname in 1:length(inputCases.names)){
+  for(nname in 1:length(genesList)){
 
     rawList[[nname]] <- list()
 
-    names(rawList)[nname] <- inputCases.names[nname]
+    names(rawList)[nname] <- names(genesList)[nname]
 
   }
 
@@ -535,5 +545,7 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
     assign(paste("vaS", ".", submissionName, sep = ""), validationResult, envir = globalenv())
 
   }
+
+  assign(paste("ohaultS", ".", submissionName, sep = ""), NULL, envir = globalenv())
 
 }
