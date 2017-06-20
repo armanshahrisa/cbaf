@@ -399,21 +399,7 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
             pre.topGenes[is.nan(pre.topGenes) | is.na(pre.topGenes)] <- 0
 
-            # Creating data.frame for the top 5 genes
 
-            post.topGenes <- data.frame(study = source.data.subset.name)
-
-            # Correcting column name for the first column
-
-            if(obtainedDataType == "multiple studies"){
-
-              colnames(post.topGenes)[1] <- "Cancer Study"
-
-            } else if(obtainedDataType == "single study"){
-
-              colnames(post.topGenes)[1] <- "Cancer Study Subgroup"
-
-            }
 
             # Finding the top 5 values
 
@@ -449,9 +435,21 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
               # complete dataframe
 
-              post.topGenes <- cbind(post.topGenes, complete.top)
+              if(topV == 1){
+
+                post.topGenes <- complete.top
+
+              } else if(topV > 1){
+
+                post.topGenes <- cbind(post.topGenes, complete.top)
+
+              }
 
             }
+
+            # correcting rowname
+
+            rownames(post.topGenes) <- source.data.subset.name
 
 
             # fixing the problem caused by more thank one gene with same rank
@@ -674,21 +672,7 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
             pre.topGenes[is.nan(pre.topGenes) | is.na(pre.topGenes)] <- 0
 
-            # Creating data.frame for the top 5 genes
 
-            post.topGenes <- data.frame(study = source.data.subset.name)
-
-            # Correcting column name for the first column
-
-            if(obtainedDataType == "multiple studies"){
-
-              colnames(post.topGenes)[1] <- "Cancer Study"
-
-            } else if(obtainedDataType == "single study"){
-
-              colnames(post.topGenes)[1] <- "Cancer Study Subgroup"
-
-            }
 
             # Finding the top 5 values
 
@@ -724,9 +708,21 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
               # complete dataframe
 
-              post.topGenes <- cbind(post.topGenes, complete.top)
+              if(topV == 1){
+
+                post.topGenes <- complete.top
+
+              } else if(topV > 1){
+
+                post.topGenes <- cbind(post.topGenes, complete.top)
+
+              }
 
             }
+
+            # correcting rowname
+
+            rownames(post.topGenes) <- source.data.subset.name
 
 
             # fixing the problem caused by more thank one gene with same rank
@@ -871,21 +867,7 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
             pre.topGenes[is.nan(pre.topGenes) | is.na(pre.topGenes)] <- 0
 
-            # Creating data.frame for the top 5 genes
 
-            post.topGenes <- data.frame(study = source.data.subset.name)
-
-            # Correcting column name for the first column
-
-            if(obtainedDataType == "multiple studies"){
-
-              colnames(post.topGenes)[1] <- "Cancer Study"
-
-            } else if(obtainedDataType == "single study"){
-
-              colnames(post.topGenes)[1] <- "Cancer Study Subgroup"
-
-            }
 
             # Finding the top 5 values
 
@@ -921,9 +903,21 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
               # complete dataframe
 
-              post.topGenes <- cbind(post.topGenes, complete.top)
+              if(topV == 1){
+
+                post.topGenes <- complete.top
+
+              } else if(topV > 1){
+
+                post.topGenes <- cbind(post.topGenes, complete.top)
+
+              }
 
             }
+
+            # correcting rowname
+
+            rownames(post.topGenes) <- source.data.subset.name
 
 
             # fixing the problem caused by more thank one gene with same rank
