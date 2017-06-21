@@ -377,11 +377,11 @@ xlsxOutput <- function(submissionName){
 
   if(skipped > 0 & skipped != 1){
 
-    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," heatmaps were skipped: They already exist. ---", sep = ""))
+    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," excel files were skipped: They already exist. ---", sep = ""))
 
   } else if(skipped > 0 & skipped == 1){
 
-    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," heatmaps was skipped: It already exist. ---", sep = ""))
+    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," excel file was skipped: It already exist. ---", sep = ""))
 
   }
 
