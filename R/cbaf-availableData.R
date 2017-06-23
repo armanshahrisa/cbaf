@@ -20,13 +20,6 @@
 #' excel file - 'Available Data Types Output.xlsx' - is also generated in the working directory.
 #'
 #' @usage available.data.types()
-#' @examples
-#' # After viewing 'available.data.types.output', users can create a character vector of desired study names
-#' # for process.multiple.studies() or pick one study for process.one.study(). For mor information,
-#' # please type '?process.multiple.studies' and '?process.one.study'.
-#' cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
-#' "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)",
-#' "Breast Invasive Carcinoma (TCGA, Provisional)")
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
@@ -179,16 +172,16 @@ available.data.types <- function(){
 
 
 
-The function has three parts -- find all studies, get case lists, output
-to Excel. I revised it into three separate functions, which might be
-documented on the same page. The first gets all studies
+# The function has three parts -- find all studies, get case lists, output
+# to Excel. I revised it into three separate functions, which might be
+# documented on the same page. The first gets all studies
 
 available.studies <- function() {
   mycgds <- cgdsr::CGDS("http://www.cbioportal.org/")
   getCancerStudies(mycgds)
 }
 
-I revised available.data.types as
+# I revised available.data.types as
 
 available.data.types <- function(studies = available.studies()) {
   ## relevant descriptions
@@ -218,7 +211,7 @@ available.data.types <- function(studies = available.studies()) {
   mycgds <- CGDS("http://www.cbioportal.org/")
   pb <- txtProgressBar(min = 0, max = nrow(studies), style = 3)
   i <- 0
-  available <- sapply(studies[, "cancer_study_id"], function(se, cgds) {
+  available <- sapply(studies[, "name"], function(se, cgds) {
     description <- getCaseLists(cgds, se)[, "case_list_description"]
     i <<- i + 1
     setTxtProgressBar(pb, i)
@@ -233,53 +226,53 @@ available.data.types <- function(studies = available.studies()) {
   cbind(studies, t(available))
 }
 
-The main changes are
+# The main changes are
 
-1. provide an argument with default value, preserving original behavior
+# 1. provide an argument with default value, preserving original behavior
 
-2. collect constant strings to an 'initialization' section of the function
+# 2. collect constant strings to an 'initialization' section of the function
 
-3. use sapply() to manage memory, rather than allocating and filling a
-matrix
+# 3. use sapply() to manage memory, rather than allocating and filling a
+# matrix
 
-4. respect R's notion of data types, e.g., logical() values rather than
-"TRUE" / "FALSE" character strings; using a data.frame (because columns
-are of different type) rather than matrix.
+# 4. respect R's notion of data types, e.g., logical() values rather than
+# "TRUE" / "FALSE" character strings; using a data.frame (because columns
+# are of different type) rather than matrix.
 
-5. avoid querying the web service for getCancerStudies() on each iteration
+#5. avoid querying the web service for getCancerStudies() on each iteration
 
-6. not printing the result to an Excel file
+#6. not printing the result to an Excel file
 
-7. returning the result to the user for subsequent processing, without
-writing to the global environment.
+#7. returning the result to the user for subsequent processing, without
+#writing to the global environment.
 
-I created a third function to write to Excel. It expects a file name
-from the user and will not overwrite an existing file. It returns the
-file name where the output can be found
+#I created a third function to write to Excel. It expects a file name
+#from the user and will not overwrite an existing file. It returns the
+#file name where the output can be found
 
 write.xls <- function(data.types, file) {
-stopifnot(!file.exists(file)))
+stopifnot(!file.exists(file))
 ## your implementation here
 file
 }
 
 
-On the help page I might illustrate this as
+# On the help page I might illustrate this as
 
-studies <- available.studies()
-head(studies)
+# studies <- available.studies()
+# head(studies)
 
-then use a subset of the data for the next function
+# then use a subset of the data for the next function
 
-data.types <- available.data.types(head(studies))
-data.types
+# data.types <- available.data.types(head(studies))
+# data.types
 
-and finally write the output to a temporary file
+# and finally write the output to a temporary file
 
 xls.file <- write.xls(data.types, tempfile(fileext=".xls"))
 xls.file    # open in Excel
 
-You might wish to write a final function that integrates these steps
+# You might wish to write a final function that integrates these steps
 
 all.available.data.types <- function(file) {
 stopifnot(!file.exists(file))
@@ -288,16 +281,14 @@ data.types = available.data.types(studies)
 write.xls(data.types, file)
 }
 
-and include this as Michael suggests
+# and include this as Michael suggests
 
-\dontrun{
-all.available.data.types("my.xls")
-}
+# \dontrun{
+# all.available.data.types("my.xls")
+# }
 
-Bioconductor style would strongly discourage '.'-separated function
-names, instead preferring camelCase() or snake_case().'
-
-
+#Bioconductor style would strongly discourage '.'-separated function
+# names, instead preferring camelCase() or snake_case().'
 
 
 
@@ -312,74 +303,6 @@ names, instead preferring camelCase() or snake_case().'
 
 
 
-
-
-
-
-shortenStudiesNames = TRUE
-
-
-if(shortenStudiesNames == TRUE){
-
-groupNames <- sapply(strsplit(as.character(studiesNames), split=" (", fixed=TRUE), function(x) (x[1]))
-
-}
-
-
-
-
-
-
-
-
-aaaa <- list()
-water <- list()
-
-aaaa$ water <- list()
-
-
-aaaa[[1]][[1]] <- c(1,2)
-names(aaaa[[1]])[1] <- "Hello"
-
-
-
-
-x <- -6
-
-dre <- function(x){
-
-if (x < 0){
-return("skipped")
-}
-
-print("Hi!")
-
-}
-
-dre2 <- function(){
-print("Well done!")
-}
-
-
-dde <- function(x){
-dre(x=x)
-dre2()
-
-}
-
-
-dre(-6)
-
-
-dde(3)
-
-dde(-3)
-
-
-
-
-
-matrix(, nrow = 15, ncol = 0)
 
 
 
@@ -396,7 +319,7 @@ cancers <- c("Acute Myeloid Leukemia (TCGA, NEJM 2013)", "Acute Myeloid Leukemia
 
 
 
-obtainMultipleStudies(genesList, "test", cancers, desiredTechnique = "RNA-seq")
+# obtainMultipleStudies(genesList, "test", cancers, desiredTechnique = "RNA-seq")
 
 
 
@@ -418,12 +341,11 @@ lysine1 <- list(Lysinex3 = sort(data.x3[1:75,2])[1:7], r=c("SETDB1", "SUV39H2", 
 
 
 
-obtainOneStudy(lysine1, "test2", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", desiredCaseList = c(2,3,4,5), validateGenes = TRUE)
+# obtainOneStudy(lysine1, "test2", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", desiredCaseList = c(2,3,4,5), validateGenes = TRUE)
 
 
-automatedStatistics(obtainedDataType = "single study", "test2", "RNA-seq", calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
+# automatedStatistics(obtainedDataType = "single study", "test2", "RNA-seq", calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL, round=TRUE, topGenes = TRUE)
 
-cutoff=NULL, round=TRUE, topGenes = TRUE)
 
 
 
@@ -431,129 +353,9 @@ cutoff=NULL, round=TRUE, topGenes = TRUE)
 
 
 
+# processMultipleStudies(genesList, "test2", cancers, "RNA-seq", cutoff = 2)
 
-processMultipleStudies(genesList, "test2", cancers, "RNA-seq", cutoff = 2)
-
-processOneStudy(lysine1, "test2", cancername, "RNA-seq", c(2,3,4,5))
-
-
-
-
-
-ObM.test$b$`Acute_Myeloid_Leukemia_(TCGA,_Provisional)`[,sort(colnames(ObM.test$b$`Acute_Myeloid_Leukemia_(TCGA,_Provisional)`))]
-
-
-
-
-vbn <- matrix(c(1,2,3,4), ncol=4, nrow=1)
-dimnames(vbn) <- list(c("can1"), c("a", "b", "c", "d"))
-
-mkj <- matrix(c(5,6,7,8), ncol=4, nrow=1)
-dimnames(mkj) <- list(c("can2"), c("a", "b", "c", "d"))
-
-rbind(vbn, mkj)
-
-
-
-
-vvv <- list()
-
-vvv[[1]] <- "x"
-
-names(vvv)[1] <- "a"
-
-vvv[[2]] <- "x"
-
-names(vvv)[2] <- "b"
-
-
-
-bbb <- list()
-
-bbb$amb <- "x"
-
-bbb$and <- "x"
-
-
-
-vvv[[1]] <- bbb
-
-
-vvv
-
-
-
-llk <- matrix(c(1,"a", 2, "b"), ncol= 2, byrow = TRUE)
-
-nnn <- as.data.frame(llk)
-class(nnn[,2])
-
-
-
-
-
-
-
-
-
-
-
-ddf <- data.frame(Top.value=2, Top.Gene= "GAS5", stringsAsFactors = FALSE)
-
-ddt <- data.frame(Top.value=3, Top.Gene= "SNHG6", stringsAsFactors = FALSE)
-
-
-vbnn <- rbind(ddf, ddt)
-
-class(vbnn[,1])
-
-
-
-
-
-
-
-
-
-automatedStatisticsProgressBar <- txtProgressBar(min = 0, max = 3*12, style = 3)
-
-
-
-
-for (k in 1:3){
-
-
-for(l in 1:12){
-
-# Update progressbar
-
-setTxtProgressBar(automatedStatisticsProgressBar, k*l)
-
-}
-
-}
-
-# close progressbar
-
-close(automatedStatisticsProgressBar)
-
-
-
-
-
-
-
-
-
- vb <- list(a= c(1,2,3,4,5), b= TRUE, c= c("1", "c", "n"), d = list(a=c(1,2,3), b = c("f", "j", "K")))
-
-vb1 <- list(a= c(1,2,3,4,5), b= TRUE, c= c("1", "c", "n"), d = list(a=c(1,2,3), b = c("f", "j", "K")))
-
-
-
-identical(vb, vb1)
-
-
+# processOneStudy(lysine1, "test2", cancername, "RNA-seq", c(2,3,4,5))
 
 
 
