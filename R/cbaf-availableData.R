@@ -1,19 +1,19 @@
-#' @title Checking which Datasets are available for Each Cancer study.
+#' @title Checking which Data types are available for Each Cancer study.
 #'
 #' @description This function checks all the cancer studies that are registered in 'cbioportal.org' to
-#' examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA),
-#' microarray(miRNA) and methylation data.
+#' examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA), microarray(miRNA)
+#' and methylation data.
 #'
 #' @details
 #' \tabular{lllll}{
 #' Package: \tab cBioAutomatedTools \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-01 \cr
+#' Date: \tab 2017-06-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import cgdsr xlsxjars xlsx gplots RColorBrewer rafalib Biobase genefilter
+#' @import cgdsr xlsxjars xlsx Biobase
 #'
 #' @return A matrix that contain all cancers versus available data types. It is stored in the
 #' global enviroment (user's workspace) as 'available.data.types.output'. For convenience, an
@@ -295,4 +295,267 @@ all.available.data.types("my.xls")
 }
 
 Bioconductor style would strongly discourage '.'-separated function
-names, instead preferring camelCase() or snake_case().
+names, instead preferring camelCase() or snake_case().'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+shortenStudiesNames = TRUE
+
+
+if(shortenStudiesNames == TRUE){
+
+groupNames <- sapply(strsplit(as.character(studiesNames), split=" (", fixed=TRUE), function(x) (x[1]))
+
+}
+
+
+
+
+
+
+
+
+aaaa <- list()
+water <- list()
+
+aaaa$ water <- list()
+
+
+aaaa[[1]][[1]] <- c(1,2)
+names(aaaa[[1]])[1] <- "Hello"
+
+
+
+
+x <- -6
+
+dre <- function(x){
+
+if (x < 0){
+return("skipped")
+}
+
+print("Hi!")
+
+}
+
+dre2 <- function(){
+print("Well done!")
+}
+
+
+dde <- function(x){
+dre(x=x)
+dre2()
+
+}
+
+
+dre(-6)
+
+
+dde(3)
+
+dde(-3)
+
+
+
+
+
+matrix(, nrow = 15, ncol = 0)
+
+
+
+
+
+
+
+
+genesList <- list(b=c("HOTAIR", "GAS5", "SNHG6"), hhc = c("PVT1", "GAS5", "DBBBGTZZXCC", "NSD2"))
+
+genesList <- list(b=c("HOTAIR", "GAS5"))
+
+cancers <- c("Acute Myeloid Leukemia (TCGA, NEJM 2013)", "Acute Myeloid Leukemia (TCGA, Provisional)")
+
+
+
+obtainMultipleStudies(genesList, "test", cancers, desiredTechnique = "RNA-seq")
+
+
+
+
+
+
+
+
+setwd("Z:/2017.04.25-Breast-LysineX3in1-Dr. Tahmasebi")
+
+cancername <- "Breast Invasive Carcinoma (TCGA, Cell 2015)"
+
+library(xlsx)
+data.x3 <- read.xlsx("all the gene.xlsx", sheetIndex = 1)
+
+lysine.X3 <- list(Lysine.acetyltransferases = data.x3[1:17,2], Lysine.demethylases = data.x3[18:41,2], Lysine.methyltransferases = data.x3[42:75,2])
+lysine1 <- list(Lysinex3 = sort(data.x3[1:75,2])[1:7], r=c("SETDB1", "SUV39H2", "PVT1"))
+
+
+
+
+obtainOneStudy(lysine1, "test2", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", desiredCaseList = c(2,3,4,5), validateGenes = TRUE)
+
+
+automatedStatistics(obtainedDataType = "single study", "test2", "RNA-seq", calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
+
+cutoff=NULL, round=TRUE, topGenes = TRUE)
+
+
+
+
+
+
+
+
+processMultipleStudies(genesList, "test2", cancers, "RNA-seq", cutoff = 2)
+
+processOneStudy(lysine1, "test2", cancername, "RNA-seq", c(2,3,4,5))
+
+
+
+
+
+ObM.test$b$`Acute_Myeloid_Leukemia_(TCGA,_Provisional)`[,sort(colnames(ObM.test$b$`Acute_Myeloid_Leukemia_(TCGA,_Provisional)`))]
+
+
+
+
+vbn <- matrix(c(1,2,3,4), ncol=4, nrow=1)
+dimnames(vbn) <- list(c("can1"), c("a", "b", "c", "d"))
+
+mkj <- matrix(c(5,6,7,8), ncol=4, nrow=1)
+dimnames(mkj) <- list(c("can2"), c("a", "b", "c", "d"))
+
+rbind(vbn, mkj)
+
+
+
+
+vvv <- list()
+
+vvv[[1]] <- "x"
+
+names(vvv)[1] <- "a"
+
+vvv[[2]] <- "x"
+
+names(vvv)[2] <- "b"
+
+
+
+bbb <- list()
+
+bbb$amb <- "x"
+
+bbb$and <- "x"
+
+
+
+vvv[[1]] <- bbb
+
+
+vvv
+
+
+
+llk <- matrix(c(1,"a", 2, "b"), ncol= 2, byrow = TRUE)
+
+nnn <- as.data.frame(llk)
+class(nnn[,2])
+
+
+
+
+
+
+
+
+
+
+
+ddf <- data.frame(Top.value=2, Top.Gene= "GAS5", stringsAsFactors = FALSE)
+
+ddt <- data.frame(Top.value=3, Top.Gene= "SNHG6", stringsAsFactors = FALSE)
+
+
+vbnn <- rbind(ddf, ddt)
+
+class(vbnn[,1])
+
+
+
+
+
+
+
+
+
+automatedStatisticsProgressBar <- txtProgressBar(min = 0, max = 3*12, style = 3)
+
+
+
+
+for (k in 1:3){
+
+
+for(l in 1:12){
+
+# Update progressbar
+
+setTxtProgressBar(automatedStatisticsProgressBar, k*l)
+
+}
+
+}
+
+# close progressbar
+
+close(automatedStatisticsProgressBar)
+
+
+
+
+
+
+
+
+
+ vb <- list(a= c(1,2,3,4,5), b= TRUE, c= c("1", "c", "n"), d = list(a=c(1,2,3), b = c("f", "j", "K")))
+
+vb1 <- list(a= c(1,2,3,4,5), b= TRUE, c= c("1", "c", "n"), d = list(a=c(1,2,3), b = c("f", "j", "K")))
+
+
+
+identical(vb, vb1)
+
+
+
+
+
+
+

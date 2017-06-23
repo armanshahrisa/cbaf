@@ -8,7 +8,7 @@
 #' Package: \tab cBioAutomatedTools \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-20 \cr
+#' Date: \tab 2017-06-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -21,24 +21,24 @@
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
 #'
 #' @param studiesNames a character vector or a matrix that containes desired cancer names. The character vector containes standard
-#' names of cancer studies that can be found on cbioportal.org, such as \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}. Alternatively,
+#' names of cancer studies that can be found on cbioportal.org, such as 'Acute Myeloid Leukemia (TCGA, NEJM 2013)'. Alternatively,
 #' a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard
 #' cancer names while the second column must contain the desired cancer names.
 #'
-#' @param desiredTechnique a character string that is one of the following techniques: \code{'RNA-seq'}, \code{'microRNA-Seq'},
-#' \code{'microarray.mRNA'}, \code{'microarray.microRNA'} or \code{'methylation'}.
+#' @param desiredTechnique a character string that is one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA',
+#' 'microarray.microRNA' or 'methylation'.
 #'
 #' @param cancerCode a logical value that tells the function to use cbioportal abbreviated cancer names instead of complete cancer
-#' names, if set to be \code{TRUE}. For example, \code{laml_tcga_pub} is the abbreviated name for \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.
+#' names, if set to be 'TRUE'. For example, 'laml_tcga_pub' is the abbreviated name for 'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.
 #'
 #' @param validateGenes a logical value that, if set to be \code{TRUE}, function will check each cancer study to find whether
 #' or not each gene has a record. If a cancer study doesn't have a record for specific gene, it checks for alternative gene names
 #' that cbioportal might use instead of the given gene name.
 #'
 #' @return a list that contains the obtained data without further processing. Name of the list starts with 'obS' and contains
-#' \code{submissionName}. Inside the list, there is one subgroup for every gene group, which itself contains one matrix for every cancer study.
-#' In addition, if \code{validateGenes = TRUE}, a secondary list containing gene validation results will be stored. Name of the second
-#' list starts with 'vaS' and contains \code{submissionName}.
+#' submissionName. Inside the list, there is one subgroup for every gene group, which itself contains one matrix for every cancer study.
+#' In addition, if validateGenes = TRUE, a secondary list containing gene validation results will be stored. Name of the second
+#' list starts with 'vaS' and contains submissionName.
 #'
 #' @examples
 #' # Creating a list that contains one gene group: 'K.acetyltransferases'

@@ -1,18 +1,18 @@
-#' @title Checking Expression/methylation Profile for various cancer studies.
+#' @title Generating heatmaps for various studies/subgroups of a study.
 #'
-#' @description This function can prepaire heatmap for 'frequency percentage', 'mean value' and 'median value' based in user's
-#' preference.
+#' @description This function can prepare heatmap for 'frequency percentage', 'mean value' and 'median value' data provided by
+#' automatedStatistics() function.
 #'
 #' @details
 #' \tabular{lllll}{
 #' Package: \tab cBioAutomatedTools \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-20 \cr
+#' Date: \tab 2017-06-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import gplots RColorBrewer genefilter
+#' @import gplots RColorBrewer genefilter Biobase
 #'
 #' @usage heatmapOutput(submissionName, desiredTechnique, cutoff = NULL, shortenStudyNames = TRUE, genelimit = "none",
 #' resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu",
@@ -20,20 +20,13 @@
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
 #'
-#' @param desiredTechnique a character string that is one of the following techniques: \code{'RNA-seq'}, \code{'microRNA-Seq'},
-#' \code{'microarray.mRNA'}, \code{'microarray.microRNA'} or \code{'methylation'}.
-#'
-#' @param cutoff a number used to limit samples to those that are greather than specific number (cutoff). The default value for
-#' methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is
-#' \code{observed/expected ratio}, for the rest, it is \code{z-score}. TO change the cutoff to any desired number, change the
-#' option to \code{cutoff = desiredNumber} in which \code{desiredNumber} is the number of interest.
-#'
 #' @param shortenStudyNames a logical vector. If the value is set as true, function will try to remove the end part of
 #' cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted
 #' the experiment.
 #'
-#' @param genelimit if large number of genes exists in at least one gene group, this option can be use to limit the number of
-#' genes to be shown on hitmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation.
+#' @param genelimit if large number of genes exist in at least one gene group, this option can be used to limit the number of
+#' genes that are shown on hitmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation
+#' across multiple study / study subgroups.
 #' The default value is \code{none}.
 #'
 #' @param resolution a number. This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'.
@@ -43,31 +36,31 @@
 #'
 #' @param ColCex a number that specifies letter size in heatmap column names.
 #'
-#' @param heatmapMargines a numeric vectors that can be use to set heatmap margins. The default value is
+#' @param heatmapMargines a numeric vector that can be used to set heatmap margins. The default value is
 #' \code{heatmapMargines=c(15,07)}.
 #'
 #' @param angleForYaxisNames a number that determines the angle with which the studies/study subgroups names are shown in heatmaps.
 #' The default value is 45 degree.
 #'
-#' @param heatmapColor a character string matches standard color names. The default value is "RdBu". "redgreen" is also a popular
+#' @param heatmapColor a character string that defines heatmao color. The default value is "RdBu". "redgreen" is also a popular
 #' color in genomic studies. To see the rest of colors, please type \code{display.brewer.all()}.
 #'
-#' @param reverseColor a logical value that reverses the color gradiant for heatmap.
+#' @param reverseColor a logical value that reverses the color gradiant for heatmap(s).
 #'
 #' @param simplify a logical value that tells the function whether or not to change values under
-#' \code{simplifiction.cuttoff} to zero. It only affects heatmaps to assist finding the candidate genes faster. Therefore, it is
+#' \code{simplifiction.cuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
 #' not suited for publications.
 #'
 #' @param simplifictionCuttoff a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 #' for \code{simplify.visulization}. It has the same unit as \code{cutoff}.
 #'
-#' @return Based on preference, three heatmaps for \code{Frequency.Percentage}, \code{Mean.Value} and \code{Median.value} can be
-#' generated. If more than one group of genes is entered, output for each group will be strored in a separate sub-directory.
+#' @return Based on preference, three heatmaps for "Frequency.Percentage", "Mean.Value" and "Median.value" can be
+#' generated. If more than one group of genes are entered, output for each group will be strored in a separate sub-directory.
 #'
 #' @examples
 #'
 #' # Prepairing heatmap for preexist data that is generated by automatedStatistics()
-#' heatmapOutput(submissionName = "test", desiredTechnique = "RNA-seq")
+#' heatmapOutput(submissionName = "test")
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

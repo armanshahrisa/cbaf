@@ -8,7 +8,7 @@
 #' Package: \tab cBioAutomatedTools \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-20 \cr
+#' Date: \tab 2017-06-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -21,23 +21,23 @@
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
 #'
 #' @param studyName a character string showing the desired cancer name. It is an standard cancer study name that can be found on
-#' cbioportal.org, such as \code{Acute Myeloid Leukemia (TCGA, NEJM 2013)}.
+#' cbioportal.org, such as 'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.
 #'
-#' @param desiredTechnique a character string that is one of the following techniques: \code{'RNA-seq'}, \code{'microRNA-Seq'},
-#' \code{'microarray.mRNA'}, \code{'microarray.microRNA'} or \code{'methylation'}.
+#' @param desiredTechnique a character string that is one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA',
+#' 'microarray.microRNA' or 'methylation'.
 #'
 #' @param desiredCaseList a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of
-#' desired subgroups. If not, desiredCaseList must be set as \code{none}, function will show the available subgroups and ask the
-#' user to enter the desired ones during the process. The default value is \code{none}.
+#' desired subgroups. If not, desiredCaseList must be set as 'none', function will show the available subgroups and ask the
+#' user to enter the desired ones during the process. The default value is 'none'.
 #'
-#' @param validateGenes a logical value that, if set to be \code{TRUE}, function will check each cancer study to find whether
+#' @param validateGenes a logical value that, if set to be 'TRUE', function will check each cancer study to find whether
 #' or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene
 #' names that cbioportal might use instead of the given gene name.
 #'
 #' @return a list that contains the obtained data without further processing. Name of the list starts with 'obS' and contains
-#' \code{submissionName}. Inside the list, there is one subgroup for every gene group, which itself contains one matrix for every study
-#' subgroup. In addition, if \code{validateGenes = TRUE}, a secondary list containing gene validation results will be stored.
-#' Name of the second list starts with 'vaS' and containes \code{submissionName}.
+#' submissionName. Inside the list, there is one subgroup for every gene group, which itself contains one matrix for every study
+#' subgroup. In addition, if validateGenes = TRUE, a secondary list containing gene validation results will be stored.
+#' Name of the second list starts with 'vaS' and containes submissionName.
 #'
 #' @examples
 #' # Creating a list that contains one gene group: 'K.demethylases'
