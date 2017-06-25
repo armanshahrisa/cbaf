@@ -1,5 +1,5 @@
 ---
-title: "cbat"
+title: "cbaf"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -10,32 +10,38 @@ vignette: >
 
 cbat package facilitates working with high-throughput data stored on <http://www.cbioportal.org/>. The official Bioconductor package that is designed for obtaining data from cBioPortal in R, is `cgdsr`. To obtain data with this package, users have to pass a multi-step procedure. Besides, the index of cancers and their subgroups might change frequently, which in turn, requires changing the R code. `cbat` makes this procedure automated for __RNA-seq__, __microRNA-seq__, __microarray__ and __methylation__ data types. In addition, comparing the genetic data from different cancer studies/cancer study subgroups becomes much faster and easier. Further, the results are presented as an excel file and multiple heatmaps.
 
-The package consists of three functions: `available.data.types()`, `process.data.for.cancers()` and `process.data.for.a.cancer()`.
+The package consists of six main functions: `availableData()`, `obtainOneStudy()`, `obtainMultipleStudies()`, `automatedStatistics()`, `heatmapOutput()` and `xlsxOutput()`.
+
+There are two other functions that combine multiple functions in order to perform automated procedures of obtaining the required data, calculating statistics and exporting the data as heatmaps and excel files: `processOneStudy()` and `processMultipleStudies()`.
 
 
 
 
-## available.data.types()
+## availableData()
 
-This function ,requires no input, scans all the cancer studies to find which of the _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data types exist for each study. To use this function, simply type:
+This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data for every study. It requires a name  as a necessary argument.
+```
+    availableData("name")
+```    
+
+ There is another argument that enables the function to save the result as an excel file. The default value is `excelFile = TRUE`. To stop saving excel file, set `excelFile = FALSE`.
 
 ```
-    available.data.types()
+    availableData("name", excelFile = FALSE)
 ```    
 
 The code starts with printing a message in the R console to inform the user it is scanning all the available cancer studies. In the next line, a progress bar will appear.
 
 ```
-[1] "Cheching which data types are available for each cancer"
+[1] "Cheching the available data for every cancer study"
   |                                                                 |   0%
 
 ```
 The progress bar gradually proceeds until it reaches 100%. Until now, 159 cancer studies are registered in cBioPortal. Therefore, the function would requires some time to finish. Upon the finishing, an additional line will be printed in the console that shows the directory in which _Available Data Types.xlsx_ has been saved and the name with which the output is stored in R's global environment (user's workspace).
 
 ```
-[1] "Cheching which data types are available for each cancer"
+[1] "Cheching the available data for every cancer study"
   |===================================================================| 100%
-[1] "An .xlsx file entitled 'Available Data Types Output.xlsx' ,which shows the availabile data types for each cancer study, was saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools . In adition, the output is available in the global enviroment as 'available.data.types.output'"
 ```
 
 The following table shows how the _Available Data Types.xlsx_ file looks like. Since the complete output is too large, only the first five rows are shown. 
