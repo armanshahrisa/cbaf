@@ -69,10 +69,6 @@ color in genomic studies. To see the rest of colors, please type \code{display.b
 
 \item{reverse.heatmap.color}{a logical value that reverses the color gradiant for heatmap.}
 
-\item{rewrite.output.list}{a logical value. This option can be used to modify heatmap, for instance change margin,
-without obtaining data from internet again. If set to false, function will use the values previously stored in the
-global environment to draw heatmaps and save excel file. The default value is \code{TRUE}.}
-
 \item{top.genes}{a logical value that, if set as \code{TRUE}, cause the function to create three data.frame that contain the
 gene names with the highest values for each cancer. To get all the three data.frames, `Frequency.Percentage`, `Mean.Value` and
 `Median` must have been included for \code{data.presented.as}.}
