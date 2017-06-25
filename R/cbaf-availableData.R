@@ -42,9 +42,57 @@ available.data.types <- function(){
 
   # Prerequisites for cBioportal
 
-  mycgds = cgdsr::CGDS("http://www.cbioportal.org/")
+  mycgds = CGDS("http://www.cbioportal.org/")
 
-  all.cancers <- getCancerStudies(mycgds)[,2]
+  list.of.studies <- getCancerStudies(mycgds)
+
+  all.cancers <- data.list[,2]
+
+
+
+  #
+
+  RNAseq.terms <- c(
+
+    "Tumor Samples with mRNA data (RNA Seq V2)",
+
+    "Tumors with mRNA data (RNA Seq V2)",
+
+    "Tumor Samples with mRNA data (RNA Seq)",
+
+    "Tumors with mRNA data (RNA Seq)"
+  )
+
+  microRNAseq.terms <- "Tumors with microRNA data (microRNA-Seq)"
+
+  microarray.for.mRNA.term <- c(
+
+    "Tumor Samples with mRNA data (Agilent microarray)",
+
+    "Tumors with mRNA data (Agilent microarray)",
+
+    "Tumor Samples with mRNA data (U133 microarray only)",
+
+    "Tumors with mRNA data"
+
+  )
+
+  microarray.for.miRNA.term <- "Tumors with microRNA"
+
+  methylation.term <- c(
+
+    "Tumor Samples with methylation data (HM450)",
+
+    "Tumors with methylation data (HM450)",
+
+    "Tumor Samples with methylation data (HM27)",
+
+    "Tumors with methylation data (HM27)",
+
+    "Tumors with methylation data"
+
+  )
+
 
 
   # Creating Empty matrix in order to fill with availibility data
@@ -70,14 +118,40 @@ available.data.types <- function(){
 
   pb <- txtProgressBar(min = 0, max = length(all.cancers), style = 3)
 
+  i <- 0
+
+
+
+  # Checking the database
+
+  available.data <- sapply(studies[, "cancer_study_id"], function(se, cgds) {
+
+    description <- getCaseLists(cgds, se)[, "case_list_name"]
+
+    i <<- i + 1
+
+    setTxtProgressBar(pb, i)
+
+    c(RNASeq = any(description %in% RNASeq),
+
+      microRNA = any(description %in% microRNA),
+
+      microarray_mRNA = any(description %in% mRNA),
+
+      microarray_miRNA = any(description %in% miRNA),
+
+      methylation = any(description %in% methylation))
+
+  }, mycgds)
+
+
+
 
   # Getting information
 
   for(se in 1:length(all.cancers)){
 
-    mycancerstudy = getCancerStudies(mycgds)[se,1]
-
-    All.types <- getCaseLists(mycgds,mycancerstudy)[,2]
+    All.types <- getCaseLists(mycgds,data.list[se,1])[,2]
 
 
 
@@ -211,8 +285,8 @@ available.data.types <- function(studies = available.studies()) {
   mycgds <- CGDS("http://www.cbioportal.org/")
   pb <- txtProgressBar(min = 0, max = nrow(studies), style = 3)
   i <- 0
-  available <- sapply(studies[, "name"], function(se, cgds) {
-    description <- getCaseLists(cgds, se)[, "case_list_description"]
+  available <- sapply(studies[, "cancer_study_id"], function(se, cgds) {
+    description <- getCaseLists(cgds, se)[, "case_list_name"]
     i <<- i + 1
     setTxtProgressBar(pb, i)
     c(RNASeq = any(description %in% RNASeq),
@@ -223,8 +297,12 @@ available.data.types <- function(studies = available.studies()) {
   }, mycgds)
   close(pb)
 
+
   cbind(studies, t(available))
 }
+
+
+getCaseLists(mycgds,data.list[se,1])[,2]
 
 # The main changes are
 
@@ -324,19 +402,6 @@ cancers <- c("Acute Myeloid Leukemia (TCGA, NEJM 2013)", "Acute Myeloid Leukemia
 
 
 
-
-
-
-
-setwd("Z:/2017.04.25-Breast-LysineX3in1-Dr. Tahmasebi")
-
-cancername <- "Breast Invasive Carcinoma (TCGA, Cell 2015)"
-
-library(xlsx)
-data.x3 <- read.xlsx("all the gene.xlsx", sheetIndex = 1)
-
-lysine.X3 <- list(Lysine.acetyltransferases = data.x3[1:17,2], Lysine.demethylases = data.x3[18:41,2], Lysine.methyltransferases = data.x3[42:75,2])
-lysine1 <- list(Lysinex3 = sort(data.x3[1:75,2])[1:7], r=c("SETDB1", "SUV39H2", "PVT1"))
 
 
 
