@@ -177,18 +177,16 @@ availableData <- function(outputName, excelFile = TRUE){
 
   combined.list <- cbind(list.of.studies[,"cancer_study_id"], list.of.studies[,"name"], t(list.of.available.data), list.of.studies[,"description"])
 
-  # Storing the output as a variable
-
-  assign(outputName, combined.list, envir = globalenv())
-
 
 
   ################################################
   # Exporting results
 
-  # Storing data matrix in the global enviornment
+  # Storing the output as a variable
 
-  available.data.types.output <<- available.data.matrix
+  assign(outputName, combined.list, envir = globalenv())
+
+
 
   # Converting matrix to data.frame
 
