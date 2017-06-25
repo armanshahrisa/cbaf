@@ -94,13 +94,13 @@
 #' The default value is 45 degree.
 #'
 #' @param heatmapColor a character string that defines heatmao color. The default value is "RdBu". "redgreen" is also a popular
-#' color in genomic studies. To see the rest of colors, please type \code{display.brewer.all()}.
+#' color in genomic studies. To see the rest of colors, please type \code{display.brewer.all()}.  Default value is 'TRUE'.
 #'
 #' @param reverseColor a logical value that reverses the color gradiant for heatmap(s).
 #'
 #' @param simplify a logical value that tells the function whether or not to change values under
 #' \code{simplifiction.cuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
-#' not suited for publications.
+#' not suited for publications. Default value is 'FALSE'.
 #'
 #' @param simplifictionCuttoff a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 #' for \code{simplify.visulization}. It has the same unit as \code{cutoff}.

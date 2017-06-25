@@ -15,6 +15,10 @@
 #'
 #' @import cgdsr xlsxjars xlsx Biobase
 #'
+#' @param outputName a character string that is required to name the output and, if requested, excel file.
+#'
+#' @param excelFile a logical value that tells the function whether or not export the results as an excel file. Default vlue is TRUE
+#'
 #' @return A matrix that contain all cancers versus available data types. It is stored in the
 #' global enviroment (user's workspace) as 'available.data.types.output'. For convenience, an
 #' excel file - 'Available Data Types Output.xlsx' - is also generated in the working directory.
@@ -34,7 +38,30 @@
 ###################################################################################################
 ###################################################################################################
 
-available.data.types <- function(){
+availableData <- function(outputName, excelFile = TRUE){
+
+
+  ############################################
+  # Check input parameters
+
+  if(!exists("outputName")){
+
+    if(!is.character("outputName")){
+
+      stop("'outputName' must be entered as a character string")
+
+    }
+
+  }
+
+
+
+  if(!is.logical(excelFile)){
+
+    stop("'excelFile' must be either TRUE or FALSE")
+
+  }
+
 
 
   ############################################
@@ -46,13 +73,11 @@ available.data.types <- function(){
 
   list.of.studies <- getCancerStudies(mycgds)
 
-  all.cancers <- data.list[,2]
 
 
+  # Terms associated with different techniques
 
-  #
-
-  RNAseq.terms <- c(
+  RNA_seq.terms <- c(
 
     "Tumor Samples with mRNA data (RNA Seq V2)",
 
@@ -63,7 +88,7 @@ available.data.types <- function(){
     "Tumors with mRNA data (RNA Seq)"
   )
 
-  microRNAseq.terms <- "Tumors with microRNA data (microRNA-Seq)"
+  microRNA_seq.terms <- "Tumors with microRNA data (microRNA-Seq)"
 
   microarray.for.mRNA.term <- c(
 
@@ -95,22 +120,6 @@ available.data.types <- function(){
 
 
 
-  # Creating Empty matrix in order to fill with availibility data
-
-  available.data.matrix <- matrix(rep(" ", length(all.cancers)), nrow = length(all.cancers), ncol = 6)
-
-  rownames(available.data.matrix) <- 1:length(all.cancers)
-
-  available.data.matrix[,1] <- all.cancers
-
-  colnames(available.data.matrix) <- c("Cancers Study" ,"RNA-seq", "MicroRNA-seq", "Microarray (mRNA)", "Microarray (miRNA)", "Methylation")
-
-
-
-
-  ############################################
-  # Availability of four data sets
-
   print("Cheching which data types are available for each cancer")
 
 
@@ -122,97 +131,55 @@ available.data.types <- function(){
 
 
 
-  # Checking the database
+  ############################################
+  ## core segment
 
-  available.data <- sapply(studies[, "cancer_study_id"], function(se, cgds) {
+  # looking for supported technique data
 
-    description <- getCaseLists(cgds, se)[, "case_list_name"]
+  list.of.available.data <- sapply(studies[, "cancer_study_id"], function(cs, cgds) {
+
+    description <- getCaseLists(cgds, cs)[, "case_list_name"]
 
     i <<- i + 1
 
     setTxtProgressBar(pb, i)
 
-    c(RNASeq = any(description %in% RNASeq),
+    c(RNAseq = any(RNA_seq.terms %in% description),
 
-      microRNA = any(description %in% microRNA),
+      microRNA = any(microRNA_seq.terms %in% description),
 
-      microarray_mRNA = any(description %in% mRNA),
+      microarray_mRNA = any(microarray.for.mRNA.term %in% description),
 
-      microarray_miRNA = any(description %in% miRNA),
+      microarray_miRNA = any(microarray.for.miRNA.term %in% description),
 
-      methylation = any(description %in% methylation))
+      methylation = any(methylation.term %in% description))
+
+
 
   }, mycgds)
 
 
-
-
-  # Getting information
-
-  for(se in 1:length(all.cancers)){
-
-    All.types <- getCaseLists(mycgds,data.list[se,1])[,2]
-
-
-
-    # Availability of RNA-seq data
-
-    available.data.matrix[se,2] <- any(All.types %in% c("Tumor Samples with mRNA data (RNA Seq V2)", "Tumors with mRNA data (RNA Seq V2)",
-
-                                                        "Tumor Samples with mRNA data (RNA Seq)", "Tumors with mRNA data (RNA Seq)"))
-
-
-
-    # Availability of microRNA-seq data
-
-    available.data.matrix[se,3] <- any(All.types %in% c("Tumors with microRNA data (microRNA-Seq)"))
-
-
-
-    # Availability of Microarray data (mRNA)
-
-    available.data.matrix[se,4] <- any(All.types %in% c("Tumor Samples with mRNA data (Agilent microarray)",
-
-                                                        "Tumors with mRNA data (Agilent microarray)", "Tumor Samples with mRNA data (U133 microarray only)",
-
-                                                        "Tumors with mRNA data"))
-
-
-
-    # Availability of RNA-seq data (miRNA)
-
-    available.data.matrix[se,5] <- any(All.types %in% c("Tumors with microRNA"))
-
-
-
-    # Availability of methylation data
-
-    available.data.matrix[se,6] <- any(All.types %in% c("Tumor Samples with methylation data (HM450)", "Tumors with methylation data (HM450)",
-
-                                                        "Tumor Samples with methylation data (HM27)", "Tumors with methylation data (HM27)",
-
-                                                        "Tumors with methylation data"))
-
-
-
-    # update progress bar
-
-    setTxtProgressBar(pb, se)
-
-  }
+  # close progressbar
 
   close(pb)
 
 
 
-
-  ################################################
   # Replacing True and False with available and ""
 
-  available.data.matrix[available.data.matrix=="TRUE"] <- "Available"
+  list.of.available.data[list.of.available.data=="TRUE"] <- "available"
 
-  available.data.matrix[available.data.matrix=="FALSE"] <- "-"
+  list.of.available.data[list.of.available.data=="FALSE"] <- "-"
 
+
+
+  # joining list.of.available.data to list.of.studies
+
+  combined.list <- cbind(list.of.studies[,"cancer_study_id"], list.of.studies[,"name"], t(list.of.available.data), list.of.studies[,"description"])
+
+  # Storing the output as a variable
+
+  assign(outputName, combined.list, envir = globalenv())
 
 
 
@@ -424,5 +391,16 @@ cancers <- c("Acute Myeloid Leukemia (TCGA, NEJM 2013)", "Acute Myeloid Leukemia
 
 
 
+
+
+# Creating Empty matrix in order to fill with availibility data
+
+#available.data.matrix <- matrix(rep(" ", length(all.cancers)), nrow = length(all.cancers), ncol = 6)
+
+#rownames(available.data.matrix) <- 1:length(all.cancers)
+
+#available.data.matrix[,1] <- all.cancers
+
+#colnames(available.data.matrix) <- c("Cancers Study" ,"RNA-seq", "MicroRNA-seq", "Microarray (mRNA)", "Microarray (miRNA)", "Methylation")
 
 

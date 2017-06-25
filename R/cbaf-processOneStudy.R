@@ -78,10 +78,6 @@
 #'
 #' @param reverse.heatmap.color a logical value that reverses the color gradiant for heatmap.
 #'
-#' @param rewrite.output.list a logical value. This option can be used to modify heatmap, for instance change margin,
-#' without obtaining data from internet again. If set to false, function will use the values previously stored in the
-#' global environment to draw heatmaps and save excel file. The default value is \code{TRUE}.
-#'
 #' @param round a logical value that, if set to be \code{TRUE}, will force the function to round all the calculated values
 #' to two decimal places. The default value is \code{TRUE}.
 #'
