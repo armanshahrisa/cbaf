@@ -44,9 +44,9 @@ availableData <- function(outputName, excelFile = TRUE){
   ############################################
   # Check input parameters
 
-  if(!exists("outputName")){
+  if(exists("outputName")){
 
-    if(!is.character("outputName")){
+    if(!is.character(outputName)){
 
       stop("'outputName' must be entered as a character string")
 
