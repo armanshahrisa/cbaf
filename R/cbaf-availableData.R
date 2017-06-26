@@ -52,6 +52,10 @@ availableData <- function(outputName, excelFile = TRUE){
 
     }
 
+  } else{
+
+    stop("'outputName' must be entered as a character string")
+
   }
 
 
