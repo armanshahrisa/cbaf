@@ -25,7 +25,6 @@
 #'
 #'
 #'
-#'
 #' @param genesList a list that contains at least one gene group
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
@@ -109,7 +108,7 @@
 #'
 #' @return a list that containes some or all of the following groups, based on what user has chosen: ValidationResults,
 #' Frequency.Percentage, Top.Genes.of.Frequency.Percentage, Frequency.Ratio, mean.Value, Top.Genes.of.Mean.Value, median.Value,
-#' Top.Genes.of.Median. It also saves these groups in one excel FileS for convenience. Based on preference, three heatmaps for
+#' Top.Genes.of.Median. It also saves these groups in one excel files for convenience. Based on preference, three heatmaps for
 #' Frequency.Percentage, Mean.Value and Median can be generated. If more than one group of genes is entered, output for each group
 #' will be strored in a separate sub-directory.
 #'

@@ -183,7 +183,7 @@ availableData <- function(outputName, excelFile = TRUE){
 
   colnames(combined.list) <- c("cancer_study_id", "cancer_study_name", "RNA.seq", "microRNA.seq", "microarray_of_mRNA",
 
-                               "microarray_of_miRNA", "methylation", "description")
+                               "microarray_of_microRNA", "methylation", "description")
 
   rownames(combined.list) <- 1:nrow(combined.list)
 
