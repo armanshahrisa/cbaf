@@ -8,16 +8,18 @@
 #'
 #' @details
 #' \tabular{lllll}{
-#' Package: \tab cBioAutomatedTools \cr
+#' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-22 \cr
+#' Date: \tab 2017-06-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
 #' @import cgdsr xlsxjars xlsx gplots RColorBrewer rafalib Biobase genefilter
 #'
-#' @usage processMultipleStudies <- function(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE,
+#' @include cbaf-obtainMultipleStudies.R cbaf-automatedStatistics.R cbaf-heatmapOutput.R cbaf-xlsxOutput.R
+#'
+#' @usage processMultipleStudies(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE,
 #' validateGenes = TRUE, calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL,
 #' round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
 #' heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
@@ -40,13 +42,9 @@
 #' @param cancerCode a logical value that tells the function to use cbioportal abbreviated cancer names instead of complete cancer
 #' names, if set to be 'TRUE'. For example, 'laml_tcga_pub' is the abbreviated name for 'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.
 #'
-#' @param validateGenes a logical value that, if set to be \code{TRUE}, function will check each cancer study to find whether
-#' or not each gene has a record. If a cancer study doesn't have a record for specific gene, it checks for alternative gene names
-#' that cbioportal might use instead of the given gene name.
-#'
-#' @param obtainedDataType a character string that specifies the type of input data to function. Two options are availabe:
-#' 'single study' and 'multiple studies'. The function uses 'obtainedDataType' and 'submissionName' to construct
-#' the name of input data. Default value is 'multiple studies'.
+#' @param validateGenes a logical value that, if set to be 'TRUE', function will check each cancer study to find whether
+#' or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene
+#' names that cbioportal might use instead of the given gene name.
 #'
 #' @param calculate a character vector that containes the statistical precedures users prefer the function to compute.
 #' Default input is \code{c("frequencyPercentage", "frequencyRatio", "Mean.Value", "medianValue")}. This will tell the function to
@@ -97,6 +95,8 @@
 #'
 #' @param reverseColor a logical value that reverses the color gradiant for heatmap(s).
 #'
+#' @param transposedHeatmap a logical value that changes row and colums of heatmap.
+#'
 #' @param simplify a logical value that tells the function whether or not to change values under
 #' \code{simplifiction.cuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
 #' not suited for publications. Default value is 'FALSE'.
@@ -113,16 +113,11 @@
 #' will be strored in a separate sub-directory.
 #'
 #' @examples
-#' # Creating a list that contains one gene group: 'K.acetyltransferases'
 #' genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 #'
-#' # creating a character vector of study names.
-#' cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
-#' "Bladder Urothelial Carcinoma (TCGA, Provisional)")
+#' studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
 #'
-#' # Running the function to obtain and process the selected data
-#' processMultipleStudies(genes, "test", cancernames, "RNA-seq", calculate = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"),
-#' heatmapMargines=c(15,5), heatmapColor = "redgreen")
+#' processMultipleStudies(genes, "test", studies, "RNA-seq", calculate = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"))
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

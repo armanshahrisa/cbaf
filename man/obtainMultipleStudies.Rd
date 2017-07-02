@@ -38,23 +38,19 @@ whether or not all genes are included in cancer studies and, if not, looks for t
 }
 \details{
 \tabular{lllll}{
-Package: \tab cBioAutomatedTools \cr
+Package: \tab cbaf \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-06-22 \cr
+Date: \tab 2017-06-28 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-# Creating a list that contains one gene group: 'K.acetyltransferases'
 genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 
-# creating a character vector of study names.
-cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
-"Bladder Urothelial Carcinoma (TCGA, Provisional)")
+studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
 
-# Running the function to obtain and process the selected data
-obtainMultipleStudies(genes, "test", cancernames, "RNA-seq")
+# obtainMultipleStudies(genes, "test", studies, "RNA-seq")
 
 }
 \author{

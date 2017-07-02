@@ -19,7 +19,7 @@ There are two other functions that combine multiple functions in order to perfor
 
 ## availableData()
 
-This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data for every study. It requires a name  as a necessary argument.
+This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a name for calling the output result and excel file.
 ```
     availableData("name")
 ```    
@@ -34,25 +34,45 @@ The code starts with printing a message in the R console to inform the user it i
 
 ```
 [1] "Cheching the available data for every cancer study"
-  |                                                                 |   0%
+  |                                                                   |   0%
 
 ```
-The progress bar gradually proceeds until it reaches 100%. Until now, 159 cancer studies are registered in cBioPortal. Therefore, the function would requires some time to finish. Upon the finishing, an additional line will be printed in the console that shows the directory in which _Available Data Types.xlsx_ has been saved and the name with which the output is stored in R's global environment (user's workspace).
+The progress bar gradually proceeds until it reaches 100%. Until now, 161 cancer studies are registered in cBioPortal. Therefore, the function would requires some time to finish.
 
 ```
 [1] "Cheching the available data for every cancer study"
   |===================================================================| 100%
 ```
 
-The following table shows how the _Available Data Types.xlsx_ file looks like. Since the complete output is too large, only the first five rows are shown. 
+Upon finishing, the output is accessible with the given name as a variable. if `excelFile = FALSE`, an excel file containing the results is also generated in the present directory. Both variable and excel file contain different columns: cancer_study_id, cancer_study_name, RNA.seq, microRNA.seq, microarray of mRNA, microarray of miRNA, methylation and description.
 
-|   |                                                                     | RNA-seq |MicroRNA-seq|Microarray (mRNA)|Microarray (miRNA)|Methylation|
-|:-:|:--------------------------------------------------------------------|:-------:|:----------:|:---------------:|:----------------:|:---------:|
-| 1 | Acinar Cell Carcinoma of the Pancreas (Johns Hopkins, J Pathol 2014)| 	 -    |	     -     |       	-        |         -        | 	   -    |
-| 2 | Acute Myeloid Leukemia (TCGA, NEJM 2013)                            |Available|	     -     |       	-        |         -        |Available  |
-| 3 | Acute Myeloid Leukemia (TCGA, Provisional)                          |Available|      -     |       	-        |         -        |Available  |
-| 4 | Adenoid Cystic Carcinoma (FMI, Am J Surg Pathl. 2014)               |	   -    |	     -     |       	-        |         -        |   	 -    |
-| 5 | Adenoid Cystic Carcinoma (MDA, Clin Cancer Res 2015)                |	   -    |	     -     |       	-        |         -        |  	   -    |
+## obtainOneStudy()
+
+This function obtaines and stores the supported data types for at least one group of genes across multiple subgroups of a cancer study.
+
+It requires at least three variables:
+
+- __submissionName__, a character string containing name of interest. It is used for naming the process.
+- __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
+- __desiredTechnique__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.
+
+Function contains other options that can be used:
+
+- __desiredCaseList__ a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as 'none', function will show the available subgroups and ask the user to enter the desired ones during the process. The default value is 'none'.
+- __validateGenes__ a logical value that, if set to be 'TRUE', function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## process.multiple.studies()
 

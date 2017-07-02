@@ -11,9 +11,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2017-06-01" />
+<meta name="date" content="2017-06-27" />
 
-<title>cbat</title>
+<title>cbaf</title>
 
 
 
@@ -29,95 +29,43 @@
 
 
 
-<h1 class="title toc-ignore">cbat</h1>
-<h4 class="date"><em>2017-06-01</em></h4>
+<h1 class="title toc-ignore">cbaf</h1>
+<h4 class="date"><em>2017-06-27</em></h4>
 
 
 
 <p>cbat package facilitates working with high-throughput data stored on <a href="http://www.cbioportal.org/" class="uri">http://www.cbioportal.org/</a>. The official Bioconductor package that is designed for obtaining data from cBioPortal in R, is <code>cgdsr</code>. To obtain data with this package, users have to pass a multi-step procedure. Besides, the index of cancers and their subgroups might change frequently, which in turn, requires changing the R code. <code>cbat</code> makes this procedure automated for <strong>RNA-seq</strong>, <strong>microRNA-seq</strong>, <strong>microarray</strong> and <strong>methylation</strong> data types. In addition, comparing the genetic data from different cancer studies/cancer study subgroups becomes much faster and easier. Further, the results are presented as an excel file and multiple heatmaps.</p>
-<p>The package consists of three functions: <code>available.data.types()</code>, <code>process.data.for.cancers()</code> and <code>process.data.for.a.cancer()</code>.</p>
-<div id="available.data.types" class="section level2">
-<h2>available.data.types()</h2>
-<p>This function ,requires no input, scans all the cancer studies to find which of the <em>RNA-seq</em>, <em>microRNA-seq</em>, <em>microarray</em> and <em>methylation</em> data types exist for each study. To use this function, simply type:</p>
-<pre><code>    available.data.types()</code></pre>
+<p>The package consists of six main functions: <code>availableData()</code>, <code>obtainOneStudy()</code>, <code>obtainMultipleStudies()</code>, <code>automatedStatistics()</code>, <code>heatmapOutput()</code> and <code>xlsxOutput()</code>.</p>
+<p>There are two other functions that combine multiple functions in order to perform automated procedures of obtaining the required data, calculating statistics and exporting the data as heatmaps and excel files: <code>processOneStudy()</code> and <code>processMultipleStudies()</code>.</p>
+<div id="availabledata" class="section level2">
+<h2>availableData()</h2>
+<p>This function scans all the cancer studies to examine presence of <em>RNA-seq</em>, <em>microRNA-seq</em>, <em>microarray</em> and <em>methylation</em> data. It requires a name for calling the output result and excel file.</p>
+<pre><code>    availableData(&quot;name&quot;)</code></pre>
+<p>There is another argument that enables the function to save the result as an excel file. The default value is <code>excelFile = TRUE</code>. To stop saving excel file, set <code>excelFile = FALSE</code>.</p>
+<pre><code>    availableData(&quot;name&quot;, excelFile = FALSE)</code></pre>
 <p>The code starts with printing a message in the R console to inform the user it is scanning all the available cancer studies. In the next line, a progress bar will appear.</p>
-<pre><code>[1] &quot;Cheching which data types are available for each cancer&quot;
-  |                                                                 |   0%
+<pre><code>[1] &quot;Cheching the available data for every cancer study&quot;
+  |                                                                   |   0%
 </code></pre>
-<p>The progress bar gradually proceeds until it reaches 100%. Until now, 159 cancer studies are registered in cBioPortal. Therefore, the function would requires some time to finish. Upon the finishing, an additional line will be printed in the console that shows the directory in which <em>Available Data Types.xlsx</em> has been saved and the name with which the output is stored in R’s global environment (user’s workspace).</p>
-<pre><code>[1] &quot;Cheching which data types are available for each cancer&quot;
-  |===================================================================| 100%
-[1] &quot;An .xlsx file entitled 'Available Data Types Output.xlsx' ,which shows the availabile data types for each cancer study, was saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools . In adition, the output is available in the global enviroment as 'available.data.types.output'&quot;</code></pre>
-<p>The following table shows how the <em>Available Data Types.xlsx</em> file looks like. Since the complete output is too large, only the first five rows are shown.</p>
-<table>
-<colgroup>
-<col width="2%"></col>
-<col width="47%"></col>
-<col width="6%"></col>
-<col width="8%"></col>
-<col width="12%"></col>
-<col width="13%"></col>
-<col width="8%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"></th>
-<th align="left"></th>
-<th align="center">RNA-seq</th>
-<th align="center">MicroRNA-seq</th>
-<th align="center">Microarray (mRNA)</th>
-<th align="center">Microarray (miRNA)</th>
-<th align="center">Methylation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="left">Acinar Cell Carcinoma of the Pancreas (Johns Hopkins, J Pathol 2014)</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="left">Acute Myeloid Leukemia (TCGA, NEJM 2013)</td>
-<td align="center">Available</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">Available</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="left">Acute Myeloid Leukemia (TCGA, Provisional)</td>
-<td align="center">Available</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">Available</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="left">Adenoid Cystic Carcinoma (FMI, Am J Surg Pathl. 2014)</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="left">Adenoid Cystic Carcinoma (MDA, Clin Cancer Res 2015)</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-</tbody>
-</table>
+<p>The progress bar gradually proceeds until it reaches 100%. Until now, 161 cancer studies are registered in cBioPortal. Therefore, the function would requires some time to finish.</p>
+<pre><code>[1] &quot;Cheching the available data for every cancer study&quot;
+  |===================================================================| 100%</code></pre>
+<p>Upon finishing, the output is accessible with the given name as a variable. if <code>excelFile = FALSE</code>, an excel file containing the results is also generated in the present directory. Both variable and excel file contain different columns: cancer_study_id, cancer_study_name, RNA.seq, microRNA.seq, microarray of mRNA, microarray of miRNA, methylation and description.</p>
+</div>
+<div id="obtainonestudy" class="section level2">
+<h2>obtainOneStudy()</h2>
+<p>This function obtaines and stores the supported data types for at least one group of genes across multiple subgroups of a cancer study.</p>
+<p>It requires at least three variables:</p>
+<ul>
+<li><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process.</li>
+<li><strong>studyName</strong>, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
+<li><strong>desiredTechnique</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.</li>
+</ul>
+<p>Function contains other options that can be used:</p>
+<ul>
+<li><strong>desiredCaseList</strong> a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as ‘none’, function will show the available subgroups and ask the user to enter the desired ones during the process. The default value is ‘none’.</li>
+<li><strong>validateGenes</strong> a logical value that, if set to be ‘TRUE’, function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</li>
+</ul>
 </div>
 <div id="process.multiple.studies" class="section level2">
 <h2>process.multiple.studies()</h2>

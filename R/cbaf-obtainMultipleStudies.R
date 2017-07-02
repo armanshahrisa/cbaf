@@ -5,10 +5,10 @@
 #'
 #' @details
 #' \tabular{lllll}{
-#' Package: \tab cBioAutomatedTools \cr
+#' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-22 \cr
+#' Date: \tab 2017-06-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -41,15 +41,11 @@
 #' list starts with 'vaS' and contains submissionName.
 #'
 #' @examples
-#' # Creating a list that contains one gene group: 'K.acetyltransferases'
 #' genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 #'
-#' # creating a character vector of study names.
-#' cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
-#' "Bladder Urothelial Carcinoma (TCGA, Provisional)")
+#' studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
 #'
-#' # Running the function to obtain and process the selected data
-#' obtainMultipleStudies(genes, "test", cancernames, "RNA-seq")
+#' # obtainMultipleStudies(genes, "test", studies, "RNA-seq")
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

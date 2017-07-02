@@ -1,6 +1,6 @@
 Package: cbaf
 biocViews: Technology
-Title: cBioAutomatedFunctions: Automated functions for analysing and comparing data available on cbioportal.org
+Title: cbaf
 Version: 0.99.0
 Authors@R: c(person("Arman", "Shahrisa", role = c("aut", "cre", "cph"),
                      email = "shahrisa.arman@hotmail.com"),
@@ -19,3 +19,12 @@ RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
+Collate: 
+    'cbaf-obtainMultipleStudies.R'
+    'cbaf-obtainOneStudy.R'
+    'cbaf-automatedStatistics.R'
+    'cbaf-availableData.R'
+    'cbaf-heatmapOutput.R'
+    'cbaf-xlsxOutput.R'
+    'cbaf-processMultipleStudies.R'
+    'cbaf-processOneStudy.R'

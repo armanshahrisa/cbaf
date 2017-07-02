@@ -4,7 +4,7 @@
 \alias{availableData}
 \title{Checking which Data types are available for Each Cancer study.}
 \usage{
-availableData()
+availableData(outputName, excelFile = TRUE)
 }
 \arguments{
 \item{outputName}{a character string that is required to name the output and, if requested, excel file.}
@@ -12,9 +12,9 @@ availableData()
 \item{excelFile}{a logical value that tells the function whether or not export the results as an excel file. Default vlue is TRUE}
 }
 \value{
-A matrix that contain all cancers versus available data types. It is stored in the
-global enviroment (user's workspace) as 'available.data.types.output'. For convenience, an
-excel file - 'Available Data Types Output.xlsx' - is also generated in the working directory.
+A matrix that contain all cancer studies versus available data types. It is stored in the
+global enviroment (user's workspace) as a variable according to input name. For convenience, an
+excel file is also generated with the same name in the working directory.
 }
 \description{
 This function checks all the cancer studies that are registered in 'cbioportal.org' to
@@ -23,12 +23,16 @@ and methylation data.
 }
 \details{
 \tabular{lllll}{
-Package: \tab cBioAutomatedTools \cr
+Package: \tab cbaf \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-06-22 \cr
+Date: \tab 2017-06-28 \cr
 License: \tab Artistic-2.0 \cr
 }
+}
+\examples{
+availableData(outputName = "list.of.studies", excelFile = FALSE)
+
 }
 \author{
 Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]

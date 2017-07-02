@@ -4,7 +4,7 @@
 \alias{processMultipleStudies}
 \title{Checking Expression/methylation Profile for various cancer studies.}
 \usage{
-processMultipleStudies <- function(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE,
+processMultipleStudies(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE,
 validateGenes = TRUE, calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL,
 round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
 heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
@@ -26,9 +26,9 @@ cancer names while the second column must contain the desired cancer names.}
 \item{cancerCode}{a logical value that tells the function to use cbioportal abbreviated cancer names instead of complete cancer
 names, if set to be 'TRUE'. For example, 'laml_tcga_pub' is the abbreviated name for 'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.}
 
-\item{validateGenes}{a logical value that, if set to be \code{TRUE}, function will check each cancer study to find whether
-or not each gene has a record. If a cancer study doesn't have a record for specific gene, it checks for alternative gene names
-that cbioportal might use instead of the given gene name.}
+\item{validateGenes}{a logical value that, if set to be 'TRUE', function will check each cancer study to find whether
+or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene
+names that cbioportal might use instead of the given gene name.}
 
 \item{calculate}{a character vector that containes the statistical precedures users prefer the function to compute.
 Default input is \code{c("frequencyPercentage", "frequencyRatio", "Mean.Value", "medianValue")}. This will tell the function to
@@ -79,21 +79,19 @@ color in genomic studies. To see the rest of colors, please type \code{display.b
 
 \item{reverseColor}{a logical value that reverses the color gradiant for heatmap(s).}
 
+\item{transposedHeatmap}{a logical value that changes row and colums of heatmap.}
+
 \item{simplify}{a logical value that tells the function whether or not to change values under
 \code{simplifiction.cuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
 not suited for publications. Default value is 'FALSE'.}
 
 \item{simplifictionCuttoff}{a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 for \code{simplify.visulization}. It has the same unit as \code{cutoff}.}
-
-\item{obtainedDataType}{a character string that specifies the type of input data to function. Two options are availabe:
-'single study' and 'multiple studies'. The function uses 'obtainedDataType' and 'submissionName' to construct
-the name of input data. Default value is 'multiple studies'.}
 }
 \value{
 a list that containes some or all of the following groups, based on what user has chosen: ValidationResults,
 Frequency.Percentage, Top.Genes.of.Frequency.Percentage, Frequency.Ratio, mean.Value, Top.Genes.of.Mean.Value, median.Value,
-Top.Genes.of.Median. It also saves these groups in one excel FileS for convenience. Based on preference, three heatmaps for
+Top.Genes.of.Median. It also saves these groups in one excel files for convenience. Based on preference, three heatmaps for
 Frequency.Percentage, Mean.Value and Median can be generated. If more than one group of genes is entered, output for each group
 will be strored in a separate sub-directory.
 }
@@ -106,24 +104,19 @@ It can generate three meatmaps for
 }
 \details{
 \tabular{lllll}{
-Package: \tab cBioAutomatedTools \cr
+Package: \tab cbaf \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-06-22 \cr
+Date: \tab 2017-06-28 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-# Creating a list that contains one gene group: 'K.acetyltransferases'
 genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 
-# creating a character vector of study names.
-cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)",
-"Bladder Urothelial Carcinoma (TCGA, Provisional)")
+studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
 
-# Running the function to obtain and process the selected data
-processMultipleStudies(genes, "test", cancernames, "RNA-seq", calculate = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"),
-heatmapMargines=c(15,5), heatmapColor = "redgreen")
+processMultipleStudies(genes, "test", studies, "RNA-seq", calculate = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"))
 
 }
 \author{

@@ -8,16 +8,18 @@
 #'
 #' @details
 #' \tabular{lllll}{
-#' Package: \tab cBioAutomatedTools \cr
+#' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-22 \cr
+#' Date: \tab 2017-06-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
 #' @import cgdsr xlsxjars xlsx gplots RColorBrewer rafalib Biobase genefilter
 #'
-#' @usage processOneStudy <- function(genesList, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE,
+#' @include cbaf-obtainOneStudy.R cbaf-automatedStatistics.R cbaf-heatmapOutput.R cbaf-xlsxOutput.R
+#'
+#' @usage processOneStudy(genesList, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE,
 #' validateGenes = TRUE, calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL,
 #' round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
 #' heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
@@ -42,10 +44,6 @@
 #' @param validateGenes a logical value that, if set to be 'TRUE', function will check each cancer study to find whether
 #' or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene
 #' names that cbioportal might use instead of the given gene name.
-#'
-#' @param obtainedDataType a character string that specifies the type of input data to function. Two options are availabe:
-#' 'single study' and 'multiple studies'. The function uses 'obtainedDataType' and 'submissionName' to construct
-#' the name of input data. Default value is 'multiple studies'.
 #'
 #' @param calculate a character vector that containes the statistical precedures users prefer the function to compute.
 #' Default input is \code{c("frequencyPercentage", "frequencyRatio", "Mean.Value", "medianValue")}. This will tell the function to
@@ -96,6 +94,8 @@
 #'
 #' @param reverseColor a logical value that reverses the color gradiant for heatmap(s).
 #'
+#' @param transposedHeatmap a logical value that changes row and colums of heatmap.
+#'
 #' @param simplify a logical value that tells the function whether or not to change values under
 #' \code{simplifiction.cuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
 #' not suited for publications. Default value is 'FALSE'.
@@ -112,12 +112,10 @@
 #' will be strored in a separate sub-directory.
 #'
 #' @examples
-#' # Creating a list that contains one gene group: 'K.demethylases'
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 #'
-#' # Running the function to obtain and process the selected data
-#' processOneStudy(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", desired.case.list = c(3,4,5),
-#' data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), heatmap.color = "redgreen")
+#' processOneStudy(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq",
+#' desired.case.list = c(3,4,5), calculate = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"))
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

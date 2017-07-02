@@ -5,10 +5,10 @@
 #'
 #' @details
 #' \tabular{lllll}{
-#' Package: \tab cBioAutomatedTools \cr
+#' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-22 \cr
+#' Date: \tab 2017-06-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -40,14 +40,10 @@
 #' Name of the second list starts with 'vaS' and containes submissionName.
 #'
 #' @examples
-#' # Creating a list that contains one gene group: 'K.demethylases'
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 #'
-#' # Chosing a submision name
-#' name <- "test"
-#'
-#' # Running the function to obtain the requested data
-#' obtainOneStudy(genesList, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", desiredCaseList = c(3,4,5))
+#' # obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
+#' # "RNA-seq", desiredCaseList = c(3,4,5))
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

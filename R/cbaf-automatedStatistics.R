@@ -6,17 +6,20 @@
 #'
 #' @details
 #' \tabular{lllll}{
-#' Package: \tab cBioAutomatedTools \cr
+#' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-22 \cr
+#' Date: \tab 2017-06-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
 #' @import cgdsr Biobase
 #'
-#' @usage automatedStatistics(obtainedDataType = "multiple studies", submissionName,
-#' calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL, round=TRUE, topGenes = TRUE)
+#' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R
+#'
+#' @usage automatedStatistics(submissionName, obtainedDataType = "multiple studies",
+#' calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
+#' cutoff=NULL, round=TRUE, topGenes = TRUE)
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
 #'
@@ -51,12 +54,10 @@
 #' \code{Median}, \code{Top.Genes.of.Median}.
 #'
 #' @examples
-#' # The function must run after one of the obtain studies function, as it process their result.
-#' automatedStatistics(obtainedDataType = "single study", "test")
+#' # automatedStatistics("test")
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
-#'
 
 
 
@@ -150,7 +151,7 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
   if(!exists(paste(haultType, submissionName, sep = ""))){
 
-    Stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first")
+    stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first")
 
   } else{
 

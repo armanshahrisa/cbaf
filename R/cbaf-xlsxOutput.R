@@ -5,7 +5,7 @@
 #'
 #' @details
 #' \tabular{lllll}{
-#' Package: \tab cBioAutomatedTools \cr
+#' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
 #' Date: \tab 2017-06-22 \cr
@@ -14,13 +14,17 @@
 #'
 #' @import xlsx Biobase
 #'
+#' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R cbaf-automatedStatistics.R
+#'
 #' @usage xlsxOutput(submissionName)
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
 #'
 #' @return It generates one excel file for each genegroup.
 #'
-#' @example xlsxOutput("test")
+#' @examples
+#' # xlsxOutput("test")
+#'
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
@@ -42,7 +46,15 @@ xlsxOutput <- function(submissionName){
 
   # Check submissionName
 
-  if(!is.character(submissionName)){
+  if(exists("submissionName")){
+
+    if(!is.character(submissionName)){
+
+      stop("'submissionName' must be entered as a character string for naming the process")
+
+    }
+
+  } else{
 
     stop("'submissionName' must be entered as a character string for naming the process")
 
