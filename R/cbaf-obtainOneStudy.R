@@ -16,7 +16,7 @@
 #'
 #' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData
 #'
-#' @importFrom BiocFileCache BiocFileCache bfcnew
+#' @importFrom BiocFileCache BiocFileCache bfcnew bfcquery bfcpath
 #'
 #'
 #'
@@ -191,19 +191,35 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
   # Check wheather the requested data exists
 
-  if(exists(paste("Pa.Ob.Si.", submissionName, sep = ""))){
+  if(exists(paste("bfc_", submissionName, sep = ""))){
 
-    if(identical(get(paste("Pa.Ob.Si.", submissionName, sep = ""))[-7], newParameters[-7])){
+    bfc <- get(paste("bfc_", submissionName, sep = ""))
 
-      continue <- FALSE
+    if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 1){
 
-      newParameters$HaultOrder <- TRUE
+      load(bfcpath(bfc, bfcquery(bfc, c("Parameters for obtainOneStudy()"))$rid))
 
-      assign(paste("Pa.Ob.Si.", submissionName, sep = ""), newParameters, envir = globalenv())
+      if(identical(oldParameters[-7], newParameters[-7])){
 
-      print("--- Function 'obtainOneStudy()' was skipped: the requested data already exist ---")
+        continue <- FALSE
 
-    } else{
+        newParameters$HaultOrder <- TRUE
+
+        oldParameters <- newParameters
+
+        save(oldParameters, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
+
+        assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
+
+        print("--- Function 'obtainOneStudy()' was skipped: the requested data already exist ---")
+
+      }else{
+
+        continue <- TRUE
+
+      }
+
+    }else{
 
       continue <- TRUE
 
@@ -415,11 +431,11 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
           # Check wheter gene has an alternative name or missed in the database
 
-          if(length(absentGeneProfileData) == 1){
+          if(length(absentGeneProfileData) == 1 & is.matrix(absentGeneProfileData)){
 
             alternativeGeneNames[ab] <- absentGeneProfileData
 
-          } else if(length(absentGeneProfileData) != 1){
+          } else{
 
             alternativeGeneNames[ab] <- "-"
 
@@ -539,21 +555,74 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     close(obtainOneStudyProgressBar)
 
-    # Store the parameters for this run
 
-    assign(paste("Pa.Ob.Si.", submissionName, sep = ""), newParameters, envir = globalenv())
 
-    # Export the obtained data as a list
 
-    assign(paste("Ob.Si.", submissionName, sep = ""), rawList, envir = globalenv())
+    ## bfc object
 
-    # Export the validation data as a list
+    # create bfc object in global environment
+
+    if(!exists(paste("bfc_", submissionName, sep = ""))){
+
+      bfc <- BiocFileCache(file.path(tempdir(), submissionName))
+
+    } else{
+
+      bfc <- get(paste("bfc_", submissionName, sep = ""))
+
+    }
+
+
+
+    # Store the obtained Data
+
+    if(nrow(bfcquery(bfc, "Obtained Data for single study")) == 0){
+
+      save(rawList, file=bfcnew(bfc, "Obtained Data for single study", ext="RData"))
+
+    } else if(nrow(bfcquery(bfc, "Obtained Data for single study")) == 1){
+
+      save(rawList, file=bfc[[bfcquery(bfc, "Obtained Data for single study")$rid]])
+
+    }
+
+
+
+    # Store the validation data
 
     if(validateGenes == TRUE){
 
-      assign(paste("Va.Si.", submissionName, sep = ""), validationResult, envir = globalenv())
+      if(nrow(bfcquery(bfc, "Validation Data for single study")) == 0){
+
+        save(validationResult, file=bfcnew(bfc, "Validation Data for single study", ext="RData"))
+
+      } else if(nrow(bfcquery(bfc, "Validation Data for single study")) == 1){
+
+        save(validationResult, file=bfc[[bfcquery(bfc, "Validation Data for single study")$rid]])
+
+      }
 
     }
+
+    # Store the parameters for this run
+
+    oldParameters <- newParameters
+
+    if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 0){
+
+      save(oldParameters, file=bfcnew(bfc, "Parameters for obtainOneStudy()", ext="RData"))
+
+    } else if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 1){
+
+      save(oldParameters, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
+
+    }
+
+
+
+    # Store bfc in global environmet
+
+    assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
 
   }
 

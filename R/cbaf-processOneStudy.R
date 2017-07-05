@@ -15,7 +15,6 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import cgdsr xlsxjars xlsx gplots RColorBrewer rafalib Biobase genefilter BiocFileCache
 #'
 #' @include cbaf-obtainOneStudy.R cbaf-automatedStatistics.R cbaf-heatmapOutput.R cbaf-xlsxOutput.R
 #'
