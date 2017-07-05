@@ -4,7 +4,8 @@
 \alias{obtainOneStudy}
 \title{Obtaining the requested data for various subgroups of a cancer study.}
 \usage{
-obtainOneStudy(genesList, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE, validateGenes = TRUE)
+obtainOneStudy(genesList, submissionName, studyName, desiredTechnique,
+desiredCaseList = FALSE, validateGenes = TRUE)
 }
 \arguments{
 \item{genesList}{a list that contains at least one gene group}

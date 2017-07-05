@@ -13,13 +13,17 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import cgdsr Biobase
+#'
+#'
+#' @import BiocFileCache
 #'
 #' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R
 #'
 #' @usage automatedStatistics(submissionName, obtainedDataType = "multiple studies",
 #' calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
 #' cutoff=NULL, round=TRUE, topGenes = TRUE)
+#'
+#'
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
 #'

@@ -4,7 +4,8 @@
 \alias{obtainMultipleStudies}
 \title{Obtaining the requested data for various cancer studies.}
 \usage{
-obtainMultipleStudies(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE, validateGenes = TRUE)
+obtainMultipleStudies(genesList, submissionName, studiesNames, desiredTechnique,
+cancerCode = FALSE, validateGenes = TRUE)
 }
 \arguments{
 \item{genesList}{a list that contains at least one gene group}

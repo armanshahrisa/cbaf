@@ -12,9 +12,16 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import cgdsr Biobase
 #'
-#' @usage obtainOneStudy(genesList, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE, validateGenes = TRUE)
+#'
+#' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData
+#'
+#' @importFrom BiocFileCache BiocFileCache bfcnew
+#'
+#'
+#'
+#' @usage obtainOneStudy(genesList, submissionName, studyName, desiredTechnique,
+#' desiredCaseList = FALSE, validateGenes = TRUE)
 #'
 #' @param genesList a list that contains at least one gene group
 #'
@@ -34,16 +41,22 @@
 #' or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene
 #' names that cbioportal might use instead of the given gene name.
 #'
+#'
+#'
 #' @return a list that contains the obtained data without further processing. Name of the list starts with 'obS' and contains
 #' submissionName. Inside the list, there is one subgroup for every gene group, which itself contains one matrix for every study
 #' subgroup. In addition, if validateGenes = TRUE, a secondary list containing gene validation results will be stored.
 #' Name of the second list starts with 'vaS' and containes submissionName.
+#'
+#'
 #'
 #' @examples
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 #'
 #' # obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
 #' # "RNA-seq", desiredCaseList = c(3,4,5))
+#'
+#'
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

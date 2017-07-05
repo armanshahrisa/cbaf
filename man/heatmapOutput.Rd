@@ -4,8 +4,9 @@
 \alias{heatmapOutput}
 \title{Generating heatmaps for various studies/subgroups of a study.}
 \usage{
-heatmapOutput(submissionName, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8,
-ColCex = 0.8, heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
+heatmapOutput(submissionName, shortenStudyNames = TRUE, genelimit = "none",
+resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10),
+angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
 transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE)
 }
 \arguments{

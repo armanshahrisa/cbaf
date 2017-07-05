@@ -4,11 +4,14 @@
 \alias{processOneStudy}
 \title{Checking Expression/methylation Profile for various subgroups of a cancer study.}
 \usage{
-processOneStudy(genesList, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE,
-validateGenes = TRUE, calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL,
-round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
-heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
-simplify = FALSE, simplifictionCuttoff = FALSE)
+processOneStudy(genesList, submissionName, studyName, desiredTechnique,
+desiredCaseList = FALSE, validateGenes = TRUE,
+calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
+cutoff=NULL, round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE,
+genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
+heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu",
+reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE,
+simplifictionCuttoff = FALSE)
 }
 \arguments{
 \item{genesList}{a list that contains at least one gene group}
@@ -114,7 +117,7 @@ License: \tab Artistic-2.0 \cr
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 
 processOneStudy(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq",
-desired.case.list = c(3,4,5), data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"))
+desired.case.list = c(3,4,5), calculate = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"))
 
 }
 \author{

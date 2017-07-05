@@ -12,12 +12,13 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import gplots RColorBrewer genefilter Biobase
+#' @import gplots RColorBrewer genefilter Biobase BiocFileCache
 #'
 #' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R cbaf-automatedStatistics.R
 #'
-#' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8,
-#' ColCex = 0.8, heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
+#' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE, genelimit = "none",
+#' resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10),
+#' angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
 #' transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE)
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.

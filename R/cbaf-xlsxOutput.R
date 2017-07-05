@@ -12,7 +12,11 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import xlsx Biobase
+#' @import xlsx Biobase BiocFileCache
+#'
+#' @importFrom xlsx write.xlsx
+#'
+#' @importFrom BiocFileCache BiocFileCache
 #'
 #' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R cbaf-automatedStatistics.R
 #'

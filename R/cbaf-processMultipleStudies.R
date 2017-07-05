@@ -15,15 +15,17 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import cgdsr xlsxjars xlsx gplots RColorBrewer rafalib Biobase genefilter
+#' @import cgdsr xlsxjars xlsx gplots RColorBrewer rafalib Biobase genefilter BiocFileCache
 #'
 #' @include cbaf-obtainMultipleStudies.R cbaf-automatedStatistics.R cbaf-heatmapOutput.R cbaf-xlsxOutput.R
 #'
-#' @usage processMultipleStudies(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE,
-#' validateGenes = TRUE, calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL,
-#' round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
-#' heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
-#' simplify = FALSE, simplifictionCuttoff = FALSE)
+#' @usage processMultipleStudies(genesList, submissionName, studiesNames, desiredTechnique,
+#' cancerCode = FALSE, validateGenes = TRUE,
+#' calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
+#' cutoff=NULL, round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none",
+#' resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10), angleForYaxisNames = 45,
+#' heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE,
+#' simplifictionCuttoff = FALSE)
 #'
 #'
 #'

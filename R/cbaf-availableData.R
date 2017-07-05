@@ -13,7 +13,7 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import cgdsr xlsxjars xlsx Biobase
+#' @import cgdsr xlsxjars xlsx Biobase BiocFileCache
 #'
 #' @usage availableData(outputName, excelFile = TRUE)
 #'
