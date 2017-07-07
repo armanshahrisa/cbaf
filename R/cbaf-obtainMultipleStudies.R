@@ -58,7 +58,7 @@
 #'
 #' studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
 #'
-#' # obtainMultipleStudies(genes, "test", studies, "RNA-seq")
+#' # obtainMultipleStudies(genes, "test2", studies, "RNA-seq")
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
@@ -170,7 +170,7 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
 
   ##########################################################################
-  ########## Decide whether functions should stops now!
+  ########## Decide whether function should stops now!
 
   # Store the new parameteres
 
@@ -188,8 +188,6 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
   newParameters$validateGenes <- validateGenes
 
-  newParameters$HaultOrder <- FALSE
-
 
 
 
@@ -204,15 +202,17 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
       load(bfcpath(bfc, bfcquery(bfc, c("Parameters for obtainMultipleStudies()"))$rid))
 
-      if(identical(oldParameters[-7], newParameters[-7])){
+      if(identical(oldParamObtainMultipleStudies[-7], newParameters)){
 
         continue <- FALSE
 
-        newParameters$HaultOrder <- TRUE
+        # Store the last parameter
 
-        oldParameters <- newParameters
+        newParameters$lastRunStatus <- "skipped"
 
-        save(oldParameters, file=bfc[[bfcquery(bfc, "obtainMultipleStudies()")$rid]])
+        oldParamObtainMultipleStudies <- newParameters
+
+        save(oldParamObtainMultipleStudies, file=bfc[[bfcquery(bfc, "obtainMultipleStudies()")$rid]])
 
         assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
 
@@ -423,45 +423,55 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
         # For loop for determining changed genes
 
-        alternativeGeneNames <- vector("character", length = length(absentGenes))
+        if(length(absentGenes) != 0){
 
-        # For loop
+          alternativeGeneNames <- vector("character", length = length(absentGenes))
 
-        for(ab in 1:length(absentGenes)){
+          # For loop
 
-          absentGeneProfileData <- colnames(data.matrix(getProfileData(mycgds, absentGenes[ab], mygeneticprofile,mycaselist)))
+          for(ab in 1:length(absentGenes)){
 
-          # Check wheter gene has an alternative name or missed in the database
+            absentGeneProfileData <- colnames(data.matrix(getProfileData(mycgds, absentGenes[ab], mygeneticprofile,mycaselist)))
 
-          if(length(absentGeneProfileData) == 1 & is.matrix(absentGeneProfileData)){
+            # Check wheter gene has an alternative name or missed in the database
 
-            alternativeGeneNames[ab] <- absentGeneProfileData
+            if(length(absentGeneProfileData) == 1){
 
-          } else{
+              alternativeGeneNames[ab] <- absentGeneProfileData
 
-            alternativeGeneNames[ab] <- "-"
+            } else if(length(absentGeneProfileData) == 0){
+
+              alternativeGeneNames[ab] <- "-"
+
+            }
 
           }
 
-        }
+          # Naming Alternative.gene.names
 
-        # Naming Alternative.gene.names
+          names(alternativeGeneNames) <- absentGenes
 
-        names(alternativeGeneNames) <- absentGenes
+          # Seperating genes with alternative names from those that are absent
 
-        # Seperating genes with alternative names from those that are absent
+          genesLackData <- alternativeGeneNames[alternativeGeneNames == "-"]
 
-        genesLackData <- alternativeGeneNames[alternativeGeneNames == "-"]
-
-        genesWithData <- alternativeGeneNames[alternativeGeneNames != "-"]
+          genesWithData <- alternativeGeneNames[alternativeGeneNames != "-"]
 
 
 
-        # modifying gene names containing an alternative name
+          # modifying gene names containing an alternative name
 
-        for(re in 1:length(genesWithData)){
+          for(re in 1:length(genesWithData)){
 
-          colnames(rawList[[group]][[c]])[colnames(rawList[[group]][[c]]) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+            colnames(rawList[[group]][[c]])[colnames(rawList[[group]][[c]]) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+
+          }
+
+        }else{
+
+          genesLackData <- NULL
+
+          genesWithData <- NULL
 
         }
 
@@ -493,9 +503,13 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
           # modifying gene names containing an alternative name
 
-          for(re in 1:length(genesWithData)){
+          if(length(genesWithData) != 0){
 
-            colnames(validationMatrix)[colnames(validationMatrix) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+            for(re in 1:length(genesWithData)){
+
+              colnames(validationMatrix)[colnames(validationMatrix) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+
+            }
 
           }
 
@@ -578,13 +592,13 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
     # Store the obtained Data
 
-    if(nrow(bfcquery(bfc, "Obtained Data for multiple studies")) == 0){
+    if(nrow(bfcquery(bfc, "Obtained data for multiple studies")) == 0){
 
-      save(rawList, file=bfcnew(bfc, "Obtained Data for multiple studies", ext="RData"))
+      save(rawList, file=bfcnew(bfc, "Obtained data for multiple studies", ext="RData"))
 
-    } else if(nrow(bfcquery(bfc, "Obtained Data for multiple studies")) == 1){
+    } else if(nrow(bfcquery(bfc, "Obtained data for multiple studies")) == 1){
 
-      save(rawList, file=bfc[[bfcquery(bfc, "Obtained Data for multiple studies")$rid]])
+      save(rawList, file=bfc[[bfcquery(bfc, "Obtained data for multiple studies")$rid]])
 
     }
 
@@ -594,29 +608,34 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
     if(validateGenes == TRUE){
 
-      if(nrow(bfcquery(bfc, "Validation Data for multiple studies")) == 0){
+      if(nrow(bfcquery(bfc, "Validation data for multiple studies")) == 0){
 
-        save(validationResult, file=bfcnew(bfc, "Validation Data for multiple studies", ext="RData"))
+        save(validationResult, file=bfcnew(bfc, "Validation data for multiple studies", ext="RData"))
 
-      } else if(nrow(bfcquery(bfc, "Validation Data for multiple studies")) == 1){
+      } else if(nrow(bfcquery(bfc, "Validation data for multiple studies")) == 1){
 
-        save(validationResult, file=bfc[[bfcquery(bfc, "Validation Data for multiple studies")$rid]])
+        save(validationResult, file=bfc[[bfcquery(bfc, "Validation data for multiple studies")$rid]])
 
       }
 
     }
 
-    # Store the parameters for this run
+    # Store the last parameter
 
-    oldParameters <- newParameters
+    newParameters$lastRunStatus <- "succeeded"
+
+    oldParamObtainMultipleStudies <- newParameters
+
+
+    # Store the parameters for this run
 
     if(nrow(bfcquery(bfc, "Parameters for obtainMultipleStudies()")) == 0){
 
-      save(oldParameters, file=bfcnew(bfc, "Parameters for obtainMultipleStudies()", ext="RData"))
+      save(oldParamObtainMultipleStudies, file=bfcnew(bfc, "Parameters for obtainMultipleStudies()", ext="RData"))
 
     } else if(nrow(bfcquery(bfc, "Parameters for obtainMultipleStudies()")) == 1){
 
-      save(oldParameters, file=bfc[[bfcquery(bfc, "Parameters for obtainMultipleStudies()")$rid]])
+      save(oldParamObtainMultipleStudies, file=bfc[[bfcquery(bfc, "Parameters for obtainMultipleStudies()")$rid]])
 
     }
 

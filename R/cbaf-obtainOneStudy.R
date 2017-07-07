@@ -157,7 +157,7 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
 
   ##########################################################################
-  ########## Decide whether functions should stops now!
+  ########## Decide whether function should stops now!
 
   # Store the new parameteres
 
@@ -183,8 +183,6 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
   newParameters$validateGenes <- validateGenes
 
-  newParameters$HaultOrder <- FALSE
-
 
 
 
@@ -199,15 +197,17 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
       load(bfcpath(bfc, bfcquery(bfc, c("Parameters for obtainOneStudy()"))$rid))
 
-      if(identical(oldParameters[-7], newParameters[-7])){
+      if(identical(oldParamObtainOneStudy[-7], newParameters)){
 
         continue <- FALSE
 
-        newParameters$HaultOrder <- TRUE
+        # Store the last parameter
 
-        oldParameters <- newParameters
+        newParameters$lastRunStatus <- "skipped"
 
-        save(oldParameters, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
+        oldParamObtainOneStudy <- newParameters
+
+        save(oldParamObtainOneStudy, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
 
         assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
 
@@ -248,6 +248,8 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     mycancerstudy = getCancerStudies(mycgds)[which(getCancerStudies(mycgds)[,2]==studyName),1]
 
+    caseList <- getCaseLists(mycgds,mycancerstudy)
+
 
 
     ##########################################################################
@@ -257,7 +259,7 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     if(desiredCaseList == FALSE && is.logical(desiredCaseList)){
 
-      Choices <- getCaseLists(mycgds,mycancerstudy)[,2]
+      Choices <- caseList[,2]
 
       print(paste(1:length(Choices), Choices, sep=". "))
 
@@ -287,7 +289,7 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     # Creating a vector which contains names of inputCases
 
-    inputCases.names <- getCaseLists(mycgds,mycancerstudy)[inputCases ,2]
+    inputCases.names <- caseList[inputCases ,2]
 
 
 
@@ -421,45 +423,57 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
         # For loop for determining changed genes
 
-        alternativeGeneNames <- vector("character", length = length(absentGenes))
 
-        # For loop
+        if(length(absentGenes) != 0){
 
-        for(ab in 1:length(absentGenes)){
+          alternativeGeneNames <- vector("character", length = length(absentGenes))
 
-          absentGeneProfileData <- colnames(data.matrix(getProfileData(mycgds, absentGenes[ab], mygeneticprofile,mycaselist)))
+          # For loop
 
-          # Check wheter gene has an alternative name or missed in the database
+          for(ab in 1:length(absentGenes)){
 
-          if(length(absentGeneProfileData) == 1 & is.matrix(absentGeneProfileData)){
+            absentGeneProfileData <- colnames(data.matrix(getProfileData(mycgds, absentGenes[ab], mygeneticprofile,mycaselist)))
 
-            alternativeGeneNames[ab] <- absentGeneProfileData
+            # Check wheter gene has an alternative name or missed in the database
 
-          } else{
+            if(length(absentGeneProfileData) == 1){
 
-            alternativeGeneNames[ab] <- "-"
+              alternativeGeneNames[ab] <- absentGeneProfileData
+
+            } else if(length(absentGeneProfileData) == 0){
+
+              alternativeGeneNames[ab] <- "-"
+
+            }
 
           }
 
-        }
+          # Naming Alternative.gene.names
 
-        # Naming Alternative.gene.names
+          names(alternativeGeneNames) <- absentGenes
 
-        names(alternativeGeneNames) <- absentGenes
+          # Seperating genes with alternative names from those that are absent
 
-        # Seperating genes with alternative names from those that are absent
+          genesLackData <- alternativeGeneNames[alternativeGeneNames == "-"]
 
-        genesLackData <- alternativeGeneNames[alternativeGeneNames == "-"]
-
-        genesWithData <- alternativeGeneNames[alternativeGeneNames != "-"]
+          genesWithData <- alternativeGeneNames[alternativeGeneNames != "-"]
 
 
 
-        # modifying gene names containing an alternative name
+          # modifying gene names containing an alternative name
 
-        for(re in 1:length(genesWithData)){
+          for(re in 1:length(genesWithData)){
 
-          colnames(rawList[[group]][[i]])[colnames(rawList[[group]][[i]]) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+            colnames(rawList[[group]][[i]])[colnames(rawList[[group]][[i]]) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+
+          }
+
+
+        }else{
+
+          genesLackData <- NULL
+
+          genesWithData <- NULL
 
         }
 
@@ -491,9 +505,13 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
           # modifying gene names containing an alternative name
 
-          for(re in 1:length(genesWithData)){
+          if(length(genesWithData) != 0){
 
-            colnames(validationMatrix)[colnames(validationMatrix) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+            for(re in 1:length(genesWithData)){
+
+              colnames(validationMatrix)[colnames(validationMatrix) %in% genesWithData[re]] <- paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep = "")
+
+            }
 
           }
 
@@ -576,13 +594,13 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     # Store the obtained Data
 
-    if(nrow(bfcquery(bfc, "Obtained Data for single study")) == 0){
+    if(nrow(bfcquery(bfc, "Obtained data for single study")) == 0){
 
-      save(rawList, file=bfcnew(bfc, "Obtained Data for single study", ext="RData"))
+      save(rawList, file=bfcnew(bfc, "Obtained data for single study", ext="RData"))
 
-    } else if(nrow(bfcquery(bfc, "Obtained Data for single study")) == 1){
+    } else if(nrow(bfcquery(bfc, "Obtained data for single study")) == 1){
 
-      save(rawList, file=bfc[[bfcquery(bfc, "Obtained Data for single study")$rid]])
+      save(rawList, file=bfc[[bfcquery(bfc, "Obtained data for single study")$rid]])
 
     }
 
@@ -592,29 +610,34 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     if(validateGenes == TRUE){
 
-      if(nrow(bfcquery(bfc, "Validation Data for single study")) == 0){
+      if(nrow(bfcquery(bfc, "Validation data for single study")) == 0){
 
-        save(validationResult, file=bfcnew(bfc, "Validation Data for single study", ext="RData"))
+        save(validationResult, file=bfcnew(bfc, "Validation data for single study", ext="RData"))
 
-      } else if(nrow(bfcquery(bfc, "Validation Data for single study")) == 1){
+      } else if(nrow(bfcquery(bfc, "Validation data for single study")) == 1){
 
-        save(validationResult, file=bfc[[bfcquery(bfc, "Validation Data for single study")$rid]])
+        save(validationResult, file=bfc[[bfcquery(bfc, "Validation data for single study")$rid]])
 
       }
 
     }
 
-    # Store the parameters for this run
+    # Store the last parameter
 
-    oldParameters <- newParameters
+    newParameters$lastRunStatus <- "succeeded"
+
+    oldParamObtainOneStudy <- newParameters
+
+
+    # Store the parameters for this run
 
     if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 0){
 
-      save(oldParameters, file=bfcnew(bfc, "Parameters for obtainOneStudy()", ext="RData"))
+      save(oldParamObtainOneStudy, file=bfcnew(bfc, "Parameters for obtainOneStudy()", ext="RData"))
 
     } else if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 1){
 
-      save(oldParameters, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
+      save(oldParamObtainOneStudy, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
 
     }
 

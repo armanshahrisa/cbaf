@@ -69,7 +69,7 @@ xlsxOutput <- function(submissionName){
 
 
   ##########################################################################
-  ########## Decide whether functions should stops now!
+  ########## Decide whether functions should stop now!
 
   # Store the new parameteres
 

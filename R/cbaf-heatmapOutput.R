@@ -100,7 +100,7 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
 
   ##########################################################################
-  ########## Decide whether functions should stops now!
+  ########## Decide whether function should stops now!
 
   # Store the new parameteres
 

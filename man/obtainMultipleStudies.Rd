@@ -51,7 +51,7 @@ genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 
 studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
 
-# obtainMultipleStudies(genes, "test", studies, "RNA-seq")
+# obtainMultipleStudies(genes, "test2", studies, "RNA-seq")
 
 }
 \author{

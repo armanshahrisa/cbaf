@@ -57,7 +57,7 @@ License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-# automatedStatistics("test")
+automatedStatistics("test", obtainedDataType = "single study")
 
 }
 \author{

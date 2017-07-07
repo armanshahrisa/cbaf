@@ -15,9 +15,11 @@
 #'
 #'
 #'
-#' @import BiocFileCache
+#' @importFrom BiocFileCache BiocFileCache bfcnew bfcquery bfcpath
 #'
 #' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R
+#'
+#'
 #'
 #' @usage automatedStatistics(submissionName, obtainedDataType = "multiple studies",
 #' calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
@@ -58,10 +60,12 @@
 #' \code{Median}, \code{Top.Genes.of.Median}.
 #'
 #' @examples
-#' # automatedStatistics("test")
+#' automatedStatistics("test", obtainedDataType = "single study")
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
+#'
+#' @export
 
 
 
@@ -82,15 +86,19 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
   if(obtainedDataType == "multiple studies"){
 
-    databaseSymbol <- "Ob.Mu."
+    previousParamName <- "Parameters for obtainMultipleStudies()"
 
-    haultType <- "Pa.Ob.Mu."
+    paramDeterminant <- "MultipleStudies"
+
+    databaseType <- "Obtained data for multiple studies"
 
   } else if(obtainedDataType == "single study"){
 
-    databaseSymbol <- "Ob.Si."
+    previousParamName <- "Parameters for obtainOneStudy()"
 
-    haultType <- "Pa.Ob.Si."
+    paramDeterminant <- "ObtainOneStudy"
+
+    databaseType <- "Obtained data for single study"
 
   } else{
 
@@ -127,45 +135,38 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
 
   ##########################################################################
-  ########## Decide whether functions should stops now!
-
-  # Store the new parameteres
-
-  newParameters <-list()
-
-  newParameters$submissionName <- submissionName
-
-  newParameters$obtainedDataType <- obtainedDataType
-
-  newParameters$calculate <- calculate
-
-  newParameters$cutoff <- cutoff
-
-  newParameters$round <- round
-
-  newParameters$topGenes <- topGenes
-
-  newParameters$HaultOrder <- FALSE
-
-
-
-
+  ########## Decide whether function should stops now!
 
   # Check wheather the requested data exists
 
-  if(!exists(paste(haultType, submissionName, sep = ""))){
+  if(!exists(paste("bfc_", submissionName, sep = ""))){
 
     stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first")
 
-  } else{
+  } else if(exists(paste("bfc_", submissionName, sep = ""))){
 
+    bfc <- get(paste("bfc_", submissionName, sep = ""))
 
-    oldParam <- get(paste(haultType, submissionName, sep = ""))
+    if(!nrow(bfcquery(bfc, previousParamName)) == 1){
 
-    desiredTechnique <- oldParam$desiredTechnique
+      stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first")
 
-    newParameters$desiredTechnique <- desiredTechnique
+    }
+
   }
+
+
+
+  # obtain parameters for prevous function
+
+  load(bfcpath(bfc, bfcquery(bfc, c(previousParamName))$rid))
+
+  previousFunctionParam <- get(paste("oldParam", paramDeterminant, sep = ""))
+
+
+  # fetch an old parameter from the previous function
+
+  desiredTechnique <- previousFunctionParam$desiredTechnique
 
 
 
@@ -195,17 +196,55 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
 
 
+
+
+  # Store the new parameteres
+
+  newParameters <-list()
+
+  newParameters$submissionName <- submissionName
+
+  newParameters$obtainedDataType <- obtainedDataType
+
+  newParameters$calculate <- calculate
+
+  newParameters$cutoff <- cutoff
+
+  newParameters$round <- round
+
+  newParameters$topGenes <- topGenes
+
+  newParameters$desiredTechnique <- desiredTechnique
+
+
+
+
+
   # Check wheather the requested data exists
 
-  if(exists(paste("Pa.PrData.", submissionName, sep = ""))){
+  if(nrow(bfcquery(bfc, "Parameters for automatedStatistics()")) == 1){
 
-    if(oldParam$HaultOrder == TRUE){
+    load(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid))
 
-      if(identical(get(paste("Pa.PrData.", submissionName, sep = ""))[-7], newParameters[-7])){
+    # Check whether the previous function is skipped
+
+    if(previousFunctionParam$lastRunStatus == "skipped"){
+
+      if(identical(oldParamAutomatedStatistics[-8], newParameters)){
 
         continue <- FALSE
 
-        newParameters$HaultOrder <- TRUE
+        # Store the last parameter
+
+        newParameters$lastRunStatus <- "skipped"
+
+        oldParamAutomatedStatistics <- newParameters
+
+        save(oldParamAutomatedStatistics, file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")$rid]])
+
+        assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
+
+
 
         assign(paste("Pa.PrData.", submissionName, sep = ""), newParameters, envir = globalenv())
 
@@ -237,7 +276,9 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
     # Getting the source data
 
-    sourceDataList <- get(paste(databaseSymbol, submissionName, sep = ""))
+    load(bfcpath(bfc, bfcquery(bfc, databaseType)$rid))
+
+    sourceDataList <- rawList
 
     if(!is.list(sourceDataList)){
 
@@ -983,13 +1024,53 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
     close(automatedStatisticsProgressBar)
 
+
+
+
+    ## bfc object
+
+    # obtain bfc object
+
+    bfc <- get(paste("bfc_", submissionName, sep = ""))
+
+
+
+    # Store the obtained Data
+
+    if(nrow(bfcquery(bfc, "Calculated statistics")) == 0){
+
+      save(processedList, file=bfcnew(bfc, "Calculated statistics", ext="RData"))
+
+    } else if(nrow(bfcquery(bfc, "Calculated statistics")) == 1){
+
+      save(processedList, file=bfc[[bfcquery(bfc, "Calculated statistics")$rid]])
+
+    }
+
+    # Store the last parameter
+
+    newParameters$lastRunStatus <- "succeeded"
+
+    oldParamAutomatedStatistics <- newParameters
+
+
     # Store the parameters for this run
 
-    assign(paste("Pa.PrData.", submissionName, sep = ""), newParameters, envir = globalenv())
+    if(nrow(bfcquery(bfc, "Parameters for automatedStatistics()")) == 0){
 
-    # Export the obtained data as list
+      save(oldParamAutomatedStatistics, file=bfcnew(bfc, "Parameters for automatedStatistics()", ext="RData"))
 
-    assign(paste("PrData.", submissionName, sep = ""), processedList, envir = globalenv())
+    } else if(nrow(bfcquery(bfc, "Parameters for automatedStatistics()")) == 1){
+
+      save(oldParamAutomatedStatistics, file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")$rid]])
+
+    }
+
+
+
+    # Store bfc in global environmet
+
+    assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
 
   }
 
