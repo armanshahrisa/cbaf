@@ -12,22 +12,32 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import xlsx Biobase BiocFileCache
+#'
 #'
 #' @importFrom xlsx write.xlsx
 #'
-#' @importFrom BiocFileCache BiocFileCache
+#' @importFrom BiocFileCache bfcnew bfcquery bfcpath
+#'
+#' @importFrom utils head setTxtProgressBar txtProgressBar
 #'
 #' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R cbaf-automatedStatistics.R
 #'
+#'
+#'
 #' @usage xlsxOutput(submissionName)
+#'
+#'
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
 #'
+#'
+#'
 #' @return It generates one excel file for each genegroup.
 #'
+#'
+#'
 #' @examples
-#' # xlsxOutput("test")
+#' xlsxOutput("test")
 #'
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
@@ -71,33 +81,42 @@ xlsxOutput <- function(submissionName){
   ##########################################################################
   ########## Decide whether functions should stop now!
 
-  # Store the new parameteres
-
-  newParameters <-list()
-
-  newParameters$submissionName <- submissionName
-
-
-
-
-
   # Check wheather the requested data exists
 
-  if(!exists(paste("Pa.PrData.", submissionName, sep = ""))){
+  if(!exists(paste("bfc_", submissionName, sep = ""))){
 
-    Stop("Please run automatedStatistics() function first")
+    stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function")
 
-  } else{
+  } else if(exists(paste("bfc_", submissionName, sep = ""))){
 
-    oldParam <- get(paste("Pa.PrData.", submissionName, sep = ""))
+    bfc <- get(paste("bfc_", submissionName, sep = ""))
 
-    desiredTechnique <- oldParam$desiredTechnique
+    if(!nrow(bfcquery(bfc, c("Parameters for automatedStatistics()"))) == 1){
 
-    cutoff <- oldParam$cutoff
+      stop("Please run the automatedStatistics() function first")
 
-    obtainedDataType <- oldParam$obtainedDataType
+    }
 
   }
+
+
+
+  # obtain parameters for prevous function
+
+  load(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid))
+
+  previousFunctionParam <- oldParamAutomatedStatistics
+
+
+
+
+  # fetch an old parameter from the previous function
+
+  desiredTechnique <- previousFunctionParam$desiredTechnique
+
+  cutoff <- previousFunctionParam$cutoff
+
+  obtainedDataType <- previousFunctionParam$obtainedDataType
 
 
 
@@ -115,11 +134,29 @@ xlsxOutput <- function(submissionName){
 
 
 
-  if(exists(paste("Pa.Excel.", submissionName, sep = ""))){
 
-    if(oldParam$HaultOrder == TRUE){
 
-      if(identical(get(paste("Pa.Excel.", submissionName, sep = "")), newParameters)){
+  # Store the new parameteres
+
+  newParameters <-list()
+
+  newParameters$submissionName <- submissionName
+
+
+
+
+
+  # Check wheather the requested data exists
+
+  if(nrow(bfcquery(bfc, "Parameters for xlsxOutput()")) == 1){
+
+    load(bfcpath(bfc, bfcquery(bfc, c("Parameters for xlsxOutput()"))$rid))
+
+    # Check whether the previous function is skipped
+
+    if(previousFunctionParam$lastRunStatus == "skipped"){
+
+      if(identical(oldParamXlsxOutput, newParameters)){
 
         continue <- FALSE
 
@@ -145,25 +182,41 @@ xlsxOutput <- function(submissionName){
 
 
 
-  # Get the previous function's result
 
-  whole.data <- get(paste("PrData.", submissionName, sep = ""))
+
+  # Getting the source data
+
+  load(bfcpath(bfc, bfcquery(bfc, c("Calculated statistics"))$rid))
+
+  statisticsData <- processedList
+
+  if(!is.list(statisticsData)){
+
+    stop(paste("Input database must be a list.", sep = ""))
+
+  }
+
+
+
+
 
   # Check gene validation dat
 
   if(obtainedDataType == "multiple studies"){
 
-    validationType <- "Va.Mu."
+    validationName <- "Validation data for multiple studie"
 
   } else if(obtainedDataType == "single study"){
 
-    validationType <- "Va.Si."
+    validationName <- "Validation data for single study"
 
   }
 
-  if(exists(paste(validationType, submissionName, sep = ""))){
+  if(nrow(bfcquery(bfc, validationName)) == 1){
 
-    validation.data <- get(paste(validationType, submissionName, sep = ""))
+    load(bfcpath(bfc, bfcquery(bfc, validationName)$rid))
+
+    validation.data <- validationResult
 
   }
 
@@ -192,11 +245,9 @@ xlsxOutput <- function(submissionName){
 
 
 
-
-
   # Create progressbar
 
-  total.number <- length(whole.data)
+  total.number <- length(statisticsData)
 
   heatmapOutputProgressBar <- txtProgressBar(min = 0, max = total.number, style = 3)
 
@@ -211,13 +262,13 @@ xlsxOutput <- function(submissionName){
 
   # Save heatmaps in separate folder
 
-  for(gr in 1:length(whole.data)){
+  for(gr in 1:length(statisticsData)){
 
     # Subset data that can be presented as heatmap
 
-    subset.name <- names(whole.data)[gr]
+    subset.name <- names(statisticsData)[gr]
 
-    subset.data <- whole.data[[gr]]
+    subset.data <- statisticsData[[gr]]
 
     sheet.names <- names(subset.data)
 
@@ -354,9 +405,32 @@ xlsxOutput <- function(submissionName){
 
   }
 
+
+
+  # Store the last parameter
+
+  oldParamXlsxOutput <- newParameters
+
+
   # Store the parameters for this run
 
-  assign(paste("Pa.Excel.", submissionName, sep = ""), newParameters, envir = globalenv())
+  if(nrow(bfcquery(bfc, "Parameters for xlsxOutput()")) == 0){
+
+    save(oldParamXlsxOutput, file=bfcnew(bfc, "Parameters for xlsxOutput()", ext="RData"))
+
+  } else if(nrow(bfcquery(bfc, "Parameters for xlsxOutput()")) == 1){
+
+    save(oldParamXlsxOutput, file=bfc[[bfcquery(bfc, "Parameters for xlsxOutput()")$rid]])
+
+  }
+
+
+
+  # Store bfc in global environmet
+
+  assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
+
+
 
   # change directory to parent directory
 

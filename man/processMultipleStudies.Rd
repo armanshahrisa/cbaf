@@ -116,9 +116,12 @@ License: \tab Artistic-2.0 \cr
 \examples{
 genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
 
-studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
+studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)",
+"Adrenocortical Carcinoma (TCGA, Provisional)")
 
-processMultipleStudies(genes, "test", studies, "RNA-seq", calculate = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"))
+processMultipleStudies(genes, "test2", studies, "RNA-seq",
+calculate = c("frequencyPercentage", "frequencyRatio", "meanValue",
+"medianValue"), heatmapMargines = c(15,10))
 
 }
 \author{

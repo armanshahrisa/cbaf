@@ -18,6 +18,8 @@
 #'
 #' @importFrom BiocFileCache BiocFileCache bfcnew bfcquery bfcpath
 #'
+#' @importFrom utils head setTxtProgressBar txtProgressBar
+#'
 #'
 #'
 #' @usage obtainMultipleStudies(genesList, submissionName, studiesNames, desiredTechnique,

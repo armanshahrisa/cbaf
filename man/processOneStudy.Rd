@@ -116,8 +116,9 @@ License: \tab Artistic-2.0 \cr
 \examples{
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 
-processOneStudy(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq",
-desired.case.list = c(3,4,5), calculate = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"))
+processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
+"RNA-seq", desiredCaseList = c(3,4,5), calculate = c("frequencyPercentage",
+"frequencyRatio", "meanValue", "medianValue"))
 
 }
 \author{

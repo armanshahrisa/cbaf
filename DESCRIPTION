@@ -13,7 +13,7 @@ Description: This package contains functions that allow analysing and comparing 
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.4.0), cgdsr, xlsxjars, xlsx, gplots, RColorBrewer, rafalib, Biobase, genefilter
+Imports: BiocFileCache, RColorBrewer, cgdsr, genefilter, gplots, grDevices, stats, utils, xlsx 
 NeedsCompilation: no
 RoxygenNote: 6.0.1
 Suggests: knitr,

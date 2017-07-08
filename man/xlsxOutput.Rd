@@ -26,7 +26,7 @@ License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-# xlsxOutput("test")
+xlsxOutput("test")
 
 
 }

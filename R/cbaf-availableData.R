@@ -13,7 +13,13 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import cgdsr xlsxjars xlsx Biobase BiocFileCache
+#'
+#'
+#' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData
+#'
+#' @importFrom xlsx write.xlsx
+#'
+#' @importFrom utils head setTxtProgressBar txtProgressBar
 #'
 #' @usage availableData(outputName, excelFile = TRUE)
 #'
@@ -26,7 +32,7 @@
 #' excel file is also generated with the same name in the working directory.
 #'
 #' @examples
-#' availableData(outputName = "list.of.studies", excelFile = FALSE)
+#' # availableData(outputName = "list.of.studies", excelFile = FALSE)
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

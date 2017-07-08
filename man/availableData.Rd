@@ -31,7 +31,7 @@ License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-availableData(outputName = "list.of.studies", excelFile = FALSE)
+# availableData(outputName = "list.of.studies", excelFile = FALSE)
 
 }
 \author{

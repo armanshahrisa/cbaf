@@ -15,7 +15,11 @@
 #'
 #'
 #'
-#' @importFrom BiocFileCache BiocFileCache bfcnew bfcquery bfcpath
+#' @importFrom stats median na.omit
+#'
+#' @importFrom BiocFileCache bfcnew bfcquery bfcpath
+#'
+#' @importFrom utils head setTxtProgressBar txtProgressBar
 #'
 #' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R
 #'
@@ -55,9 +59,13 @@
 #' top genes for each cancer. To get all the three data.frames, "Frequency.Percentage", "Mean.Value" and "Median" must have been
 #' included for \code{calculate}.
 #'
+#'
+#'
 #' @return a list that contains some or all of the following statistical measurements for every gene group, based on what user has chosen:
 #' \code{Frequency.Percentage}, \code{Top.Genes.of.Frequency.Percentage}, \code{Frequency.Ratio}, \code{Mean.Value}, \code{Top.Genes.of.Mean.Value},
 #' \code{Median}, \code{Top.Genes.of.Median}.
+#'
+#'
 #'
 #' @examples
 #' automatedStatistics("test", obtainedDataType = "single study")
@@ -88,7 +96,7 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
     previousParamName <- "Parameters for obtainMultipleStudies()"
 
-    paramDeterminant <- "MultipleStudies"
+    paramDeterminant <- "ObtainMultipleStudies"
 
     databaseType <- "Obtained data for multiple studies"
 
@@ -243,10 +251,6 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
         save(oldParamAutomatedStatistics, file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")$rid]])
 
         assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
-
-
-
-        assign(paste("Pa.PrData.", submissionName, sep = ""), newParameters, envir = globalenv())
 
         print("--- Function 'automatedStatistics()' was skipped: the requested data already exist ---")
 
@@ -1026,15 +1030,6 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
 
 
-
-    ## bfc object
-
-    # obtain bfc object
-
-    bfc <- get(paste("bfc_", submissionName, sep = ""))
-
-
-
     # Store the obtained Data
 
     if(nrow(bfcquery(bfc, "Calculated statistics")) == 0){
@@ -1046,6 +1041,8 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
       save(processedList, file=bfc[[bfcquery(bfc, "Calculated statistics")$rid]])
 
     }
+
+
 
     # Store the last parameter
 

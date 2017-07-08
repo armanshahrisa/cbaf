@@ -12,14 +12,32 @@
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
-#' @import gplots RColorBrewer genefilter Biobase BiocFileCache
+#'
+#'
+#' @importFrom genefilter rowVars
+#'
+#' @importFrom RColorBrewer brewer.pal
+#'
+#' @importFrom gplots heatmap.2
+#'
+#' @importFrom BiocFileCache bfcnew bfcquery bfcpath
+#'
+#' @importFrom grDevices colorRampPalette dev.off png
+#'
+#' @importFrom utils head setTxtProgressBar txtProgressBar
+#'
+#'
 #'
 #' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R cbaf-automatedStatistics.R
+#'
+#'
 #'
 #' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE, genelimit = "none",
 #' resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10),
 #' angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
 #' transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE)
+#'
+#'
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
 #'
@@ -59,11 +77,17 @@
 #' @param simplifictionCuttoff a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 #' for \code{simplify.visulization}. It has the same unit as \code{cutoff}.
 #'
+#'
+#'
 #' @return Based on preference, three heatmaps for "Frequency.Percentage", "Mean.Value" and "Median.value" can be
 #' generated. If more than one group of genes are entered, output for each group will be strored in a separate sub-directory.
 #'
+#'
+#'
 #' @examples
 #' heatmapOutput(submissionName = "test")
+#'
+#'
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}s
@@ -102,6 +126,59 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
   ##########################################################################
   ########## Decide whether function should stops now!
 
+  # Check wheather the requested data exists
+
+  if(!exists(paste("bfc_", submissionName, sep = ""))){
+
+    stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function")
+
+  } else if(exists(paste("bfc_", submissionName, sep = ""))){
+
+    bfc <- get(paste("bfc_", submissionName, sep = ""))
+
+    if(!nrow(bfcquery(bfc, c("Parameters for automatedStatistics()"))) == 1){
+
+      stop("Please run the automatedStatistics() function")
+
+    }
+
+  }
+
+
+
+  # obtain parameters for prevous function
+
+  load(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid))
+
+  previousFunctionParam <- oldParamAutomatedStatistics
+
+
+
+
+  # fetch an old parameter from the previous function
+
+  desiredTechnique <- previousFunctionParam$desiredTechnique
+
+  cutoff <- previousFunctionParam$cutoff
+
+
+
+  # setting the value for cutoff
+
+  if(desiredTechnique == "methylation"){
+
+    cutoff.phrase <- "obs/exp cutoff"
+
+  } else{
+
+    cutoff.phrase <- "z-score cutoff"
+
+  }
+
+
+
+
+
   # Store the new parameteres
 
   newParameters <-list()
@@ -138,48 +215,15 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   # Check wheather the requested data exists
 
-  if(!exists(paste("Pa.PrData.", submissionName, sep = ""))){
+  if(nrow(bfcquery(bfc, "Parameters for heatmapOutput()")) == 1){
 
-    stop("Please run automatedStatistics() function first")
+    load(bfcpath(bfc, bfcquery(bfc, c("Parameters for heatmapOutput()"))$rid))
 
-  } else{
+    # Check whether the previous function is skipped
 
-    oldParam <- get(paste("Pa.PrData.", submissionName, sep = ""))
+    if(previousFunctionParam$lastRunStatus == "skipped"){
 
-    desiredTechnique <- oldParam$desiredTechnique
-
-    cutoff <- oldParam$cutoff
-
-  }
-
-
-  # setting the value for cutoff
-
-  if(desiredTechnique == "methylation"){
-
-    cutoff.phrase <- "obs/exp cutoff"
-
-  } else{
-
-    cutoff.phrase <- "z-score cutoff"
-
-  }
-
-
-
-  # Get the previous function's result
-
-  whole.data <- get(paste("PrData.", submissionName, sep = ""))
-
-
-
-  # Check wheather the requested data exists
-
-  if(exists(paste("Pa.Heat.", submissionName, sep = ""))){
-
-    if(oldParam$HaultOrder == TRUE){
-
-      if(identical(get(paste("Pa.Heat.", submissionName, sep = "")), newParameters)){
+      if(identical(oldParamHeatmapOutput, newParameters)){
 
         continue <- FALSE
 
@@ -204,11 +248,26 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
 
 
+
+  # Getting the source data
+
+  load(bfcpath(bfc, bfcquery(bfc, c("Calculated statistics"))$rid))
+
+  statisticsData <- processedList
+
+  if(!is.list(statisticsData)){
+
+    stop(paste("Input database must be a list.", sep = ""))
+
+  }
+
+
+
+
+
   # get the working directory
 
   parent.directory <- getwd()
-
-
 
 
 
@@ -225,17 +284,17 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   }
 
+
+
   # Count number of skipped heatmaps
 
   skipped <- 0
 
 
 
-
-
   # Create progressbar
 
-  total.number <- length(whole.data)*length((whole.data[[1]]) [names(whole.data[[1]]) %in% c("Frequency.Percentage", "Mean.Value", "Median.Value")])
+  total.number <- length(statisticsData)*length((statisticsData[[1]]) [names(statisticsData[[1]]) %in% c("Frequency.Percentage", "Mean.Value", "Median.Value")])
 
   heatmapOutputProgressBar <- txtProgressBar(min = 0, max = total.number, style = 3)
 
@@ -250,13 +309,13 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   # Save heatmaps in separate folder
 
-  for(gr in 1:length(whole.data)){
+  for(gr in 1:length(statisticsData)){
 
     # Subset data that can be presented as heatmap
 
-    subset.name <- names(whole.data)[gr]
+    subset.name <- names(statisticsData)[gr]
 
-    subset.data <- (whole.data[[gr]]) [names(whole.data[[gr]]) %in% c("Frequency.Percentage", "Mean.Value", "Median.Value")]
+    subset.data <- (statisticsData[[gr]]) [names(statisticsData[[gr]]) %in% c("Frequency.Percentage", "Mean.Value", "Median.Value")]
 
 
 
@@ -445,6 +504,8 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   close(heatmapOutputProgressBar)
 
+
+
   # report number of skipped heatmaps
 
   if(skipped > 0 & skipped != 1){
@@ -457,9 +518,32 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   }
 
+
+
+  # Store the last parameter
+
+  oldParamHeatmapOutput <- newParameters
+
+
   # Store the parameters for this run
 
-  assign(paste("Pa.Heat.", submissionName, sep = ""), newParameters, envir = globalenv())
+  if(nrow(bfcquery(bfc, "Parameters for heatmapOutput()")) == 0){
+
+    save(oldParamHeatmapOutput, file=bfcnew(bfc, "Parameters for heatmapOutput()", ext="RData"))
+
+  } else if(nrow(bfcquery(bfc, "Parameters for heatmapOutput()")) == 1){
+
+    save(oldParamHeatmapOutput, file=bfc[[bfcquery(bfc, "Parameters for heatmapOutput()")$rid]])
+
+  }
+
+
+
+  # Store bfc in global environmet
+
+  assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
+
+
 
   # change directory to parent directory
 

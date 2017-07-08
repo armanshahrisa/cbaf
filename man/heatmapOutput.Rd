@@ -68,6 +68,8 @@ License: \tab Artistic-2.0 \cr
 \examples{
 heatmapOutput(submissionName = "test")
 
+
+
 }
 \author{
 Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
