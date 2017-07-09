@@ -25,6 +25,7 @@
 #'
 #'
 #'
+#'
 #' @usage automatedStatistics(submissionName, obtainedDataType = "multiple studies",
 #' calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
 #' cutoff=NULL, round=TRUE, topGenes = TRUE)
@@ -68,6 +69,11 @@
 #'
 #'
 #' @examples
+#' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
+#'
+#' obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
+#' "RNA-seq", desiredCaseList = c(3,4), validateGenes = FALSE)
+#'
 #' automatedStatistics("test", obtainedDataType = "single study")
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]

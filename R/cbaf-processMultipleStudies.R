@@ -121,7 +121,7 @@
 #'
 #' processMultipleStudies(genes, "test2", studies, "RNA-seq",
 #' calculate = c("frequencyPercentage", "frequencyRatio", "meanValue",
-#' "medianValue"), heatmapMargines = c(15,10))
+#' "medianValue"), heatmapMargines = c(15,10), validateGenes = FALSE)
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

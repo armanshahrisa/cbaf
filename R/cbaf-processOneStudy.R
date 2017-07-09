@@ -117,8 +117,8 @@
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 #'
 #' processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-#' "RNA-seq", desiredCaseList = c(3,4,5), calculate = c("frequencyPercentage",
-#' "frequencyRatio", "meanValue", "medianValue"))
+#' "RNA-seq", desiredCaseList = c(3,4), calculate = c("frequencyPercentage",
+#' "frequencyRatio", "meanValue", "medianValue"), validateGenes = FALSE)
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

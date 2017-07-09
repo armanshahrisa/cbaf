@@ -57,6 +57,11 @@ License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
+
+obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
+"RNA-seq", desiredCaseList = c(3,4), validateGenes = FALSE)
+
 automatedStatistics("test", obtainedDataType = "single study")
 
 }

@@ -9,7 +9,7 @@ availableData(outputName, excelFile = TRUE)
 \arguments{
 \item{outputName}{a character string that is required to name the output and, if requested, excel file.}
 
-\item{excelFile}{a logical value that tells the function whether or not export the results as an excel file. Default vlue is TRUE}
+\item{excelFile}{a logical value that tells the function whether or not export the results as an excel file. Default value is TRUE.}
 }
 \value{
 A matrix that contain all cancer studies versus available data types. It is stored in the
@@ -29,10 +29,6 @@ Version: \tab 0.99.0 \cr
 Date: \tab 2017-06-28 \cr
 License: \tab Artistic-2.0 \cr
 }
-}
-\examples{
-# availableData(outputName = "list.of.studies", excelFile = FALSE)
-
 }
 \author{
 Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]

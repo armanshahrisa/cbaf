@@ -60,7 +60,7 @@
 #'
 #' studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
 #'
-#' # obtainMultipleStudies(genes, "test2", studies, "RNA-seq")
+#' obtainMultipleStudies(genes, "test2", studies, "RNA-seq", validateGenes = FALSE)
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}

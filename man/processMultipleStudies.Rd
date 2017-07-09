@@ -121,7 +121,7 @@ studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)",
 
 processMultipleStudies(genes, "test2", studies, "RNA-seq",
 calculate = c("frequencyPercentage", "frequencyRatio", "meanValue",
-"medianValue"), heatmapMargines = c(15,10))
+"medianValue"), heatmapMargines = c(15,10), validateGenes = FALSE)
 
 }
 \author{

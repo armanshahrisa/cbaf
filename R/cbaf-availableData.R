@@ -25,14 +25,13 @@
 #'
 #' @param outputName a character string that is required to name the output and, if requested, excel file.
 #'
-#' @param excelFile a logical value that tells the function whether or not export the results as an excel file. Default vlue is TRUE
+#' @param excelFile a logical value that tells the function whether or not export the results as an excel file. Default value is TRUE.
 #'
 #' @return A matrix that contain all cancer studies versus available data types. It is stored in the
 #' global enviroment (user's workspace) as a variable according to input name. For convenience, an
 #' excel file is also generated with the same name in the working directory.
 #'
-#' @examples
-#' # availableData(outputName = "list.of.studies", excelFile = FALSE)
+#'
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
