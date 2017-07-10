@@ -388,7 +388,7 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
       } else if (length(s.condition) == 0){
 
-        stop(paste(studiesNames[i], "doesn't have an appropriate 'level 2' condition for", desiredTechnique, "data!", sep=" "))
+        stop(paste(studiesNames[c], "doesn't have an appropriate 'level 2' condition for", desiredTechnique, "data!", sep=" "))
 
       }) ,1]
 

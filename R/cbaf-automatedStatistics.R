@@ -306,9 +306,17 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
 
 
+    # Report
+
+    print(paste("***", "Performing the requested statistical analyses for", submissionName, "***", sep = " "))
+
+
+
     # Create a progressbar
 
-    automatedStatisticsProgressBar <- txtProgressBar(min = 0, max = length(sourceDataList[[1]])*length(sourceDataList), style = 3)
+    total.number <- length(sourceDataList)*length(sourceDataList[[1]])
+
+    automatedStatisticsProgressBar <- txtProgressBar(min = 0, max = total.number, style = 3)
 
     ExtA <- 0
 
@@ -316,12 +324,6 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
     ##########################################################################
     ########## Core segment
-
-    # Report
-
-    print(paste("***", "Performing the requested statistical analyses for", submissionName, "***", sep = " "))
-
-
 
     # calculating the first 'for' loop for different gene groups
 
