@@ -8,7 +8,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-28 \cr
+#' Date: \tab 2017-07-30 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -56,7 +56,7 @@
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 #'
 #' obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-#' "RNA-seq", desiredCaseList = c(3,4), validateGenes = FALSE)
+#' "RNA-seq", desiredCaseList = c(3,4))
 #'
 #'
 #'
@@ -197,9 +197,9 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 1){
 
-      load(bfcpath(bfc, bfcquery(bfc, c("Parameters for obtainOneStudy()"))$rid))
+      oldParameters <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for obtainOneStudy()"))$rid))
 
-      if(identical(oldParamObtainOneStudy[-7], newParameters)){
+      if(identical(oldParameters[-7], newParameters)){
 
         continue <- FALSE
 
@@ -209,7 +209,7 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
         oldParamObtainOneStudy <- newParameters
 
-        save(oldParamObtainOneStudy, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
+        saveRDS(oldParamObtainOneStudy, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
 
         assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
 
@@ -598,11 +598,11 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     if(nrow(bfcquery(bfc, "Obtained data for single study")) == 0){
 
-      save(rawList, file=bfcnew(bfc, "Obtained data for single study", ext="RData"))
+      saveRDS(rawList, file=bfcnew(bfc, "Obtained data for single study", ext="RDS"))
 
     } else if(nrow(bfcquery(bfc, "Obtained data for single study")) == 1){
 
-      save(rawList, file=bfc[[bfcquery(bfc, "Obtained data for single study")$rid]])
+      saveRDS(rawList, file=bfc[[bfcquery(bfc, "Obtained data for single study")$rid]])
 
     }
 
@@ -614,11 +614,11 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
       if(nrow(bfcquery(bfc, "Validation data for single study")) == 0){
 
-        save(validationResult, file=bfcnew(bfc, "Validation data for single study", ext="RData"))
+        saveRDS(validationResult, file=bfcnew(bfc, "Validation data for single study", ext="RDS"))
 
       } else if(nrow(bfcquery(bfc, "Validation data for single study")) == 1){
 
-        save(validationResult, file=bfc[[bfcquery(bfc, "Validation data for single study")$rid]])
+        saveRDS(validationResult, file=bfc[[bfcquery(bfc, "Validation data for single study")$rid]])
 
       }
 
@@ -635,11 +635,11 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
     if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 0){
 
-      save(oldParamObtainOneStudy, file=bfcnew(bfc, "Parameters for obtainOneStudy()", ext="RData"))
+      saveRDS(oldParamObtainOneStudy, file=bfcnew(bfc, "Parameters for obtainOneStudy()", ext="RDS"))
 
     } else if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 1){
 
-      save(oldParamObtainOneStudy, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
+      saveRDS(oldParamObtainOneStudy, file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
 
     }
 

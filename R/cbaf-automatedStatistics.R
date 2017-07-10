@@ -9,7 +9,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-28 \cr
+#' Date: \tab 2017-07-30 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -72,9 +72,10 @@
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 #'
 #' obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-#' "RNA-seq", desiredCaseList = c(3,4), validateGenes = FALSE)
+#' "RNA-seq", desiredCaseList = c(3,4))
 #'
-#' automatedStatistics("test", obtainedDataType = "single study")
+#' automatedStatistics("test", obtainedDataType = "single study", calculate =
+#' c("frequencyPercentage", "frequencyRatio"))
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
@@ -173,9 +174,7 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
   # obtain parameters for prevous function
 
-  load(bfcpath(bfc, bfcquery(bfc, c(previousParamName))$rid))
-
-  previousFunctionParam <- get(paste("oldParam", paramDeterminant, sep = ""))
+  previousFunctionParam <- readRDS(bfcpath(bfc, bfcquery(bfc, c(previousParamName))$rid))
 
 
   # fetch an old parameter from the previous function
@@ -238,13 +237,13 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
   if(nrow(bfcquery(bfc, "Parameters for automatedStatistics()")) == 1){
 
-    load(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid))
+    oldParameters <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid))
 
     # Check whether the previous function is skipped
 
     if(previousFunctionParam$lastRunStatus == "skipped"){
 
-      if(identical(oldParamAutomatedStatistics[-8], newParameters)){
+      if(identical(oldParameters[-8], newParameters)){
 
         continue <- FALSE
 
@@ -254,7 +253,7 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
         oldParamAutomatedStatistics <- newParameters
 
-        save(oldParamAutomatedStatistics, file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")$rid]])
+        saveRDS(oldParamAutomatedStatistics, file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")$rid]])
 
         assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
 
@@ -286,9 +285,7 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
     # Getting the source data
 
-    load(bfcpath(bfc, bfcquery(bfc, databaseType)$rid))
-
-    sourceDataList <- rawList
+    sourceDataList <- readRDS(bfcpath(bfc, bfcquery(bfc, databaseType)$rid))
 
     if(!is.list(sourceDataList)){
 
@@ -1040,11 +1037,11 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
     if(nrow(bfcquery(bfc, "Calculated statistics")) == 0){
 
-      save(processedList, file=bfcnew(bfc, "Calculated statistics", ext="RData"))
+      saveRDS(processedList, file=bfcnew(bfc, "Calculated statistics", ext="RDS"))
 
     } else if(nrow(bfcquery(bfc, "Calculated statistics")) == 1){
 
-      save(processedList, file=bfc[[bfcquery(bfc, "Calculated statistics")$rid]])
+      saveRDS(processedList, file=bfc[[bfcquery(bfc, "Calculated statistics")$rid]])
 
     }
 
@@ -1061,11 +1058,11 @@ automatedStatistics<- function(submissionName, obtainedDataType = "multiple stud
 
     if(nrow(bfcquery(bfc, "Parameters for automatedStatistics()")) == 0){
 
-      save(oldParamAutomatedStatistics, file=bfcnew(bfc, "Parameters for automatedStatistics()", ext="RData"))
+      saveRDS(oldParamAutomatedStatistics, file=bfcnew(bfc, "Parameters for automatedStatistics()", ext="RDS"))
 
     } else if(nrow(bfcquery(bfc, "Parameters for automatedStatistics()")) == 1){
 
-      save(oldParamAutomatedStatistics, file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")$rid]])
+      saveRDS(oldParamAutomatedStatistics, file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")$rid]])
 
     }
 

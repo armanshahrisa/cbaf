@@ -8,7 +8,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-28 \cr
+#' Date: \tab 2017-07-30 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -18,7 +18,7 @@
 #'
 #' @importFrom RColorBrewer brewer.pal
 #'
-#' @importFrom gplots heatmap.2
+#' @importFrom gplots heatmap.2 redgreen
 #'
 #' @importFrom BiocFileCache bfcnew bfcquery bfcpath
 #'
@@ -71,7 +71,7 @@
 #' @param transposedHeatmap a logical value that changes row and colums of heatmap.
 #'
 #' @param simplify a logical value that tells the function whether or not to change values under
-#' \code{simplifiction.cuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
+#' \code{simplifictionCuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
 #' not suited for publications.
 #'
 #' @param simplifictionCuttoff a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
@@ -88,9 +88,10 @@
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 #'
 #' obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-#' "RNA-seq", desiredCaseList = c(3,4), validateGenes = FALSE)
+#' "RNA-seq", desiredCaseList = c(3,4))
 #'
-#' automatedStatistics("test", obtainedDataType = "single study")
+#' automatedStatistics("test", obtainedDataType = "single study", calculate =
+#' c("frequencyPercentage", "frequencyRatio"))
 #'
 #' heatmapOutput(submissionName = "test")
 #'
@@ -155,9 +156,7 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   # obtain parameters for prevous function
 
-  load(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid))
-
-  previousFunctionParam <- oldParamAutomatedStatistics
+  previousFunctionParam <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid))
 
 
 
@@ -224,13 +223,13 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   if(nrow(bfcquery(bfc, "Parameters for heatmapOutput()")) == 1){
 
-    load(bfcpath(bfc, bfcquery(bfc, c("Parameters for heatmapOutput()"))$rid))
+    oldParameters <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for heatmapOutput()"))$rid))
 
     # Check whether the previous function is skipped
 
     if(previousFunctionParam$lastRunStatus == "skipped"){
 
-      if(identical(oldParamHeatmapOutput, newParameters)){
+      if(identical(oldParameters, newParameters)){
 
         continue <- FALSE
 
@@ -258,9 +257,7 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   # Getting the source data
 
-  load(bfcpath(bfc, bfcquery(bfc, c("Calculated statistics"))$rid))
-
-  statisticsData <- processedList
+  statisticsData <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Calculated statistics"))$rid))
 
   if(!is.list(statisticsData)){
 
@@ -397,7 +394,7 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
             if(simplify == TRUE & is.numeric(simplifictionCuttoff) & !is.numeric(genelimit)){
 
-              heatmap.data[heatmap.data < simplifiction.cuttoff] <- 0
+              heatmap.data[heatmap.data < simplifictionCuttoff] <- 0
 
             } else if(simplify == TRUE & !is.numeric(simplifictionCuttoff)){
 
@@ -536,11 +533,11 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   if(nrow(bfcquery(bfc, "Parameters for heatmapOutput()")) == 0){
 
-    save(oldParamHeatmapOutput, file=bfcnew(bfc, "Parameters for heatmapOutput()", ext="RData"))
+    saveRDS(oldParamHeatmapOutput, file=bfcnew(bfc, "Parameters for heatmapOutput()", ext="RDS"))
 
   } else if(nrow(bfcquery(bfc, "Parameters for heatmapOutput()")) == 1){
 
-    save(oldParamHeatmapOutput, file=bfc[[bfcquery(bfc, "Parameters for heatmapOutput()")$rid]])
+    saveRDS(oldParamHeatmapOutput, file=bfc[[bfcquery(bfc, "Parameters for heatmapOutput()")$rid]])
 
   }
 

@@ -26,7 +26,7 @@ and methylation data.
 Package: \tab cbaf \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-06-28 \cr
+Date: \tab 2017-07-30 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

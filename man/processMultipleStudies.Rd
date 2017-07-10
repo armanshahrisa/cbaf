@@ -109,7 +109,7 @@ It can generate three meatmaps for
 Package: \tab cbaf \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-06-28 \cr
+Date: \tab 2017-07-30 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
@@ -120,8 +120,8 @@ studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)",
 "Adrenocortical Carcinoma (TCGA, Provisional)")
 
 processMultipleStudies(genes, "test2", studies, "RNA-seq",
-calculate = c("frequencyPercentage", "frequencyRatio", "meanValue",
-"medianValue"), heatmapMargines = c(15,10), validateGenes = FALSE)
+calculate = c("frequencyPercentage", "frequencyRatio"), heatmapMargines =
+c(15,10))
 
 }
 \author{

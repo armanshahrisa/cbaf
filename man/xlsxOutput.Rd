@@ -21,7 +21,7 @@ uses outputs of obtainOneStudy()/obtainMultipleStudies() and automatedStatistics
 Package: \tab cbaf \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-06-22 \cr
+Date: \tab 2017-07-30 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
@@ -29,9 +29,10 @@ License: \tab Artistic-2.0 \cr
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 
 obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-"RNA-seq", desiredCaseList = c(3,4), validateGenes = FALSE)
+"RNA-seq", desiredCaseList = c(3,4))
 
-automatedStatistics("test", obtainedDataType = "single study")
+automatedStatistics("test", obtainedDataType = "single study", calculate =
+c("frequencyPercentage", "frequencyRatio"))
 
 xlsxOutput("test")
 

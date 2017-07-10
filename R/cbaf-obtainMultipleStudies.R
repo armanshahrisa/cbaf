@@ -8,7 +8,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-06-28 \cr
+#' Date: \tab 2017-07-30 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -60,7 +60,7 @@
 #'
 #' studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
 #'
-#' obtainMultipleStudies(genes, "test2", studies, "RNA-seq", validateGenes = FALSE)
+#' obtainMultipleStudies(genes, "test2", studies, "RNA-seq")
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
@@ -202,9 +202,9 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
     if(nrow(bfcquery(bfc, "Parameters for obtainMultipleStudies()")) == 1){
 
-      load(bfcpath(bfc, bfcquery(bfc, c("Parameters for obtainMultipleStudies()"))$rid))
+      oldParameters <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for obtainMultipleStudies()"))$rid))
 
-      if(identical(oldParamObtainMultipleStudies[-7], newParameters)){
+      if(identical(oldParameters[-7], newParameters)){
 
         continue <- FALSE
 
@@ -214,7 +214,7 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
         oldParamObtainMultipleStudies <- newParameters
 
-        save(oldParamObtainMultipleStudies, file=bfc[[bfcquery(bfc, "obtainMultipleStudies()")$rid]])
+        saveRDS(oldParamObtainMultipleStudies, file=bfc[[bfcquery(bfc, "obtainMultipleStudies()")$rid]])
 
         assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
 
@@ -596,11 +596,11 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
     if(nrow(bfcquery(bfc, "Obtained data for multiple studies")) == 0){
 
-      save(rawList, file=bfcnew(bfc, "Obtained data for multiple studies", ext="RData"))
+      saveRDS(rawList, file=bfcnew(bfc, "Obtained data for multiple studies", ext="RDS"))
 
     } else if(nrow(bfcquery(bfc, "Obtained data for multiple studies")) == 1){
 
-      save(rawList, file=bfc[[bfcquery(bfc, "Obtained data for multiple studies")$rid]])
+      saveRDS(rawList, file=bfc[[bfcquery(bfc, "Obtained data for multiple studies")$rid]])
 
     }
 
@@ -612,11 +612,11 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
       if(nrow(bfcquery(bfc, "Validation data for multiple studies")) == 0){
 
-        save(validationResult, file=bfcnew(bfc, "Validation data for multiple studies", ext="RData"))
+        saveRDS(validationResult, file=bfcnew(bfc, "Validation data for multiple studies", ext="RDS"))
 
       } else if(nrow(bfcquery(bfc, "Validation data for multiple studies")) == 1){
 
-        save(validationResult, file=bfc[[bfcquery(bfc, "Validation data for multiple studies")$rid]])
+        saveRDS(validationResult, file=bfc[[bfcquery(bfc, "Validation data for multiple studies")$rid]])
 
       }
 
@@ -633,11 +633,11 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
     if(nrow(bfcquery(bfc, "Parameters for obtainMultipleStudies()")) == 0){
 
-      save(oldParamObtainMultipleStudies, file=bfcnew(bfc, "Parameters for obtainMultipleStudies()", ext="RData"))
+      saveRDS(oldParamObtainMultipleStudies, file=bfcnew(bfc, "Parameters for obtainMultipleStudies()", ext="RDS"))
 
     } else if(nrow(bfcquery(bfc, "Parameters for obtainMultipleStudies()")) == 1){
 
-      save(oldParamObtainMultipleStudies, file=bfc[[bfcquery(bfc, "Parameters for obtainMultipleStudies()")$rid]])
+      saveRDS(oldParamObtainMultipleStudies, file=bfc[[bfcquery(bfc, "Parameters for obtainMultipleStudies()")$rid]])
 
     }
 

@@ -109,7 +109,7 @@ in each cancer subgroup.
 Package: \tab cbaf \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-06-28 \cr
+Date: \tab 2017-07-30 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
@@ -118,7 +118,7 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
 
 processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
 "RNA-seq", desiredCaseList = c(3,4), calculate = c("frequencyPercentage",
-"frequencyRatio", "meanValue", "medianValue"), validateGenes = FALSE)
+"frequencyRatio"))
 
 }
 \author{
