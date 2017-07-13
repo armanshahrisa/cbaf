@@ -1,5 +1,6 @@
 ---
 title: "cbaf"
+author: Arman Shahrisa
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -8,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-cbat package facilitates working with high-throughput data stored on <http://www.cbioportal.org/>. The official Bioconductor package that is designed for obtaining data from cBioPortal in R, is `cgdsr`. To obtain data with this package, users have to pass a multi-step procedure. Besides, the index of cancers and their subgroups might change frequently, which in turn, requires changing the R code. `cbat` makes this procedure automated for __RNA-seq__, __microRNA-seq__, __microarray__ and __methylation__ data types. In addition, comparing the genetic data from different cancer studies/cancer study subgroups becomes much faster and easier. Further, the results are presented as an excel file and multiple heatmaps.
+cbat package facilitates working with high-throughput data stored on <http://www.cbioportal.org/>. The official Bioconductor package that is designed for obtaining data from cBioPortal in R, is `cgdsr`. To obtain data with this package, users have to pass a multi-step procedure. Besides, the index of cancers and their subgroups might change frequently, which in turn, requires changing the R code. `cbaf` makes this procedure automated for __RNA-seq__, __microRNA-seq__, __microarray__ and __methylation__ data. In addition, comparing the genetic data across the different cancer studies/cancer study subgroups becomes much faster and easier. The results are presented as excel file(s) and multiple heatmaps.
 
 The package consists of six main functions: `availableData()`, `obtainOneStudy()`, `obtainMultipleStudies()`, `automatedStatistics()`, `heatmapOutput()` and `xlsxOutput()`.
 
@@ -19,7 +20,7 @@ There are two other functions that combine multiple functions in order to perfor
 
 ## availableData()
 
-This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a name for calling the output result and excel file.
+This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a character string to name the output result.
 ```
     availableData("name")
 ```    
@@ -44,7 +45,7 @@ The progress bar gradually proceeds until it reaches 100%. Until now, 161 cancer
   |===================================================================| 100%
 ```
 
-Upon finishing, the output is accessible with the given name as a variable. if `excelFile = FALSE`, an excel file containing the results is also generated in the present directory. Both variable and excel file contain different columns: cancer_study_id, cancer_study_name, RNA.seq, microRNA.seq, microarray of mRNA, microarray of miRNA, methylation and description.
+Upon finishing, the output is accessible with the given name as a variable. if `excelFile = TRUE`, an excel file containing the results is also generated in the present directory. Both variable and excel file contain different columns: cancer_study_id, cancer_study_name, RNA.seq, microRNA.seq, microarray of mRNA, microarray of miRNA, methylation and description.
 
 ## obtainOneStudy()
 

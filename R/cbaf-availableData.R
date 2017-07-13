@@ -76,149 +76,183 @@ availableData <- function(outputName, excelFile = TRUE){
 
 
 
-  ############################################
-  # Prerequisites
 
-  # Prerequisites for cBioportal
 
-  mycgds = CGDS("http://www.cbioportal.org/")
+  if(file.exists(paste(outputName, ".xlsx", sep = ""))){
 
-  list.of.studies <- getCancerStudies(mycgds)
+    print("An excel file with the given name already exists in the working directory. Proceeding will cause the function to overwrite the file! If you wish to run the function again with a different given name, please type 'no' .")
 
+    choiceYesNo <- readline(prompt = "Proceed anyway and overwrite the file? (yes/no):      ")
 
+    if(choiceYesNo == "yes"){
 
-  # Terms associated with different techniques
+      continue <- TRUE
 
-  RNA_seq.terms <- c(
+    }else if(choiceYesNo == "no"){
 
-    "Tumor Samples with mRNA data (RNA Seq V2)",
+      continue <- FALSE
 
-    "Tumors with mRNA data (RNA Seq V2)",
+    }else{
 
-    "Tumor Samples with mRNA data (RNA Seq)",
+      stop("please type 'yes' or 'no'!")
 
-    "Tumors with mRNA data (RNA Seq)"
-  )
+    }
 
-  microRNA_seq.terms <- "Tumors with microRNA data (microRNA-Seq)"
+  } else{
 
-  microarray.for.mRNA.term <- c(
+    continue <- TRUE
 
-    "Tumor Samples with mRNA data (Agilent microarray)",
+  }
 
-    "Tumors with mRNA data (Agilent microarray)",
 
-    "Tumor Samples with mRNA data (U133 microarray only)",
 
-    "Tumors with mRNA data"
+  if(continue == TRUE){
 
-  )
+    ############################################
+    # Prerequisites
 
-  microarray.for.miRNA.term <- "Tumors with microRNA"
+    # Prerequisites for cBioportal
 
-  methylation.term <- c(
+    mycgds = CGDS("http://www.cbioportal.org/")
 
-    "Tumor Samples with methylation data (HM450)",
+    list.of.studies <- getCancerStudies(mycgds)
 
-    "Tumors with methylation data (HM450)",
 
-    "Tumor Samples with methylation data (HM27)",
 
-    "Tumors with methylation data (HM27)",
+    # Terms associated with different techniques
 
-    "Tumors with methylation data"
+    RNA_seq.terms <- c(
 
-  )
+      "Tumor Samples with mRNA data (RNA Seq V2)",
 
+      "Tumors with mRNA data (RNA Seq V2)",
 
+      "Tumor Samples with mRNA data (RNA Seq)",
 
-  print("Cheching the available data for every cancer study")
+      "Tumors with mRNA data (RNA Seq)"
+    )
 
+    microRNA_seq.terms <- "Tumors with microRNA data (microRNA-Seq)"
 
-  # create progress bar
+    microarray.for.mRNA.term <- c(
 
-  pb <- txtProgressBar(min = 0, max = nrow(list.of.studies), style = 3)
+      "Tumor Samples with mRNA data (Agilent microarray)",
 
-  i <- 0
+      "Tumors with mRNA data (Agilent microarray)",
 
+      "Tumor Samples with mRNA data (U133 microarray only)",
 
+      "Tumors with mRNA data"
 
-  ############################################
-  ## core segment
+    )
 
-  # looking for supported technique data
+    microarray.for.miRNA.term <- "Tumors with microRNA"
 
-  list.of.available.data <- sapply(list.of.studies[, "cancer_study_id"], function(cs, cgds) {
+    methylation.term <- c(
 
-    description <- getCaseLists(cgds, cs)[, "case_list_name"]
+      "Tumor Samples with methylation data (HM450)",
 
-    i <<- i + 1
+      "Tumors with methylation data (HM450)",
 
-    setTxtProgressBar(pb, i)
+      "Tumor Samples with methylation data (HM27)",
 
-    c(RNA.seq = any(RNA_seq.terms %in% description),
+      "Tumors with methylation data (HM27)",
 
-      microRNA.seq = any(microRNA_seq.terms %in% description),
+      "Tumors with methylation data"
 
-      microarray_of_mRNA = any(microarray.for.mRNA.term %in% description),
+    )
 
-      microarray_of_miRNA = any(microarray.for.miRNA.term %in% description),
 
-      methylation = any(methylation.term %in% description))
 
+    print("Cheching the available data for every cancer study")
 
 
-  }, mycgds)
+    # create progress bar
 
+    pb <- txtProgressBar(min = 0, max = nrow(list.of.studies), style = 3)
 
-  # close progressbar
+    i <- 0
 
-  close(pb)
 
 
+    ############################################
+    ## core segment
 
-  # Replacing True and False with available and ""
+    # looking for supported technique data
 
-  list.of.available.data[list.of.available.data=="TRUE"] <- "available"
+    list.of.available.data <- sapply(list.of.studies[, "cancer_study_id"], function(cs, cgds) {
 
-  list.of.available.data[list.of.available.data=="FALSE"] <- "-"
+      description <- getCaseLists(cgds, cs)[, "case_list_name"]
 
+      i <<- i + 1
 
+      setTxtProgressBar(pb, i)
 
-  # joining list.of.available.data to list.of.studies
+      c(RNA.seq = any(RNA_seq.terms %in% description),
 
-  combined.list <- cbind(list.of.studies[,"cancer_study_id"], list.of.studies[,"name"], t(list.of.available.data), list.of.studies[,"description"])
+        microRNA.seq = any(microRNA_seq.terms %in% description),
 
-  colnames(combined.list) <- c("cancer_study_id", "cancer_study_name", "RNA.seq", "microRNA.seq", "microarray_of_mRNA",
+        microarray_of_mRNA = any(microarray.for.mRNA.term %in% description),
 
-                               "microarray_of_microRNA", "methylation", "description")
+        microarray_of_miRNA = any(microarray.for.miRNA.term %in% description),
 
-  rownames(combined.list) <- 1:nrow(combined.list)
+        methylation = any(methylation.term %in% description))
 
 
 
-  ################################################
-  # Exporting results
+    }, mycgds)
 
-  # Storing the output as a variable
 
-  assign(outputName, combined.list, envir = globalenv())
+    # close progressbar
 
+    close(pb)
 
 
-  # Converting matrix to data.frame
 
-  if(excelFile == TRUE){
+    # Replacing True and False with available and ""
 
-    combined.list.dataframe <- data.frame(combined.list)
+    list.of.available.data[list.of.available.data=="TRUE"] <- "available"
 
-    colnames(combined.list.dataframe) <- gsub("_", " ", colnames(combined.list.dataframe))
+    list.of.available.data[list.of.available.data=="FALSE"] <- "-"
 
-    colnames(combined.list.dataframe) <- gsub("\\.", "-", colnames(combined.list.dataframe))
 
-    rownames(combined.list.dataframe) <- 1:nrow(combined.list)
 
-    write.xlsx(combined.list.dataframe, file=paste(outputName, ".xlsx", sep = ""))
+    # joining list.of.available.data to list.of.studies
+
+    combined.list <- cbind(list.of.studies[,"cancer_study_id"], list.of.studies[,"name"], t(list.of.available.data), list.of.studies[,"description"])
+
+    colnames(combined.list) <- c("cancer_study_id", "cancer_study_name", "RNA.seq", "microRNA.seq", "microarray_of_mRNA",
+
+                                 "microarray_of_microRNA", "methylation", "description")
+
+    rownames(combined.list) <- 1:nrow(combined.list)
+
+
+
+    ################################################
+    # Exporting results
+
+    # Storing the output as a variable
+
+    assign(outputName, combined.list, envir = globalenv())
+
+
+
+    # Converting matrix to data.frame
+
+    if(excelFile == TRUE){
+
+      combined.list.dataframe <- data.frame(combined.list)
+
+      colnames(combined.list.dataframe) <- gsub("_", " ", colnames(combined.list.dataframe))
+
+      colnames(combined.list.dataframe) <- gsub("\\.", "-", colnames(combined.list.dataframe))
+
+      rownames(combined.list.dataframe) <- 1:nrow(combined.list)
+
+      write.xlsx(combined.list.dataframe, file=paste(outputName, ".xlsx", sep = ""))
+
+    }
 
   }
 
