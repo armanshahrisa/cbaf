@@ -78,7 +78,7 @@ availableData <- function(outputName, excelFile = TRUE){
 
 
 
-  if(file.exists(paste(outputName, ".xlsx", sep = ""))){
+  if(excelFile == TRUE & file.exists(paste(outputName, ".xlsx", sep = ""))){
 
     print("An excel file with the given name already exists in the working directory. Proceeding will cause the function to overwrite the file! If you wish to run the function again with a different given name, please type 'no' .")
 
@@ -253,6 +253,10 @@ availableData <- function(outputName, excelFile = TRUE){
       write.xlsx(combined.list.dataframe, file=paste(outputName, ".xlsx", sep = ""))
 
     }
+
+  }else{
+
+    print("--- Function 'availableData()' was skipped. ---")
 
   }
 

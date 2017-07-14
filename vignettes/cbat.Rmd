@@ -22,23 +22,34 @@ There are two other functions that combine multiple functions in order to perfor
 
 This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a character string to name the output result.
 ```
-    availableData("name")
+availableData("name")
 ```    
 
- There is another argument that enables the function to save the result as an excel file. The default value is `excelFile = TRUE`. To stop saving excel file, set `excelFile = FALSE`.
+There is another argument that enables the function to save the result as an excel file. The default value is `excelFile = TRUE`. To stop saving excel file, set `excelFile = FALSE`.
 
 ```
-    availableData("name", excelFile = FALSE)
+availableData("name", excelFile = FALSE)
 ```    
 
-The code starts with printing a message in the R console to inform the user it is scanning all the available cancer studies. In the next line, a progress bar will appear.
+At first, if `excelFile == TRUE`, the function starts looking for an excel file with the given name in the working directory. If it finds the file, the following message is printed, asking the user whether or not it should proceeds.
+```
+[1] "An excel file with the given name already exists in the working directory. Proceeding will cause the function to overwrite the file! If you wish to run the function again with a different given name, please type no ."
+Proceed anyway and overwrite the file? (yes/no):      no
+``` 
+
+If the answer is no, the function  prints a message to inform the user and then stops processing.
+```
+[1] "--- Function 'availableData()' was skipped. ---"
+```
+
+If the user types yes or there is no excel file with the given name, the function continues with printing a message in the R console to inform the user it is scanning all the available cancer studies. Then, a progress bar will appear in the next line.
 
 ```
 [1] "Cheching the available data for every cancer study"
   |                                                                   |   0%
 
 ```
-The progress bar gradually proceeds until it reaches 100%. Until now, 161 cancer studies are registered in cBioPortal. Therefore, the function would requires some time to finish.
+The progress bar gradually proceeds until it reaches 100%.
 
 ```
 [1] "Cheching the available data for every cancer study"
@@ -47,12 +58,17 @@ The progress bar gradually proceeds until it reaches 100%. Until now, 161 cancer
 
 Upon finishing, the output is accessible with the given name as a variable. if `excelFile = TRUE`, an excel file containing the results is also generated in the present directory. Both variable and excel file contain different columns: cancer_study_id, cancer_study_name, RNA.seq, microRNA.seq, microarray of mRNA, microarray of miRNA, methylation and description.
 
+
+
+
+
 ## obtainOneStudy()
 
-This function obtaines and stores the supported data types for at least one group of genes across multiple subgroups of a cancer study.
+This function obtaines and stores the supported data for at least one group of genes across multiple subgroups of a cancer study.
 
 It requires at least three variables:
 
+- __genesList__, a list that contains at least one gene group.
 - __submissionName__, a character string containing name of interest. It is used for naming the process.
 - __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
 - __desiredTechnique__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.
