@@ -45,21 +45,26 @@
 <pre><code>availableData(&quot;name&quot;)</code></pre>
 <p>There is another argument that enables the function to save the result as an excel file. The default value is <code>excelFile = TRUE</code>. To stop saving excel file, set <code>excelFile = FALSE</code>.</p>
 <pre><code>availableData(&quot;name&quot;, excelFile = FALSE)</code></pre>
-<p>The code first checks wheather an excel file with the given name alredy exists in the working directory. It it can find the file, it will print the following code, asking the user wheter or not it should proceed excecution.</p>
-<p>The code starts with printing a message in the R console to inform the user it is scanning all the available cancer studies. In the next line, a progress bar will appear.</p>
+<p>At first, if <code>excelFile == TRUE</code>, the function starts looking for an excel file with the given name in the working directory. If it finds the file, the following message is printed, asking the user whether or not it should proceeds.</p>
+<pre><code>[1] &quot;An excel file with the given name already exists in the working directory. Proceeding will cause the function to overwrite the file! If you wish to run the function again with a different given name, please type no .&quot;
+Proceed anyway and overwrite the file? (yes/no):      no</code></pre>
+<p>If the answer is no, the function prints a message to inform the user and then stops processing.</p>
+<pre><code>[1] &quot;--- Function 'availableData()' was skipped. ---&quot;</code></pre>
+<p>If the user types yes or there is no excel file with the given name, the function continues with printing a message in the R console to inform the user it is scanning all the available cancer studies. Then, a progress bar will appear in the next line.</p>
 <pre><code>[1] &quot;Cheching the available data for every cancer study&quot;
   |                                                                   |   0%
 </code></pre>
-<p>The progress bar gradually proceeds until it reaches 100%. Until now, 161 cancer studies are registered in cBioPortal. Therefore, the function would requires some time to finish.</p>
+<p>The progress bar gradually proceeds until it reaches 100%.</p>
 <pre><code>[1] &quot;Cheching the available data for every cancer study&quot;
   |===================================================================| 100%</code></pre>
 <p>Upon finishing, the output is accessible with the given name as a variable. if <code>excelFile = TRUE</code>, an excel file containing the results is also generated in the present directory. Both variable and excel file contain different columns: cancer_study_id, cancer_study_name, RNA.seq, microRNA.seq, microarray of mRNA, microarray of miRNA, methylation and description.</p>
 </div>
 <div id="obtainonestudy" class="section level2">
 <h2>obtainOneStudy()</h2>
-<p>This function obtaines and stores the supported data types for at least one group of genes across multiple subgroups of a cancer study.</p>
+<p>This function obtaines and stores the supported data for at least one group of genes across multiple subgroups of a cancer study.</p>
 <p>It requires at least three variables:</p>
 <ul>
+<li><strong>genesList</strong>, a list that contains at least one gene group.</li>
 <li><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process.</li>
 <li><strong>studyName</strong>, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
 <li><strong>desiredTechnique</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.</li>

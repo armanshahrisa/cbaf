@@ -350,13 +350,9 @@ obtainMultipleStudies <- function(genesList, submissionName, studiesNames, desir
 
       groupName <- gsub(groupName, pattern = "\\- ", replacement = " negative ", ignore.case = TRUE)
 
-      groupName <- gsub(groupName, pattern = " ", replacement = "_", ignore.case = TRUE)
 
 
 
-
-
-      ##--## print(as.character(studiesNames[c]))
 
       mycancerstudy = getCancerStudies(mycgds)[which(getCancerStudies(mycgds)[,2]==as.character(studiesNames[c])),1]
 

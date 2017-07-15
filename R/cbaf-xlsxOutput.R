@@ -366,16 +366,6 @@ xlsxOutput <- function(submissionName){
 
 
 
-        if(name.statistics.data %in% c("Top.Genes.of.Frequency.Percentage", "Top.Genes.of.Mean.Value", "Top.Genes.of.Median.Value")){
-
-          # Removing index as rownames
-
-          statistics.data <- statistics.data[, 2:length(ncol(statistics.data))]
-
-        }
-
-
-
         # Saving the expression profile
 
         write.xlsx(statistics.data, file = name.of.excel.file, sheetName = gsub(x = name.statistics.data, pattern = "\\.", replacement = " "), append = TRUE)

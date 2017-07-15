@@ -365,6 +365,7 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
         }
 
 
+
         heatmap.data <- t(statistics.data)
 
         # Removing NA

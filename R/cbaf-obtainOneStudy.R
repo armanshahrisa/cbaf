@@ -381,8 +381,6 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
       groupName <- gsub(groupName, pattern = "\\- ", replacement = " negative ", ignore.case = TRUE)
 
-      groupName <- gsub(groupName, pattern = " ", replacement = "_", ignore.case = TRUE)
-
 
 
       # Setting the first characteristics of data according to the desired case list
