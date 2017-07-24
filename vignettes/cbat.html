@@ -12,7 +12,7 @@
 
 <meta name="author" content="Arman Shahrisa" />
 
-<meta name="date" content="2017-07-15" />
+<meta name="date" content="2017-07-25" />
 
 <title>cbaf</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">cbaf</h1>
 <h4 class="author"><em>Arman Shahrisa</em></h4>
-<h4 class="date"><em>2017-07-15</em></h4>
+<h4 class="date"><em>2017-07-25</em></h4>
 
 
 
@@ -41,16 +41,16 @@
 <p>There are two other functions that combine multiple functions in order to perform automated procedures of obtaining the required data, calculating statistics and exporting the data as heatmaps and excel files: <code>processOneStudy()</code> and <code>processMultipleStudies()</code>.</p>
 <div id="availabledata" class="section level2">
 <h2>availableData()</h2>
-<p>This function scans all the cancer studies to examine presence of <em>RNA-seq</em>, <em>microRNA-seq</em>, <em>microarray</em> and <em>methylation</em> data. It requires a character string to name the output result.</p>
+<p>This function scans all the cancer studies to examine presence of <em>RNA-seq</em>, <em>microRNA-seq</em>, <em>microarray</em> and <em>methylation</em> data. It requires a name to lable the output result.</p>
 <pre><code>availableData(&quot;name&quot;)</code></pre>
-<p>There is another argument that enables the function to save the result as an excel file. The default value is <code>excelFile = TRUE</code>. To stop saving excel file, set <code>excelFile = FALSE</code>.</p>
+<p>There is another argument that enables the function to save the result as an excel file. The default value is <code>excelFile = TRUE</code>. To prevent saving excel file, set <code>excelFile = FALSE</code>.</p>
 <pre><code>availableData(&quot;name&quot;, excelFile = FALSE)</code></pre>
 <p>At first, if <code>excelFile == TRUE</code>, the function starts looking for an excel file with the given name in the working directory. If it finds the file, the following message is printed, asking the user whether or not it should proceeds.</p>
 <pre><code>[1] &quot;An excel file with the given name already exists in the working directory. Proceeding will cause the function to overwrite the file! If you wish to run the function again with a different given name, please type no .&quot;
 Proceed anyway and overwrite the file? (yes/no):      no</code></pre>
 <p>If the answer is no, the function prints a message to inform the user and then stops processing.</p>
 <pre><code>[1] &quot;--- Function 'availableData()' was skipped. ---&quot;</code></pre>
-<p>If the user types yes or there is no excel file with the given name, the function continues with printing a message in the R console to inform the user it is scanning all the available cancer studies. Then, a progress bar will appear in the next line.</p>
+<p>If the user types yes or there is no excel file with the given name, the function continues with printing a message to inform the user it is scanning all the available cancer studies. Then, a progress bar will appear in the next line.</p>
 <pre><code>[1] &quot;Cheching the available data for every cancer study&quot;
   |                                                                   |   0%
 </code></pre>
@@ -61,19 +61,82 @@ Proceed anyway and overwrite the file? (yes/no):      no</code></pre>
 </div>
 <div id="obtainonestudy" class="section level2">
 <h2>obtainOneStudy()</h2>
-<p>This function obtaines and stores the supported data for at least one group of genes across multiple subgroups of a cancer study.</p>
-<p>It requires at least three variables:</p>
+<p>This function obtains and stores the supported data for at least one group of genes across multiple subgroups of a cancer study. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names.</p>
+<p>It requires at least four variables:</p>
 <ul>
-<li><strong>genesList</strong>, a list that contains at least one gene group.</li>
+<li><strong>genesList</strong>, a list that contains at least one gene group. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</li>
 <li><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process.</li>
 <li><strong>studyName</strong>, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
 <li><strong>desiredTechnique</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.</li>
 </ul>
-<p>Function contains other options that can be used:</p>
+<p>Function also contains two other options:</p>
 <ul>
 <li><strong>desiredCaseList</strong> a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as ‘none’, function will show the available subgroups and ask the user to enter the desired ones during the process. The default value is ‘none’.</li>
 <li><strong>validateGenes</strong> a logical value that, if set to be ‘TRUE’, function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</li>
 </ul>
+<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>submissionName</em> is <code>test</code>, <em>cancername</em> is <code>Breast Invasive Carcinoma (TCGA, Cell 2015)</code>. and the <em>desiredTechnique</em> is RNA-seq.</p>
+<pre><code>genes &lt;- list(K.demethylases = c(&quot;KDM1A&quot;, &quot;KDM1B&quot;, &quot;KDM2A&quot;), K.acetyltransferases = c(&quot;CLOCK&quot;, &quot;CREBBP&quot;, &quot;ELP3&quot;, &quot;EP300&quot;))
+
+obtainOneStudy(genes, &quot;test&quot;, &quot;Breast Invasive Carcinoma (TCGA, Cell 2015)&quot;, &quot;RNA-seq&quot;)
+</code></pre>
+<p>Here is example of how more options can be used with <code>obtainOneStudy()</code>, including index of desired subgroups for <code>desiredCaseList</code>:</p>
+<pre><code>process.one.study(genes, cancernames, &quot;RNA-seq&quot;, desired.case.list = c(3,4,5), data.presented.as = c(&quot;Frequency.Percentage&quot;, &quot;Frequency.Ratio&quot;, &quot;Mean.Value&quot;), resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = &quot;redgreen&quot;)</code></pre>
+<p>First, it checks whether the requested data has already been obtained and, if the requested data exists, it prints the following message and then stops further processing.</p>
+<pre><code>[1] &quot;--- Function 'obtainOneStudy()' was skipped: the requested data already exist ---&quot;</code></pre>
+<p>If there is a change in function input data, e.g. gene names, or the requested data has not been obtained, assuming <code>desired.case.list = &quot;none&quot;</code>, all subgroups of the requested cancer study appear on console, asking the user to chose the index of desired subgroups:</p>
+<pre><code>[1] &quot;Please enter the numeric index of desired case list(s) for Breast Invasive Carcinoma (TCGA, Cell 2015) separated by comma. For instance two indexes 1 and 2 should be enterd as 1, 2&quot;
+ [1] &quot;1. All Complete Tumors&quot;                                &quot;2. All Tumors&quot;                                        
+ [3] &quot;3. ER+ breast tumors&quot;                                  &quot;4. ER- breast tumors&quot;                                 
+ [5] &quot;5. Her2-positive breast tumors&quot;                        &quot;6. Invasive Ductal Cancer (Luminal A)&quot;                
+ [7] &quot;7. Invasive Ductal Cancer (PAM50 Basal-like)&quot;          &quot;8. Invasive Ductal Cancer (PAM50 Her2-enriched)&quot;      
+ [9] &quot;9. Invasive Ductal Cancer (PAM50 Luminal B)&quot;           &quot;10. Invasive Lobular Cancer&quot;                          
+[11] &quot;11. Invasive Lobular Cancer (Luminal A)&quot;               &quot;12. Mixed IDC/ILC breast cancer&quot;                      
+[13] &quot;13. Other histologies breast cancer&quot;                   &quot;14. Sequenced Tumors&quot;                                 
+[15] &quot;15. TCGA Freeze 2015&quot;                                  &quot;16. Triple-negative breast tumors&quot;                    
+[17] &quot;17. Tumor Samples with CNA data&quot;                       &quot;18. Tumor Samples with methylation data (HM27)&quot;       
+[19] &quot;19. Tumor Samples with methylation data (HM450)&quot;       &quot;20. Tumor Samples with mRNA data (Agilent microarray)&quot;
+[21] &quot;21. Tumor Samples with mRNA data (RNA Seq V2)&quot;         &quot;22. Tumor Samples with RPPA data&quot;                     
+[23] &quot;23. Tumor Samples with sequencing and CNA data&quot;</code></pre>
+<pre><code>Enter the numeric index(es):                  2,3,4,5</code></pre>
+<p>Then, it starts to get the data and infroms the user with a progress bar.</p>
+<pre><code>[1] &quot;*** Obtaining the requested data for test ***&quot;
+|===================================================================| 100%</code></pre>
+<p>The output is stored as a BiocFileCache object, which its name is the combination of <code>bfc_</code> and <em>submissionName</em>. Accordingly, in our example the BiocFileCache name is <code>bfc_test</code>.</p>
+</div>
+<div id="obtainmultiplestudies" class="section level2">
+<h2>obtainMultipleStudies()</h2>
+<p>This function obtains and stores the supported data for at least one group of genes across multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names.</p>
+<p>It requires at least three variables:</p>
+<ul>
+<li><strong>genes</strong>, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</li>
+<li><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process.</li>
+<li><strong>cancernames</strong>, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>. Alternatively, a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.</li>
+<li><strong>high.throughput.data.type</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.</li>
+</ul>
+<p>Function also contains two other options:</p>
+<ul>
+<li><strong>cancerCode</strong>, if set as <code>TRUE</code>, function will use the standard abbreviated cancer names instead of complete cancer names. For example, <code>laml_tcga_pub</code> is the shortened name for <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
+<li><strong>validateGenes</strong> a logical value that, if set to be ‘TRUE’, function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</li>
+</ul>
+<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>submissionName</em> is <code>test</code>, <em>cancername</em> is <code>Breast Invasive Carcinoma (TCGA, Cell 2015)</code>. and the <em>desiredTechnique</em> is RNA-seq.</p>
+<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>cancernames</em> has complete names of five cancer studies and the desired high-throughput study is RNA-seq.</p>
+<pre><code>genes &lt;- list(K.demethylases = c(&quot;KDM1A&quot;, &quot;KDM1B&quot;, &quot;KDM2A&quot;), K.acetyltransferases = c(&quot;CLOCK&quot;, &quot;CREBBP&quot;, &quot;ELP3&quot;, &quot;EP300&quot;))
+
+
+cancernames &lt;- c(&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;, &quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;, &quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;, &quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;, &quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;)
+
+
+obntainMultipleStudies(genes, &quot;test2&quot;, cancernames, &quot;RNA-seq&quot;)</code></pre>
+<p>The following code shows how to create a matrix with desired names for <code>cancernames</code>:</p>
+<pre><code>cancernames &lt;- matrix(c(&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;, &quot;acute myeloid leukemia&quot;, &quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;, &quot;adrenocortical carcinoma&quot;, &quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;, &quot;bladder urothelial carcinoma&quot;, &quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;, &quot;brain lower grade glioma&quot;, &quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;,  &quot;breast invasive carcinoma&quot;), nrow = 5, ncol=2 , byrow = TRUE)</code></pre>
+<p>An example of how more options for <code>processMultipleStudies()</code> can be altered:</p>
+<pre><code>ObtainMultipleStudies(genes, &quot;test2&quot;,cancernames, &quot;RNA-seq&quot;, cancerCode = TRUE, validateGenes = FALSE)</code></pre>
+<p>Function starts by checking whether or not the requested data has already been obtained and, if the requested data exists, it prints the following message and then prevents further processing.</p>
+<pre><code>[1] &quot;--- Function 'obtainMultipleStudies()' was skipped: the requested data already exist ---&quot;</code></pre>
+<p>If there is a change in function input data, e.g. gene names, or the requested data has not been obtained, it proceeds by getting the data and informs the user with a progress bar.</p>
+<pre><code>[1] &quot;*** Obtaining the requested data for test2 ***&quot;
+|===================================================================| 100%</code></pre>
+<p>The output is stored as a BiocFileCache object, which its name is the combination of <code>bfc_</code> and <em>submissionName</em>. Accordingly, in our example the BiocFileCache name is <code>bfc_test2</code>.</p>
 </div>
 <div id="process.multiple.studies" class="section level2">
 <h2>process.multiple.studies()</h2>
@@ -112,10 +175,6 @@ Proceed anyway and overwrite the file? (yes/no):      no</code></pre>
 
 
 cancernames &lt;- c(&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;, &quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;, &quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;, &quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;, &quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;)
-
-# or
-
-cancernames &lt;- available.data.types.output[c(3,9,15,17,24),1]
 
 
 process.multiple.studies(genes, cancernames, &quot;RNA-seq&quot;)</code></pre>
@@ -204,7 +263,7 @@ process.one.study(genes, &quot;Breast Invasive Carcinoma (TCGA, Cell 2015)&quot;
 <h3>First segment of function: obtaining and processing the requested data</h3>
 <p><code>process.multiple.studies()</code> starts by printing that it is obtaining and processing the the requested data.</p>
 <pre><code>[1] &quot;[[[ Obtaining and processing the requested data for K.demethylases genes ]]]&quot;</code></pre>
-<p>Then, <code>assuming desired.case.list = &quot;none&quot;</code>, all subgroups of the requested cancer study appear on console, asking the user to chose the index of desired subgroups:</p>
+<p>Then, assuming <code>desired.case.list = &quot;none&quot;</code>, all subgroups of the requested cancer study appear on console, asking the user to chose the index of desired subgroups:</p>
 <pre><code>[1] &quot;Please enter the numeric index of desired case list(s) for Breast Invasive Carcinoma (TCGA, Cell 2015) separated by comma. For instance two indexes 1 and 2 should be enterd as 1, 2&quot;
  [1] &quot;1. All Complete Tumors&quot;                                &quot;2. All Tumors&quot;                                        
  [3] &quot;3. ER+ breast tumors&quot;                                  &quot;4. ER- breast tumors&quot;                                 

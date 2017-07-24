@@ -20,12 +20,12 @@ There are two other functions that combine multiple functions in order to perfor
 
 ## availableData()
 
-This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a character string to name the output result.
+This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a name to lable the output result.
 ```
 availableData("name")
 ```    
 
-There is another argument that enables the function to save the result as an excel file. The default value is `excelFile = TRUE`. To stop saving excel file, set `excelFile = FALSE`.
+There is another argument that enables the function to save the result as an excel file. The default value is `excelFile = TRUE`. To prevent saving excel file, set `excelFile = FALSE`.
 
 ```
 availableData("name", excelFile = FALSE)
@@ -42,7 +42,7 @@ If the answer is no, the function  prints a message to inform the user and then 
 [1] "--- Function 'availableData()' was skipped. ---"
 ```
 
-If the user types yes or there is no excel file with the given name, the function continues with printing a message in the R console to inform the user it is scanning all the available cancer studies. Then, a progress bar will appear in the next line.
+If the user types yes or there is no excel file with the given name, the function continues with printing a message to inform the user it is scanning all the available cancer studies. Then, a progress bar will appear in the next line.
 
 ```
 [1] "Cheching the available data for every cancer study"
@@ -64,22 +64,125 @@ Upon finishing, the output is accessible with the given name as a variable. if `
 
 ## obtainOneStudy()
 
-This function obtaines and stores the supported data for at least one group of genes across multiple subgroups of a cancer study.
+This function obtains and stores the supported data for at least one group of genes across multiple subgroups of a cancer study. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. 
 
-It requires at least three variables:
+It requires at least four variables:
 
-- __genesList__, a list that contains at least one gene group.
+- __genesList__, a list that contains at least one gene group. There is no limit for the number of gene groups, users can set as many as gene groups they desire.
 - __submissionName__, a character string containing name of interest. It is used for naming the process.
 - __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
 - __desiredTechnique__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.
 
-Function contains other options that can be used:
+Function also contains two other options:
 
 - __desiredCaseList__ a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as 'none', function will show the available subgroups and ask the user to enter the desired ones during the process. The default value is 'none'.
 - __validateGenes__ a logical value that, if set to be 'TRUE', function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.
 
+In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _submissionName_ is `test`, _cancername_ is `Breast Invasive Carcinoma (TCGA, Cell 2015)`. and the _desiredTechnique_ is RNA-seq.
+
+```
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
+
+obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq")
+
+```
 
 
+Here is example of how more options can be used with `obtainOneStudy()`, including index of desired subgroups for `desiredCaseList`:
+```
+process.one.study(genes, cancernames, "RNA-seq", desired.case.list = c(3,4,5), data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
+```
+
+First, it checks whether the requested data has already been obtained and, if the requested data exists, it prints the following message and then stops further processing.
+```
+[1] "--- Function 'obtainOneStudy()' was skipped: the requested data already exist ---"
+```
+
+If there is a change in function input data, e.g. gene names, or the requested data has not been obtained, assuming `desired.case.list = "none"`, all subgroups of the requested cancer study appear on console, asking the user to chose the index of desired subgroups: 
+```
+[1] "Please enter the numeric index of desired case list(s) for Breast Invasive Carcinoma (TCGA, Cell 2015) separated by comma. For instance two indexes 1 and 2 should be enterd as 1, 2"
+ [1] "1. All Complete Tumors"                                "2. All Tumors"                                        
+ [3] "3. ER+ breast tumors"                                  "4. ER- breast tumors"                                 
+ [5] "5. Her2-positive breast tumors"                        "6. Invasive Ductal Cancer (Luminal A)"                
+ [7] "7. Invasive Ductal Cancer (PAM50 Basal-like)"          "8. Invasive Ductal Cancer (PAM50 Her2-enriched)"      
+ [9] "9. Invasive Ductal Cancer (PAM50 Luminal B)"           "10. Invasive Lobular Cancer"                          
+[11] "11. Invasive Lobular Cancer (Luminal A)"               "12. Mixed IDC/ILC breast cancer"                      
+[13] "13. Other histologies breast cancer"                   "14. Sequenced Tumors"                                 
+[15] "15. TCGA Freeze 2015"                                  "16. Triple-negative breast tumors"                    
+[17] "17. Tumor Samples with CNA data"                       "18. Tumor Samples with methylation data (HM27)"       
+[19] "19. Tumor Samples with methylation data (HM450)"       "20. Tumor Samples with mRNA data (Agilent microarray)"
+[21] "21. Tumor Samples with mRNA data (RNA Seq V2)"         "22. Tumor Samples with RPPA data"                     
+[23] "23. Tumor Samples with sequencing and CNA data"
+```
+```
+Enter the numeric index(es):                  2,3,4,5
+```  
+
+Then, it starts to get the data and infroms the user with a progress bar.
+
+```
+[1] "*** Obtaining the requested data for test ***"
+|===================================================================| 100%
+```
+The output is stored as a BiocFileCache object, which its name is the combination of `bfc_` and _submissionName_. Accordingly, in our example the BiocFileCache name is `bfc_test`.
+
+
+
+
+
+## obtainMultipleStudies()
+
+This function obtains and stores the supported data for at least one group of genes across multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. 
+
+
+It requires at least three variables:
+
+- __genes__, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.
+- __submissionName__, a character string containing name of interest. It is used for naming the process.
+- __cancernames__, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`. Alternatively, a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.
+- __high.throughput.data.type__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.
+
+Function also contains two other options:
+
+- __cancerCode__, if set as `TRUE`, function will use the standard abbreviated cancer names instead of complete cancer names. For example, `laml_tcga_pub` is the shortened name for `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
+- __validateGenes__ a logical value that, if set to be 'TRUE', function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.
+
+In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _submissionName_ is `test`, _cancername_ is `Breast Invasive Carcinoma (TCGA, Cell 2015)`. and the _desiredTechnique_ is RNA-seq.
+
+In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _cancernames_  has complete names of five cancer studies and the desired high-throughput study is RNA-seq.
+
+```
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
+
+
+cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)")
+
+
+obntainMultipleStudies(genes, "test2", cancernames, "RNA-seq")
+```
+
+The following code shows how to create a matrix with desired names for `cancernames`:
+```
+cancernames <- matrix(c("Acute Myeloid Leukemia (TCGA, Provisional)", "acute myeloid leukemia", "Adrenocortical Carcinoma (TCGA, Provisional)", "adrenocortical carcinoma", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "bladder urothelial carcinoma", "Brain Lower Grade Glioma (TCGA, Provisional)", "brain lower grade glioma", "Breast Invasive Carcinoma (TCGA, Provisional)",  "breast invasive carcinoma"), nrow = 5, ncol=2 , byrow = TRUE)
+```
+
+An example of how more options for `processMultipleStudies()` can be altered:
+```
+ObtainMultipleStudies(genes, "test2",cancernames, "RNA-seq", cancerCode = TRUE, validateGenes = FALSE)
+```
+
+Function starts by checking whether or not the requested data has already been obtained and, if the requested data exists, it prints the following message and then prevents further processing.
+```
+[1] "--- Function 'obtainMultipleStudies()' was skipped: the requested data already exist ---"
+```
+
+If there is a change in function input data, e.g. gene names, or the requested data has not been obtained, it proceeds by getting the data and informs the user with a progress bar.
+
+```
+[1] "*** Obtaining the requested data for test2 ***"
+|===================================================================| 100%
+```
+The output is stored as a BiocFileCache object, which its name is the combination of `bfc_` and _submissionName_. Accordingly, in our example the BiocFileCache name is `bfc_test2`.
 
 
 
@@ -135,10 +238,6 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferase
 
 
 cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)")
-
-# or
-
-cancernames <- available.data.types.output[c(3,9,15,17,24),1]
 
 
 process.multiple.studies(genes, cancernames, "RNA-seq")
@@ -268,7 +367,7 @@ process.one.study(genes, cancernames, "RNA-seq", desired.case.list = c(3,4,5), d
 ```
 [1] "[[[ Obtaining and processing the requested data for K.demethylases genes ]]]"
 ``` 
-Then, `assuming desired.case.list = "none"`, all subgroups of the requested cancer study appear on console, asking the user to chose the index of desired subgroups: 
+Then, assuming `desired.case.list = "none"`, all subgroups of the requested cancer study appear on console, asking the user to chose the index of desired subgroups: 
 ```
 [1] "Please enter the numeric index of desired case list(s) for Breast Invasive Carcinoma (TCGA, Cell 2015) separated by comma. For instance two indexes 1 and 2 should be enterd as 1, 2"
  [1] "1. All Complete Tumors"                                "2. All Tumors"                                        

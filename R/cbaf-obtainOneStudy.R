@@ -487,7 +487,7 @@ obtainOneStudy <- function(genesList, submissionName, studyName, desiredTechniqu
 
           # Empty validation matrix
 
-          validationMatrix <- matrix(, ncol = length(genesNames), nrow = 1)
+          validationMatrix <- matrix(, ncol = ncol(rawList[[group]][[c]]), nrow = 1)
 
           # Naming empty matrix
 
