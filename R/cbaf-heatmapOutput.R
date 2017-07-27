@@ -437,11 +437,11 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
             # Limiting the number of genes in heatmap to get better resolution
 
-            if(genelimit=="none" | genelimit < ncol(heatmap.data)){
+            if(genelimit=="none" | genelimit > ncol(heatmap.data)){
 
               heatmap.data <- heatmap.data
 
-            } else if(is.numeric(genelimit) & genelimit >= ncol(heatmap.data)){
+            } else if(is.numeric(genelimit) & genelimit <= ncol(heatmap.data)){
 
               ordering <- order(abs(rowVars(heatmap.data)), decreasing=TRUE)
 
