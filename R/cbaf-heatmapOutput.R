@@ -35,7 +35,8 @@
 #' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE, genelimit = "none",
 #' resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10),
 #' angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
-#' transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE)
+#' transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
+#' genesToDrop = NULL)
 #'
 #'
 #'
@@ -73,6 +74,8 @@
 #' @param simplify a logical value that tells the function whether or not to change values under
 #' \code{simplifictionCuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
 #' not suited for publications.
+#'
+#' @param genesToDrop a character vector. Gene names within this vector will be removed from heatmap.
 #'
 #' @param simplifictionCuttoff a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 #' for \code{simplify.visulization}. It has the same unit as \code{cutoff}.
@@ -114,7 +117,7 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
                           heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
 
-                          simplify = FALSE, simplifictionCuttoff = FALSE){
+                          simplify = FALSE, simplifictionCuttoff = FALSE, genesToDrop = NULL){
 
   ##########################################################################
   ########## Prerequisites
@@ -214,6 +217,8 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
   newParameters$simplify <- simplify
 
   newParameters$simplifictionCuttoff <- simplifictionCuttoff
+
+  newParameters$genesToDrop <- genesToDrop
 
 
 
@@ -339,6 +344,26 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
       statistics.data <- subset.data[[possible]]
 
+
+
+      # Remove desired genes
+
+      if(!is.null(genesToDrop)){
+
+        if(!is.character(genesToDrop)){
+
+          stop("Please enter the desired genes to drop as a character vector.")
+
+        } else{
+
+          statistics.data <- statistics.data[, !(colnames(statistics.data) %in% genesToDrop), drop = FALSE]
+
+        }
+
+      }
+
+
+
       name.statistics.data <- names(subset.data)[possible]
 
       # determine ourput file name
@@ -412,11 +437,11 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
             # Limiting the number of genes in heatmap to get better resolution
 
-            if(genelimit=="none"){
+            if(genelimit=="none" | genelimit < ncol(heatmap.data)){
 
               heatmap.data <- heatmap.data
 
-            } else if(is.numeric(genelimit)){
+            } else if(is.numeric(genelimit) & genelimit >= ncol(heatmap.data)){
 
               ordering <- order(abs(rowVars(heatmap.data)), decreasing=TRUE)
 

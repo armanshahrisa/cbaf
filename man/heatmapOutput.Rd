@@ -7,7 +7,8 @@
 heatmapOutput(submissionName, shortenStudyNames = TRUE, genelimit = "none",
 resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10),
 angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
-transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE)
+transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
+genesToDrop = NULL)
 }
 \arguments{
 \item{submissionName}{a character string containing name of interest. It is used for naming the process.}
@@ -47,6 +48,8 @@ not suited for publications.}
 
 \item{simplifictionCuttoff}{a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 for \code{simplify.visulization}. It has the same unit as \code{cutoff}.}
+
+\item{genesToDrop}{a character vector. Gene names within this vector will be removed from heatmap.}
 }
 \value{
 Based on preference, three heatmaps for "Frequency.Percentage", "Mean.Value" and "Median.value" can be

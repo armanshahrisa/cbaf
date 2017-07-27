@@ -11,7 +11,7 @@ cutoff=NULL, round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE,
 genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
 heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu",
 reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE,
-simplifictionCuttoff = FALSE)
+simplifictionCuttoff = FALSE, genesToDrop = NULL)
 }
 \arguments{
 \item{genesList}{a list that contains at least one gene group}

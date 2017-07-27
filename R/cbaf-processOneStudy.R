@@ -25,7 +25,7 @@
 #' genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
 #' heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu",
 #' reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE,
-#' simplifictionCuttoff = FALSE)
+#' simplifictionCuttoff = FALSE, genesToDrop = NULL)
 #'
 #'
 #'
@@ -141,7 +141,7 @@ processOneStudy <- function(genesList, submissionName, studyName, desiredTechniq
 
                             heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
 
-                            transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE){
+                            transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE, genesToDrop = NULL){
 
   ##########################################################################
   ### Obtaining data
@@ -182,7 +182,7 @@ processOneStudy <- function(genesList, submissionName, studyName, desiredTechniq
 
                 heatmapColor = heatmapColor, reverseColor = reverseColor, transposedHeatmap = transposedHeatmap, simplify = simplify,
 
-                simplifictionCuttoff = simplifictionCuttoff)
+                simplifictionCuttoff = simplifictionCuttoff, genesToDrop = genesToDrop)
 
 
 
