@@ -42,7 +42,7 @@ whether or not all genes are included in cancer studies and, if not, looks for t
 Package: \tab cbaf \cr
 Type: \tab Package \cr
 Version: \tab 0.99.0 \cr
-Date: \tab 2017-07-30 \cr
+Date: \tab 2017-08-10 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

@@ -11,7 +11,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-07-30 \cr
+#' Date: \tab 2017-08-10 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -59,7 +59,7 @@
 #'
 #' @param cutoff a number used to limit samples to those that are greather than specific number (cutoff). The default value for
 #' methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is
-#' \code{observed/expected ratio}, for the rest, it is 'z-score'. TO change the cutoff to any desired number, change the
+#' \code{observed/expected ratio}, for the rest, it is 'z-score'. To change the cutoff to any desired number, change the
 #' option to \code{cutoff = desiredNumber} in which desiredNumber is the number of interest.
 #'
 #' @param round a logical value that, if set to be TRUE, will force the function to round all the calculated values

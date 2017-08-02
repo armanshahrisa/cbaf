@@ -66,19 +66,23 @@ Upon finishing, the output is accessible with the given name as a variable. if `
 
 This function obtains and stores the supported data for at least one group of genes across multiple subgroups of a cancer study. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. 
 
-It requires at least four variables:
+It requires at least four arguments:
 
 - __genesList__, a list that contains at least one gene group. There is no limit for the number of gene groups, users can set as many as gene groups they desire.
+
 - __submissionName__, a character string containing name of interest. It is used for naming the process.
+
 - __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
+
 - __desiredTechnique__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.
 
 Function also contains two other options:
 
 - __desiredCaseList__ a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as 'none', function will show the available subgroups and ask the user to enter the desired ones during the process. The default value is 'none'.
+
 - __validateGenes__ a logical value that, if set to be 'TRUE', function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.
 
-In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _submissionName_ is `test`, _cancername_ is `Breast Invasive Carcinoma (TCGA, Cell 2015)`. and the _desiredTechnique_ is RNA-seq.
+In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _submissionName_ is `test`, _cancername_ is `Breast Invasive Carcinoma (TCGA, Cell 2015)` and the _desiredTechnique_ is `RNA-seq`.
 
 ```
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
@@ -135,21 +139,23 @@ The output is stored as a BiocFileCache object, which its name is the combinatio
 This function obtains and stores the supported data for at least one group of genes across multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. 
 
 
-It requires at least three variables:
+It requires at least four arguments:
 
 - __genes__, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.
+
 - __submissionName__, a character string containing name of interest. It is used for naming the process.
+
 - __cancernames__, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`. Alternatively, a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.
+
 - __high.throughput.data.type__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.
 
 Function also contains two other options:
 
 - __cancerCode__, if set as `TRUE`, function will use the standard abbreviated cancer names instead of complete cancer names. For example, `laml_tcga_pub` is the shortened name for `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
+
 - __validateGenes__ a logical value that, if set to be 'TRUE', function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.
 
-In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _submissionName_ is `test`, _cancername_ is `Breast Invasive Carcinoma (TCGA, Cell 2015)`. and the _desiredTechnique_ is RNA-seq.
-
-In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _cancernames_  has complete names of five cancer studies and the desired high-throughput study is RNA-seq.
+In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _submissionName_ is `test`, _cancername_ has complete names of five cancer studies and the desired high-throughput study is `RNA-seq`.
 
 ```
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
@@ -168,7 +174,7 @@ cancernames <- matrix(c("Acute Myeloid Leukemia (TCGA, Provisional)", "acute mye
 
 An example of how more options for `processMultipleStudies()` can be altered:
 ```
-ObtainMultipleStudies(genes, "test2",cancernames, "RNA-seq", cancerCode = TRUE, validateGenes = FALSE)
+ObtainMultipleStudies(genes, "test2", cancernames, "RNA-seq", cancerCode = TRUE, validateGenes = FALSE)
 ```
 
 Function starts by checking whether or not the requested data has already been obtained and, if the requested data exists, it prints the following message and then prevents further processing.
@@ -186,6 +192,70 @@ The output is stored as a BiocFileCache object, which its name is the combinatio
 
 
 
+
+
+## automatedStatistics()
+
+This function calculates the statistics for the data obtained by `obtainOneStudy()` or `obtainMultipleStudies()` functions. Based on user's preference, these statistics can include _frequency percentage_, _frequency ratio_, _mean value_ and _median value_ of samples greater than specific value. Furthermore, it can look for the genes that comprise the highest values in each cancer and list the top 5 genes for _frequency percentage_, _mean value_ and _median value_. 
+
+
+It requires at least two arguments:
+
+- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same name used for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
+
+- __obtainedDataType__, a character string that identifies the type of input data produced by the previous function. Two options are availabe: 'single study' for `obtainOneStudy()` and `multiple studies` for `obtainMultipleStudies()`. The function uses `obtainedDataType` and `submissionName` to construct the name of the BiocFileCach object and then finds the appropiate data inside it. Default value is `multiple studies`.
+
+Function also contains four other options:
+
+- __calculate__, a character vector that containes the statistical precedures user desires. Default input is `c("frequencyPercentage", "frequencyRatio", "Mean.Value", "medianValue")`. This will tell the function to compute the followings:
+
+    + _frequencyPercentage_, which is the number of samples having the value greather than specific cutoff divided by the total sample size for every study / study subgroup
+    
+    + _frequency ratio_, which shows the number of selected samples divided by the total number of samples that give the frequency percentage. It shows the selecected and total sample sizes.
+    
+    + _Mean Value_, which contains mean value of selected samples for each study.
+    
+    + _Median Value_, which shows the median value of selected samples for every study.
+    
+- __topGenes__, a logical value that, if `TRUE`, causes the function to calculate the five genes comprising the highest values in _frequencyPercentage_, _Mean.Value_ and _medianValue_ if they are included in __calculate__.
+
+- __cutoff__, a number used to limit samples to those that are greather than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
+
+- __round__, a logical value that, if set to be `TRUE`, will force the function to round all the calculated values to two decimal places. The default value is `TRUE`.
+
+
+In the following example, _submissionName_ is `test`,  and the _obtainedDataType_ is `multiple studies`.
+
+
+```
+automatedStatistics("test", obtainedDataType = "multiple studies")
+
+```
+The following is the same as previous but excludes _mean value_ and _median value_. Not that top genes for these two will also be ignored. 
+
+
+```
+automatedStatistics("test", obtainedDataType = "multiple studies", calculate = c("frequencyPercentage", "frequencyRatio"))
+
+```
+Function starts by checking whether or not output data of the previous function exists. If not, an error message will appear:
+
+```
+Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first
+```
+If it can find the desired data but the last execution of the previous function (either `obtainOneStudy()` or `obtainMultipleStudies()`) was skipped, it then checks its own parameters. If the parameters are the same as the last time _automatedStatistics()_ has been run, it will also skip, printing the following message:
+
+```
+[1] "--- Function 'automatedStatistics()' was skipped: the requested data already exist ---"
+```
+
+If there is a change in function input data, e.g. chenge in cutoff value, or the requested data does not exist, it continues by computing the requested statistics and informs the user with a progress bar.
+
+```
+[1] "*** Performing the requested statistical analyses for test2 ***"
+|===================================================================| 100%
+```
+The output is stored as a new section of the previous BiocFileCache object which is created by one of the former functions (`obtainOneStudy()` or `obtainMultipleStudies()`).
 
 
 

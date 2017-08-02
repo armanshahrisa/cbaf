@@ -9,7 +9,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-07-30 \cr
+#' Date: \tab 2017-08-10 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -28,7 +28,7 @@
 #'
 #' @usage automatedStatistics(submissionName, obtainedDataType = "multiple studies",
 #' calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
-#' cutoff=NULL, round=TRUE, topGenes = TRUE)
+#' topGenes = TRUE, cutoff=NULL, round=TRUE)
 #'
 #'
 #'
@@ -44,21 +44,21 @@
 #' 'frequencyPercentage', which is the number of samples having the value greather than specific cutoff divided by the total sample
 #' size for every study / study subgroup;
 #' 'frequency ratio', which shows the number of selected samples divided by the total number of samples that give the frequency
-#' percentage for every study / study subgroup -to know selecected and total sample sizes only;
+#' percentage. It shows the selecected and total sample sizes;
 #' 'Mean Value', that contains mean value of selected samples for each study;
 #' 'Median Value', which shows the median value of selected samples for each study.
-#'
-#' @param cutoff a number used to limit samples to those that are greather than specific number (cutoff). The default value for
-#' methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is
-#' \code{observed/expected ratio}, for the rest, it is 'z-score'. TO change the cutoff to any desired number, change the
-#' option to \code{cutoff = desiredNumber} in which desiredNumber is the number of interest.
-#'
-#' @param round a logical value that, if set to be TRUE, will force the function to round all the calculated values
-#' to two decimal places. The default value is TRUE.
 #'
 #' @param topGenes a logical value that, if set as TRUE, causes the function to create three data.frame that contain the five
 #' top genes for each cancer. To get all the three data.frames, "Frequency.Percentage", "Mean.Value" and "Median" must have been
 #' included for \code{calculate}.
+#'
+#' @param cutoff a number used to limit samples to those that are greather than this number (cutoff). The default value for
+#' methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is
+#' \code{observed/expected ratio}, for the rest, it is 'z-score'. To change the cutoff to any desired number, change the
+#' option to \code{cutoff = desiredNumber} in which desiredNumber is the number of interest.
+#'
+#' @param round a logical value that, if set to be TRUE, will force the function to round all the calculated values
+#' to two decimal places. The default value is TRUE.
 #'
 #'
 #'
@@ -92,7 +92,7 @@
 
 automatedStatistics<- function(submissionName, obtainedDataType = "multiple studies", calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
 
-                              cutoff = NULL, round=TRUE, topGenes = TRUE){
+                               topGenes = TRUE, cutoff = NULL, round=TRUE){
 
   ##########################################################################
   ########## Prerequisites

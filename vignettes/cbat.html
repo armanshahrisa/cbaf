@@ -12,7 +12,7 @@
 
 <meta name="author" content="Arman Shahrisa" />
 
-<meta name="date" content="2017-07-25" />
+<meta name="date" content="2017-08-03" />
 
 <title>cbaf</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">cbaf</h1>
 <h4 class="author"><em>Arman Shahrisa</em></h4>
-<h4 class="date"><em>2017-07-25</em></h4>
+<h4 class="date"><em>2017-08-03</em></h4>
 
 
 
@@ -62,19 +62,19 @@ Proceed anyway and overwrite the file? (yes/no):      no</code></pre>
 <div id="obtainonestudy" class="section level2">
 <h2>obtainOneStudy()</h2>
 <p>This function obtains and stores the supported data for at least one group of genes across multiple subgroups of a cancer study. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names.</p>
-<p>It requires at least four variables:</p>
+<p>It requires at least four arguments:</p>
 <ul>
-<li><strong>genesList</strong>, a list that contains at least one gene group. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</li>
-<li><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process.</li>
-<li><strong>studyName</strong>, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
-<li><strong>desiredTechnique</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.</li>
+<li><p><strong>genesList</strong>, a list that contains at least one gene group. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</p></li>
+<li><p><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process.</p></li>
+<li><p><strong>studyName</strong>, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</p></li>
+<li><p><strong>desiredTechnique</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.</p></li>
 </ul>
 <p>Function also contains two other options:</p>
 <ul>
-<li><strong>desiredCaseList</strong> a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as ‘none’, function will show the available subgroups and ask the user to enter the desired ones during the process. The default value is ‘none’.</li>
-<li><strong>validateGenes</strong> a logical value that, if set to be ‘TRUE’, function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</li>
+<li><p><strong>desiredCaseList</strong> a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as ‘none’, function will show the available subgroups and ask the user to enter the desired ones during the process. The default value is ‘none’.</p></li>
+<li><p><strong>validateGenes</strong> a logical value that, if set to be ‘TRUE’, function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</p></li>
 </ul>
-<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>submissionName</em> is <code>test</code>, <em>cancername</em> is <code>Breast Invasive Carcinoma (TCGA, Cell 2015)</code>. and the <em>desiredTechnique</em> is RNA-seq.</p>
+<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>submissionName</em> is <code>test</code>, <em>cancername</em> is <code>Breast Invasive Carcinoma (TCGA, Cell 2015)</code> and the <em>desiredTechnique</em> is <code>RNA-seq</code>.</p>
 <pre><code>genes &lt;- list(K.demethylases = c(&quot;KDM1A&quot;, &quot;KDM1B&quot;, &quot;KDM2A&quot;), K.acetyltransferases = c(&quot;CLOCK&quot;, &quot;CREBBP&quot;, &quot;ELP3&quot;, &quot;EP300&quot;))
 
 obtainOneStudy(genes, &quot;test&quot;, &quot;Breast Invasive Carcinoma (TCGA, Cell 2015)&quot;, &quot;RNA-seq&quot;)
@@ -106,20 +106,19 @@ obtainOneStudy(genes, &quot;test&quot;, &quot;Breast Invasive Carcinoma (TCGA, C
 <div id="obtainmultiplestudies" class="section level2">
 <h2>obtainMultipleStudies()</h2>
 <p>This function obtains and stores the supported data for at least one group of genes across multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names.</p>
-<p>It requires at least three variables:</p>
+<p>It requires at least four arguments:</p>
 <ul>
-<li><strong>genes</strong>, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</li>
-<li><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process.</li>
-<li><strong>cancernames</strong>, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>. Alternatively, a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.</li>
-<li><strong>high.throughput.data.type</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.</li>
+<li><p><strong>genes</strong>, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.</p></li>
+<li><p><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process.</p></li>
+<li><p><strong>cancernames</strong>, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>. Alternatively, a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.</p></li>
+<li><p><strong>high.throughput.data.type</strong>, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.</p></li>
 </ul>
 <p>Function also contains two other options:</p>
 <ul>
-<li><strong>cancerCode</strong>, if set as <code>TRUE</code>, function will use the standard abbreviated cancer names instead of complete cancer names. For example, <code>laml_tcga_pub</code> is the shortened name for <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</li>
-<li><strong>validateGenes</strong> a logical value that, if set to be ‘TRUE’, function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</li>
+<li><p><strong>cancerCode</strong>, if set as <code>TRUE</code>, function will use the standard abbreviated cancer names instead of complete cancer names. For example, <code>laml_tcga_pub</code> is the shortened name for <code>Acute Myeloid Leukemia (TCGA, NEJM 2013)</code>.</p></li>
+<li><p><strong>validateGenes</strong> a logical value that, if set to be ‘TRUE’, function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn’t have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.</p></li>
 </ul>
-<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>submissionName</em> is <code>test</code>, <em>cancername</em> is <code>Breast Invasive Carcinoma (TCGA, Cell 2015)</code>. and the <em>desiredTechnique</em> is RNA-seq.</p>
-<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>cancernames</em> has complete names of five cancer studies and the desired high-throughput study is RNA-seq.</p>
+<p>In the following example, <em>genes</em> consists of two gene groups K.demethylases and K.acetyltransferases, <em>submissionName</em> is <code>test</code>, <em>cancername</em> has complete names of five cancer studies and the desired high-throughput study is <code>RNA-seq</code>.</p>
 <pre><code>genes &lt;- list(K.demethylases = c(&quot;KDM1A&quot;, &quot;KDM1B&quot;, &quot;KDM2A&quot;), K.acetyltransferases = c(&quot;CLOCK&quot;, &quot;CREBBP&quot;, &quot;ELP3&quot;, &quot;EP300&quot;))
 
 
@@ -130,13 +129,49 @@ obntainMultipleStudies(genes, &quot;test2&quot;, cancernames, &quot;RNA-seq&quot
 <p>The following code shows how to create a matrix with desired names for <code>cancernames</code>:</p>
 <pre><code>cancernames &lt;- matrix(c(&quot;Acute Myeloid Leukemia (TCGA, Provisional)&quot;, &quot;acute myeloid leukemia&quot;, &quot;Adrenocortical Carcinoma (TCGA, Provisional)&quot;, &quot;adrenocortical carcinoma&quot;, &quot;Bladder Urothelial Carcinoma (TCGA, Provisional)&quot;, &quot;bladder urothelial carcinoma&quot;, &quot;Brain Lower Grade Glioma (TCGA, Provisional)&quot;, &quot;brain lower grade glioma&quot;, &quot;Breast Invasive Carcinoma (TCGA, Provisional)&quot;,  &quot;breast invasive carcinoma&quot;), nrow = 5, ncol=2 , byrow = TRUE)</code></pre>
 <p>An example of how more options for <code>processMultipleStudies()</code> can be altered:</p>
-<pre><code>ObtainMultipleStudies(genes, &quot;test2&quot;,cancernames, &quot;RNA-seq&quot;, cancerCode = TRUE, validateGenes = FALSE)</code></pre>
+<pre><code>ObtainMultipleStudies(genes, &quot;test2&quot;, cancernames, &quot;RNA-seq&quot;, cancerCode = TRUE, validateGenes = FALSE)</code></pre>
 <p>Function starts by checking whether or not the requested data has already been obtained and, if the requested data exists, it prints the following message and then prevents further processing.</p>
 <pre><code>[1] &quot;--- Function 'obtainMultipleStudies()' was skipped: the requested data already exist ---&quot;</code></pre>
 <p>If there is a change in function input data, e.g. gene names, or the requested data has not been obtained, it proceeds by getting the data and informs the user with a progress bar.</p>
 <pre><code>[1] &quot;*** Obtaining the requested data for test2 ***&quot;
 |===================================================================| 100%</code></pre>
 <p>The output is stored as a BiocFileCache object, which its name is the combination of <code>bfc_</code> and <em>submissionName</em>. Accordingly, in our example the BiocFileCache name is <code>bfc_test2</code>.</p>
+</div>
+<div id="automatedstatistics" class="section level2">
+<h2>automatedStatistics()</h2>
+<p>This function calculates the statistics for the data obtained by <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code> functions. Based on user’s preference, these statistics can include <em>frequency percentage</em>, <em>frequency ratio</em>, <em>mean value</em> and <em>median value</em> of samples greater than specific value. Furthermore, it can look for the genes that comprise the highest values in each cancer and list the top 5 genes for <em>frequency percentage</em>, <em>mean value</em> and <em>median value</em>.</p>
+<p>It requires at least two arguments:</p>
+<ul>
+<li><p><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process and should be the same name used for either of <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code> functions.</p></li>
+<li><p><strong>obtainedDataType</strong>, a character string that identifies the type of input data produced by the previous function. Two options are availabe: ‘single study’ for <code>obtainOneStudy()</code> and <code>multiple studies</code> for <code>obtainMultipleStudies()</code>. The function uses <code>obtainedDataType</code> and <code>submissionName</code> to construct the name of the BiocFileCach object and then finds the appropiate data inside it. Default value is <code>multiple studies</code>.</p></li>
+</ul>
+<p>Function also contains four other options:</p>
+<ul>
+<li><p><strong>calculate</strong>, a character vector that containes the statistical precedures user desires. Default input is <code>c(&quot;frequencyPercentage&quot;, &quot;frequencyRatio&quot;, &quot;Mean.Value&quot;, &quot;medianValue&quot;)</code>. This will tell the function to compute the followings:</p>
+<ul>
+<li><p><em>frequencyPercentage</em>, which is the number of samples having the value greather than specific cutoff divided by the total sample size for every study / study subgroup</p></li>
+<li><p><em>frequency ratio</em>, which shows the number of selected samples divided by the total number of samples that give the frequency percentage. It shows the selecected and total sample sizes.</p></li>
+<li><p><em>Mean Value</em>, which contains mean value of selected samples for each study.</p></li>
+<li><p><em>Median Value</em>, which shows the median value of selected samples for every study.</p></li>
+</ul></li>
+<li><p><strong>topGenes</strong>, a logical value that, if <code>TRUE</code>, causes the function to calculate the five genes comprising the highest values in <em>frequencyPercentage</em>, <em>Mean.Value</em> and <em>medianValue</em> if they are included in <strong>calculate</strong>.</p></li>
+<li><p><strong>cutoff</strong>, a number used to limit samples to those that are greather than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is <em>observed/expected ratio</em>, for the rest, it is <em>z-score</em>. To change the cutoff to any desired number, change the option to <code>cutoff = desiredNumber</code> in which desiredNumber is the number of interest.</p></li>
+<li><p><strong>round</strong>, a logical value that, if set to be <code>TRUE</code>, will force the function to round all the calculated values to two decimal places. The default value is <code>TRUE</code>.</p></li>
+</ul>
+<p>In the following example, <em>submissionName</em> is <code>test</code>, and the <em>obtainedDataType</em> is <code>multiple studies</code>.</p>
+<pre><code>automatedStatistics(&quot;test&quot;, obtainedDataType = &quot;multiple studies&quot;)
+</code></pre>
+<p>The following is the same as previous but excludes <em>mean value</em> and <em>median value</em>. Not that top genes for these two will also be ignored.</p>
+<pre><code>automatedStatistics(&quot;test&quot;, obtainedDataType = &quot;multiple studies&quot;, calculate = c(&quot;frequencyPercentage&quot;, &quot;frequencyRatio&quot;))
+</code></pre>
+<p>Function starts by checking whether or not output data of the previous function exists. If not, an error message will appear:</p>
+<pre><code>Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first</code></pre>
+<p>If it can find the desired data but the last execution of the previous function (either <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code>) was skipped, it then checks its own parameters. If the parameters are the same as the last time <em>automatedStatistics()</em> has been run, it will also skip, printing the following message:</p>
+<pre><code>[1] &quot;--- Function 'automatedStatistics()' was skipped: the requested data already exist ---&quot;</code></pre>
+<p>If there is a change in function input data, e.g. chenge in cutoff value, or the requested data does not exist, it continues by computing the requested statistics and informs the user with a progress bar.</p>
+<pre><code>[1] &quot;*** Performing the requested statistical analyses for test2 ***&quot;
+|===================================================================| 100%</code></pre>
+<p>The output is stored as a new section of the previous BiocFileCache object which is created by one of the former functions (<code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code>).</p>
 </div>
 <div id="process.multiple.studies" class="section level2">
 <h2>process.multiple.studies()</h2>
