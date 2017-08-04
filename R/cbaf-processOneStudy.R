@@ -105,6 +105,8 @@
 #' @param simplifictionCuttoff a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 #' for \code{simplify.visulization}. It has the same unit as \code{cutoff}.
 #'
+#' @param genesToDrop a character vector. Gene names within this vector will be removed from heatmap.
+#'
 #'
 #'
 #' @return a list that containes some or all of the following groups, based on what user has chosen: ValidationResults,
