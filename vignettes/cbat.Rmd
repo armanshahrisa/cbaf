@@ -255,7 +255,7 @@ If there is a change in function input data, e.g. chenge in cutoff value, or the
 [1] "*** Performing the requested statistical analyses for test2 ***"
 |===================================================================| 100%
 ```
-The output is stored as a new section of the previous BiocFileCache object which is created by one of the former functions (`obtainOneStudy()` or `obtainMultipleStudies()`).
+The output is stored as a new section of the previous BiocFileCache object which is created by one of the two former functions (`obtainOneStudy()` or `obtainMultipleStudies()`).
 
 
 
