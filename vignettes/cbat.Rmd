@@ -261,6 +261,77 @@ The output is stored as a new section of the previous BiocFileCache object which
 
 
 
+## heatmapOutput()
+
+This function prepares heatmap for _frequency percentage_, _mean value_ and _median value_ data provided by `automatedStatistics()` function.
+
+
+It requires at least two arguments:
+
+- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same name used for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
+
+- __obtainedDataType__, a character string that identifies the type of input data produced by the previous function. Two options are availabe: 'single study' for `obtainOneStudy()` and `multiple studies` for `obtainMultipleStudies()`. The function uses `obtainedDataType` and `submissionName` to construct the name of the BiocFileCach object and then finds the appropiate data inside it. Default value is `multiple studies`.
+
+Function also contains four other options:
+
+- __calculate__, a character vector that containes the statistical precedures user desires. Default input is `c("frequencyPercentage", "frequencyRatio", "Mean.Value", "medianValue")`. This will tell the function to compute the followings:
+
+    + _frequencyPercentage_, which is the number of samples having the value greather than specific cutoff divided by the total sample size for every study / study subgroup
+    
+    + _frequency ratio_, which shows the number of selected samples divided by the total number of samples that give the frequency percentage. It shows the selecected and total sample sizes.
+    
+    + _Mean Value_, which contains mean value of selected samples for each study.
+    
+    + _Median Value_, which shows the median value of selected samples for every study.
+    
+- __topGenes__, a logical value that, if `TRUE`, causes the function to calculate the five genes comprising the highest values in _frequencyPercentage_, _Mean.Value_ and _medianValue_ if they are included in __calculate__.
+
+- __cutoff__, a number used to limit samples to those that are greather than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
+
+- __round__, a logical value that, if set to be `TRUE`, will force the function to round all the calculated values to two decimal places. The default value is `TRUE`.
+
+
+In the following example, _submissionName_ is `test`,  and the _obtainedDataType_ is `multiple studies`.
+
+
+```
+automatedStatistics("test", obtainedDataType = "multiple studies")
+
+```
+The following is the same as previous but excludes _mean value_ and _median value_. Not that top genes for these two will also be ignored. 
+
+
+```
+automatedStatistics("test", obtainedDataType = "multiple studies", calculate = c("frequencyPercentage", "frequencyRatio"))
+
+```
+Function starts by checking whether or not output data of the previous function exists. If not, an error message will appear:
+
+```
+Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first
+```
+If it can find the desired data but the last execution of the previous function (either `obtainOneStudy()` or `obtainMultipleStudies()`) was skipped, it then checks its own parameters. If the parameters are the same as the last time _automatedStatistics()_ has been run, it will also skip, printing the following message:
+
+```
+[1] "--- Function 'automatedStatistics()' was skipped: the requested data already exist ---"
+```
+
+If there is a change in function input data, e.g. chenge in cutoff value, or the requested data does not exist, it continues by computing the requested statistics and informs the user with a progress bar.
+
+```
+[1] "*** Performing the requested statistical analyses for test2 ***"
+|===================================================================| 100%
+```
+The output is stored as a new section of the previous BiocFileCache object which is created by one of the two former functions (`obtainOneStudy()` or `obtainMultipleStudies()`).
+
+
+
+
+
+
+
+
+
 
 
 

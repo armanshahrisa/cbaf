@@ -12,7 +12,7 @@
 
 <meta name="author" content="Arman Shahrisa" />
 
-<meta name="date" content="2017-08-05" />
+<meta name="date" content="2017-08-14" />
 
 <title>cbaf</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">cbaf</h1>
 <h4 class="author"><em>Arman Shahrisa</em></h4>
-<h4 class="date"><em>2017-08-05</em></h4>
+<h4 class="date"><em>2017-08-14</em></h4>
 
 
 
@@ -140,6 +140,42 @@ obntainMultipleStudies(genes, &quot;test2&quot;, cancernames, &quot;RNA-seq&quot
 <div id="automatedstatistics" class="section level2">
 <h2>automatedStatistics()</h2>
 <p>This function calculates the statistics for the data obtained by <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code> functions. Based on user’s preference, these statistics can include <em>frequency percentage</em>, <em>frequency ratio</em>, <em>mean value</em> and <em>median value</em> of samples greater than specific value. Furthermore, it can look for the genes that comprise the highest values in each cancer and list the top 5 genes for <em>frequency percentage</em>, <em>mean value</em> and <em>median value</em>.</p>
+<p>It requires at least two arguments:</p>
+<ul>
+<li><p><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process and should be the same name used for either of <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code> functions.</p></li>
+<li><p><strong>obtainedDataType</strong>, a character string that identifies the type of input data produced by the previous function. Two options are availabe: ‘single study’ for <code>obtainOneStudy()</code> and <code>multiple studies</code> for <code>obtainMultipleStudies()</code>. The function uses <code>obtainedDataType</code> and <code>submissionName</code> to construct the name of the BiocFileCach object and then finds the appropiate data inside it. Default value is <code>multiple studies</code>.</p></li>
+</ul>
+<p>Function also contains four other options:</p>
+<ul>
+<li><p><strong>calculate</strong>, a character vector that containes the statistical precedures user desires. Default input is <code>c(&quot;frequencyPercentage&quot;, &quot;frequencyRatio&quot;, &quot;Mean.Value&quot;, &quot;medianValue&quot;)</code>. This will tell the function to compute the followings:</p>
+<ul>
+<li><p><em>frequencyPercentage</em>, which is the number of samples having the value greather than specific cutoff divided by the total sample size for every study / study subgroup</p></li>
+<li><p><em>frequency ratio</em>, which shows the number of selected samples divided by the total number of samples that give the frequency percentage. It shows the selecected and total sample sizes.</p></li>
+<li><p><em>Mean Value</em>, which contains mean value of selected samples for each study.</p></li>
+<li><p><em>Median Value</em>, which shows the median value of selected samples for every study.</p></li>
+</ul></li>
+<li><p><strong>topGenes</strong>, a logical value that, if <code>TRUE</code>, causes the function to calculate the five genes comprising the highest values in <em>frequencyPercentage</em>, <em>Mean.Value</em> and <em>medianValue</em> if they are included in <strong>calculate</strong>.</p></li>
+<li><p><strong>cutoff</strong>, a number used to limit samples to those that are greather than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is <em>observed/expected ratio</em>, for the rest, it is <em>z-score</em>. To change the cutoff to any desired number, change the option to <code>cutoff = desiredNumber</code> in which desiredNumber is the number of interest.</p></li>
+<li><p><strong>round</strong>, a logical value that, if set to be <code>TRUE</code>, will force the function to round all the calculated values to two decimal places. The default value is <code>TRUE</code>.</p></li>
+</ul>
+<p>In the following example, <em>submissionName</em> is <code>test</code>, and the <em>obtainedDataType</em> is <code>multiple studies</code>.</p>
+<pre><code>automatedStatistics(&quot;test&quot;, obtainedDataType = &quot;multiple studies&quot;)
+</code></pre>
+<p>The following is the same as previous but excludes <em>mean value</em> and <em>median value</em>. Not that top genes for these two will also be ignored.</p>
+<pre><code>automatedStatistics(&quot;test&quot;, obtainedDataType = &quot;multiple studies&quot;, calculate = c(&quot;frequencyPercentage&quot;, &quot;frequencyRatio&quot;))
+</code></pre>
+<p>Function starts by checking whether or not output data of the previous function exists. If not, an error message will appear:</p>
+<pre><code>Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first</code></pre>
+<p>If it can find the desired data but the last execution of the previous function (either <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code>) was skipped, it then checks its own parameters. If the parameters are the same as the last time <em>automatedStatistics()</em> has been run, it will also skip, printing the following message:</p>
+<pre><code>[1] &quot;--- Function 'automatedStatistics()' was skipped: the requested data already exist ---&quot;</code></pre>
+<p>If there is a change in function input data, e.g. chenge in cutoff value, or the requested data does not exist, it continues by computing the requested statistics and informs the user with a progress bar.</p>
+<pre><code>[1] &quot;*** Performing the requested statistical analyses for test2 ***&quot;
+|===================================================================| 100%</code></pre>
+<p>The output is stored as a new section of the previous BiocFileCache object which is created by one of the two former functions (<code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code>).</p>
+</div>
+<div id="heatmapoutput" class="section level2">
+<h2>heatmapOutput()</h2>
+<p>This function prepares heatmap for <em>frequency percentage</em>, <em>mean value</em> and <em>median value</em> data provided by <code>automatedStatistics()</code> function.</p>
 <p>It requires at least two arguments:</p>
 <ul>
 <li><p><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process and should be the same name used for either of <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code> functions.</p></li>

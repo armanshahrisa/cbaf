@@ -182,22 +182,52 @@ availableData <- function(outputName, excelFile = TRUE){
 
     list.of.available.data <- sapply(list.of.studies[, "cancer_study_id"], function(cs, cgds) {
 
-      description <- getCaseLists(cgds, cs)[, "case_list_name"]
+      # Obtain available techniques
+
+      available.options <- getCaseLists(cgds, cs)
+
+
+
+      # Update progressbar
 
       i <<- i + 1
 
       setTxtProgressBar(pb, i)
 
-      c(RNA.seq = any(RNA_seq.terms %in% description),
 
-        microRNA.seq = any(microRNA_seq.terms %in% description),
 
-        microarray_of_mRNA = any(microarray.for.mRNA.term %in% description),
+      if(any(colnames(available.options) == "case_list_name")){
 
-        microarray_of_miRNA = any(microarray.for.miRNA.term %in% description),
 
-        methylation = any(methylation.term %in% description))
+        description <- available.options[, "case_list_name"]
 
+
+        c(RNA.seq = any(RNA_seq.terms %in% description),
+
+          microRNA.seq = any(microRNA_seq.terms %in% description),
+
+          microarray_of_mRNA = any(microarray.for.mRNA.term %in% description),
+
+          microarray_of_miRNA = any(microarray.for.miRNA.term %in% description),
+
+          methylation = any(methylation.term %in% description))
+
+
+      } else{
+
+
+        c(RNA.seq = "FALSE",
+
+          microRNA.seq = "FALSE",
+
+          microarray_of_mRNA = "FALSE",
+
+          microarray_of_miRNA = "FALSE",
+
+          methylation = "FALSE")
+
+
+      }
 
 
     }, mycgds)
