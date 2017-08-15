@@ -12,7 +12,7 @@
 
 <meta name="author" content="Arman Shahrisa" />
 
-<meta name="date" content="2017-08-14" />
+<meta name="date" content="2017-08-16" />
 
 <title>cbaf</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">cbaf</h1>
 <h4 class="author"><em>Arman Shahrisa</em></h4>
-<h4 class="date"><em>2017-08-14</em></h4>
+<h4 class="date"><em>2017-08-16</em></h4>
 
 
 
@@ -176,38 +176,39 @@ obntainMultipleStudies(genes, &quot;test2&quot;, cancernames, &quot;RNA-seq&quot
 <div id="heatmapoutput" class="section level2">
 <h2>heatmapOutput()</h2>
 <p>This function prepares heatmap for <em>frequency percentage</em>, <em>mean value</em> and <em>median value</em> data provided by <code>automatedStatistics()</code> function.</p>
-<p>It requires at least two arguments:</p>
+<p>It requires at least one arguments:</p>
 <ul>
-<li><p><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process and should be the same name used for either of <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code> functions.</p></li>
-<li><p><strong>obtainedDataType</strong>, a character string that identifies the type of input data produced by the previous function. Two options are availabe: ‘single study’ for <code>obtainOneStudy()</code> and <code>multiple studies</code> for <code>obtainMultipleStudies()</code>. The function uses <code>obtainedDataType</code> and <code>submissionName</code> to construct the name of the BiocFileCach object and then finds the appropiate data inside it. Default value is <code>multiple studies</code>.</p></li>
+<li><strong>submissionName</strong>, a character string containing name of interest. It is used for naming the process and should be the same name used for either of <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code> functions.</li>
 </ul>
-<p>Function also contains four other options:</p>
+<p>Function also contains thirteen other options:</p>
 <ul>
-<li><p><strong>calculate</strong>, a character vector that containes the statistical precedures user desires. Default input is <code>c(&quot;frequencyPercentage&quot;, &quot;frequencyRatio&quot;, &quot;Mean.Value&quot;, &quot;medianValue&quot;)</code>. This will tell the function to compute the followings:</p>
-<ul>
-<li><p><em>frequencyPercentage</em>, which is the number of samples having the value greather than specific cutoff divided by the total sample size for every study / study subgroup</p></li>
-<li><p><em>frequency ratio</em>, which shows the number of selected samples divided by the total number of samples that give the frequency percentage. It shows the selecected and total sample sizes.</p></li>
-<li><p><em>Mean Value</em>, which contains mean value of selected samples for each study.</p></li>
-<li><p><em>Median Value</em>, which shows the median value of selected samples for every study.</p></li>
-</ul></li>
-<li><p><strong>topGenes</strong>, a logical value that, if <code>TRUE</code>, causes the function to calculate the five genes comprising the highest values in <em>frequencyPercentage</em>, <em>Mean.Value</em> and <em>medianValue</em> if they are included in <strong>calculate</strong>.</p></li>
-<li><p><strong>cutoff</strong>, a number used to limit samples to those that are greather than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is <em>observed/expected ratio</em>, for the rest, it is <em>z-score</em>. To change the cutoff to any desired number, change the option to <code>cutoff = desiredNumber</code> in which desiredNumber is the number of interest.</p></li>
-<li><p><strong>round</strong>, a logical value that, if set to be <code>TRUE</code>, will force the function to round all the calculated values to two decimal places. The default value is <code>TRUE</code>.</p></li>
+<li><p><strong>shortenStudyNames</strong> a logical value, when equals to <code>TRUE</code>, function will removes the end part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.</p></li>
+<li><p><strong>genelimit</strong> if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, <code>genelimit=50</code> will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is <code>none</code>.</p></li>
+<li><p><strong>resolution</strong> This option can be used to adjust the resolution of the output heatmaps as ‘dot per inch’. The defalut resolution is 600.</p></li>
+<li><p><strong>RowCex</strong> a number that specifies letter size in heatmap row names.</p></li>
+<li><p><strong>ColCex</strong> a number that specifies letter size in heatmap column names.</p></li>
+<li><p><strong>heatmapMargines</strong> a numeric vector that can be used to set heatmap margins. The default value is <code>heatmapMargines=c(15,07)</code>.</p></li>
+<li><p><strong>angleForYaxisNames</strong> a number that determines the angle with which the studies/study subgroups names are shown in heatmaps. The angle is based on degree. The default value is 45.</p></li>
+<li><p><strong>heatmapColor</strong> a character string that defines heatmap color. The default value is “RdBu”. “redgreen” is also a popular color in genomic studies. To see the rest of colors, please type <code>library(RColorBrewer)</code> and then <code>display.brewer.all()</code>.</p></li>
+<li><p><strong>reverseColor</strong> a logical value that reverses the color gradiant for heatmap(s).</p></li>
+<li><p><strong>transposedHeatmap</strong> a logical value that changes row and columns of heatmap.</p></li>
+<li><p><strong>simplify</strong> a logical value that tells the function whether or not to change values under <em>simplifictionCuttoff</em> to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is not suited for publications.</p></li>
+<li><p><strong>simplifictionCuttoff</strong> a logical value that, if <code>simplify.visulization = TRUE</code>, needs to be set as a desired cuttoff <em>simplify.visulization</em>. It has the same unit as <em>cutoff</em>.</p></li>
+<li><p><strong>genesToDrop</strong> a character vector. Gene names within this vector will be removed from heatmap.</p></li>
 </ul>
-<p>In the following example, <em>submissionName</em> is <code>test</code>, and the <em>obtainedDataType</em> is <code>multiple studies</code>.</p>
-<pre><code>automatedStatistics(&quot;test&quot;, obtainedDataType = &quot;multiple studies&quot;)
+<p>In the following example, <em>submissionName</em> is <code>test</code>.</p>
+<pre><code>heatmapOutput(submissionName = &quot;test&quot;)
 </code></pre>
-<p>The following is the same as previous but excludes <em>mean value</em> and <em>median value</em>. Not that top genes for these two will also be ignored.</p>
-<pre><code>automatedStatistics(&quot;test&quot;, obtainedDataType = &quot;multiple studies&quot;, calculate = c(&quot;frequencyPercentage&quot;, &quot;frequencyRatio&quot;))
+<p>The following is the same as previous but uses more options.</p>
+<pre><code>heatmapOutput(&quot;test&quot;, shortenStudyNames = TRUE, heatmapMargines = c(13,5), heatmapColor = &quot;redgreen&quot;, genesToDrop = c(&quot;PVT1&quot;, &quot;SNHG6&quot;), RowCex = 1, ColCex = 1, reverseColor = FALSE)
 </code></pre>
 <p>Function starts by checking whether or not output data of the previous function exists. If not, an error message will appear:</p>
-<pre><code>Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first</code></pre>
-<p>If it can find the desired data but the last execution of the previous function (either <code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code>) was skipped, it then checks its own parameters. If the parameters are the same as the last time <em>automatedStatistics()</em> has been run, it will also skip, printing the following message:</p>
-<pre><code>[1] &quot;--- Function 'automatedStatistics()' was skipped: the requested data already exist ---&quot;</code></pre>
-<p>If there is a change in function input data, e.g. chenge in cutoff value, or the requested data does not exist, it continues by computing the requested statistics and informs the user with a progress bar.</p>
-<pre><code>[1] &quot;*** Performing the requested statistical analyses for test2 ***&quot;
+<pre><code>Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function</code></pre>
+<p>Otherwise, it continues by preparing and storing the requested heatmaps and informs the user with a progress bar.</p>
+<pre><code>[1] &quot;*** Preparing the requested heatmaps for test ***&quot;
 |===================================================================| 100%</code></pre>
-<p>The output is stored as a new section of the previous BiocFileCache object which is created by one of the two former functions (<code>obtainOneStudy()</code> or <code>obtainMultipleStudies()</code>).</p>
+<p>If there is no change in the options or the requested heatmaps already exist, it avoids storing the heatmaps. The number of skipped heatmaps is then printed:</p>
+<pre><code>&quot;--- 1 out of 1 heatmaps was skipped: It already exists. ---&quot;</code></pre>
 </div>
 <div id="process.multiple.studies" class="section level2">
 <h2>process.multiple.studies()</h2>

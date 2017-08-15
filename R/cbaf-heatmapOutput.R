@@ -42,12 +42,12 @@
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
 #'
-#' @param shortenStudyNames a logical vector. If the value is set as true, function will try to remove the end part of
+#' @param shortenStudyNames a logical value. If the value is set as true, function will try to remove the end part of
 #' cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted
 #' the experiment.
 #'
 #' @param genelimit if large number of genes exist in at least one gene group, this option can be used to limit the number of
-#' genes that are shown on hitmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation
+#' genes that are shown on heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes that show the most variation
 #' across multiple study / study subgroups.
 #' The default value is \code{none}.
 #'
@@ -64,12 +64,12 @@
 #' @param angleForYaxisNames a number that determines the angle with which the studies/study subgroups names are shown in heatmaps.
 #' The default value is 45 degree.
 #'
-#' @param heatmapColor a character string that defines heatmao color. The default value is "RdBu". "redgreen" is also a popular
-#' color in genomic studies. To see the rest of colors, please type \code{display.brewer.all()}.
+#' @param heatmapColor a character string that defines heatmap color. The default value is "RdBu". "redgreen" is also a popular
+#' color in genomic studies. To see the rest of colors, please type \code{library(RColorBrewer)} and then \code{display.brewer.all()}.
 #'
 #' @param reverseColor a logical value that reverses the color gradiant for heatmap(s).
 #'
-#' @param transposedHeatmap a logical value that changes row and colums of heatmap.
+#' @param transposedHeatmap a logical value that changes row and columns of heatmap.
 #'
 #' @param simplify a logical value that tells the function whether or not to change values under
 #' \code{simplifictionCuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is

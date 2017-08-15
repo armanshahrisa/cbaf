@@ -394,7 +394,7 @@ xlsxOutput <- function(submissionName){
 
   } else if(skipped > 0 & skipped == 1){
 
-    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," excel file was skipped: It already exist. ---", sep = ""))
+    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," excel file was skipped: It already exists. ---", sep = ""))
 
   }
 

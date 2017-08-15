@@ -266,65 +266,70 @@ The output is stored as a new section of the previous BiocFileCache object which
 This function prepares heatmap for _frequency percentage_, _mean value_ and _median value_ data provided by `automatedStatistics()` function.
 
 
-It requires at least two arguments:
+It requires at least one arguments:
 
 - __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same name used for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
 
-- __obtainedDataType__, a character string that identifies the type of input data produced by the previous function. Two options are availabe: 'single study' for `obtainOneStudy()` and `multiple studies` for `obtainMultipleStudies()`. The function uses `obtainedDataType` and `submissionName` to construct the name of the BiocFileCach object and then finds the appropiate data inside it. Default value is `multiple studies`.
+Function also contains thirteen other options:
 
-Function also contains four other options:
+- __shortenStudyNames__ a logical value, when equals to `TRUE`, function will removes the end part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
 
-- __calculate__, a character vector that containes the statistical precedures user desires. Default input is `c("frequencyPercentage", "frequencyRatio", "Mean.Value", "medianValue")`. This will tell the function to compute the followings:
+- __genelimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `genelimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `none`.
 
-    + _frequencyPercentage_, which is the number of samples having the value greather than specific cutoff divided by the total sample size for every study / study subgroup
-    
-    + _frequency ratio_, which shows the number of selected samples divided by the total number of samples that give the frequency percentage. It shows the selecected and total sample sizes.
-    
-    + _Mean Value_, which contains mean value of selected samples for each study.
-    
-    + _Median Value_, which shows the median value of selected samples for every study.
-    
-- __topGenes__, a logical value that, if `TRUE`, causes the function to calculate the five genes comprising the highest values in _frequencyPercentage_, _Mean.Value_ and _medianValue_ if they are included in __calculate__.
+- __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
 
-- __cutoff__, a number used to limit samples to those that are greather than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
+- __RowCex__ a number that specifies letter size in heatmap row names.
 
-- __round__, a logical value that, if set to be `TRUE`, will force the function to round all the calculated values to two decimal places. The default value is `TRUE`.
+- __ColCex__ a number that specifies letter size in heatmap column names.
+
+- __heatmapMargines__ a numeric vector that can be used to set heatmap margins. The default value is `heatmapMargines=c(15,07)`.
+
+- __angleForYaxisNames__ a number that determines the angle with which the studies/study subgroups names are shown in heatmaps. The angle is based on degree. The default value is 45.
+
+- __heatmapColor__ a character string that defines heatmap color. The default value is "RdBu". "redgreen" is also a popular color in genomic studies. To see the rest of colors, please type `library(RColorBrewer)` and then `display.brewer.all()`.
+
+- __reverseColor__ a logical value that reverses the color gradiant for heatmap(s).
+
+- __transposedHeatmap__ a logical value that changes row and columns of heatmap.
+
+- __simplify__ a logical value that tells the function whether or not to change values under _simplifictionCuttoff_ to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is not suited for publications.
+
+- __simplifictionCuttoff__ a logical value that, if `simplify.visulization = TRUE`, needs to be set as a desired cuttoff _simplify.visulization_. It has the same unit as _cutoff_.
+
+- __genesToDrop__ a character vector. Gene names within this vector will be removed from heatmap.
 
 
-In the following example, _submissionName_ is `test`,  and the _obtainedDataType_ is `multiple studies`.
+In the following example, _submissionName_ is `test`.
 
 
 ```
-automatedStatistics("test", obtainedDataType = "multiple studies")
+heatmapOutput(submissionName = "test")
 
 ```
-The following is the same as previous but excludes _mean value_ and _median value_. Not that top genes for these two will also be ignored. 
+The following is the same as previous but uses more options. 
 
 
 ```
-automatedStatistics("test", obtainedDataType = "multiple studies", calculate = c("frequencyPercentage", "frequencyRatio"))
+heatmapOutput("test", shortenStudyNames = TRUE, heatmapMargines = c(13,5), heatmapColor = "redgreen", genesToDrop = c("PVT1", "SNHG6"), RowCex = 1, ColCex = 1, reverseColor = FALSE)
 
 ```
 Function starts by checking whether or not output data of the previous function exists. If not, an error message will appear:
 
 ```
-Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first
-```
-If it can find the desired data but the last execution of the previous function (either `obtainOneStudy()` or `obtainMultipleStudies()`) was skipped, it then checks its own parameters. If the parameters are the same as the last time _automatedStatistics()_ has been run, it will also skip, printing the following message:
-
-```
-[1] "--- Function 'automatedStatistics()' was skipped: the requested data already exist ---"
+Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function
 ```
 
-If there is a change in function input data, e.g. chenge in cutoff value, or the requested data does not exist, it continues by computing the requested statistics and informs the user with a progress bar.
+Otherwise, it continues by preparing and storing the requested heatmaps and informs the user with a progress bar.
 
 ```
-[1] "*** Performing the requested statistical analyses for test2 ***"
+[1] "*** Preparing the requested heatmaps for test ***"
 |===================================================================| 100%
 ```
-The output is stored as a new section of the previous BiocFileCache object which is created by one of the two former functions (`obtainOneStudy()` or `obtainMultipleStudies()`).
+If there is no change in the options or the requested heatmaps already exist, it avoids storing the heatmaps. The number of skipped heatmaps is then printed:
 
-
+```
+"--- 1 out of 1 heatmaps was skipped: It already exists. ---"
+```
 
 
 
