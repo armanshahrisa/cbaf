@@ -47,7 +47,14 @@ License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-genes <- list(K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
+# Sample BiocFileCache object which is created by the function
+bfc_test <- BiocFileCache(system.file("extdata", "test", package = "cbaf"))
+
+
+# Example of function usage
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
+ "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
+ "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
 studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
 
