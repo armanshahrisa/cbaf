@@ -263,7 +263,7 @@ The output is stored as a new section of the previous BiocFileCache object which
 
 ## heatmapOutput()
 
-This function prepares heatmap for _frequency percentage_, _mean value_ and _median value_ data provided by `automatedStatistics()` function.
+This function prepares heatmap for _frequency percentage_, _mean value_ and _median value_ data provided by `automatedStatistics()` function. Heatmaps for every gene group are stored in separate folder.
 
 
 It requires at least one arguments:
@@ -316,7 +316,7 @@ heatmapOutput("test", shortenStudyNames = TRUE, heatmapMargines = c(13,5), heatm
 Function starts by checking whether or not output data of the previous function exists. If not, an error message will appear:
 
 ```
-Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function
+Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function first.
 ```
 
 Otherwise, it continues by preparing and storing the requested heatmaps and informs the user with a progress bar.
@@ -335,262 +335,80 @@ If there is no change in the options or the requested heatmaps already exist, it
 
 
 
+## xlsxOutput()
+
+This function exports the output of `automatedStatistics()` and the _gene validation_ result of one of the `obtainOneStudy()` or `obtainMultipleStudies()` functions as an excel file. For every gene group, an excel file will be generated and stored in the same folder as heatmaps.
 
 
+It requires one argument:
+
+- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same name used for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
 
 
+In the following example, _submissionName_ is `test`.
 
-## process.multiple.studies()
-
-This function Obtains the requested data for the given genes across the multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. The main part of function calculates frequency percentage, frequency ratio, mean expression and median of samples greater than specific value. Furthermore, it looks for the genes that comprise the highest values in each cancer. The function has been divided into two main segments. The first segment obtains and processes the desired data while the second segment generates heatmap and excel files.
-
-The function code along with all available options:
-```
-process.multiple.studies(genes, cancers, high.throughput.data.type, data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"), shorteded.cancer.names = TRUE, genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(24,17), cutoff=2, angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE, rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE,  validate.genes = TRUE, Use.CancerCode.as.Name = FALSE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)
-```
-
-
-The function requires at least three variables:
-
-- __genes__, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.
-- __cancernames__, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`. Alternatively, a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.
-- __high.throughput.data.type__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.
-
-Function contains other options that can be used for a verity of needs:
-
-- __data.presented.as__ tells the function what to compute. The default is `c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median")` which causes the function to consider all the four possible statistical procedures. Alternatively, users can decrease the number of requested statistical procedures as long as at least one procedure is given to the function.
-- __shorteded.cancer.names__ is used to remove the end part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
-- __genelimit__ can be employed if large number of genes exists in at least one gene group. This option limits the number of genes to be shown on heatmap. For instance, `genelimit=50` will limit the heatmap to show 50 genes showing the most variation. The default value is `none`.
-- __resolution__ adjusts the resolution of the output heatmaps as _dot per inch_. The default value is 600.
-- __RowCex__ specifies letter size in heatmap row names.
-- __ColCex__ specifies letter size in heatmap column names.
-- __heatmapMargines__ sets heatmap margins. The default value is `heatmapMargines=c(15,07)`.
-- __cutoff__ used to limit samples to those that are greater than specific number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, the unit is `observed/expected ratio`, for the rest, it is `z-score`- function can understand the correct unit. TO change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which _desiredNumber_ is the number of interest. 
-- __angle.for.heatmap.cancernames__ determines the angle with which the cancer names are shown in heatmaps. The default value is 45 degree.
-- __heatmap.color__ can be used to set heatmap colors. The default value is "RdBu". "redgreen" is also a popular color in genomic studies. To see the rest of colors, please type `display.brewer.all()`.
-- __reverse.heatmap.color__ can reverse the color gradient for heatmap.
-- __rewrite.output.list__ This option can be used to modify heatmap, e.g. change margin, without obtaining data from internet again. If set to `false`, function will use the values previously stored in the global environment (user's workspace) to draw heatmaps and save an excel file. The default value is `TRUE`.
-- __round__ forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
-- __top.genes__, if set as `TRUE`, cause the function to create three data.frame that contain the gene names with the highest values for each cancer. To get all the three data.frames, `Frequency.Percentage`, `Mean.Value` and `Median` must have been included for `data.presented.as`.
-- __validate.genes__, if set to be `TRUE`, function will checks each cancer study to finds whether or not each gene has a record. If a cancer study doesn't have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.
-- __Use.CancerCode.as.Name__, if set as `TRUE`, function will use the standard abbreviated cancer names instead of complete cancer names. For example, `laml_tcga_pub` is the shortened name for `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
-- __simplify.visulization__, if `TRUE`, function alters the values under `simplifiction.cuttoff` to zero. It only affects heatmaps to assist finding the candidate genes faster. Therefore, it is not suited for publications.
-- __simplifiction.cuttoff__ a logical value that, if `simplify.visulization = TRUE`, needs to be set as a desired cutoff for `simplify.visulization`. It has the same unit as `cutoff`.
-
-In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _cancernames_  has complete names of five cancer studies and the desired high-throughput study is RNA-seq.
 
 ```
-genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
+xlsxOutput("test")
 
-
-cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)")
-
-
-process.multiple.studies(genes, cancernames, "RNA-seq")
 ```
 
-The following code shows how to create a matrix with desired names for `cancernames`:
+Function starts by checking whether or not output data of the previous function exists. If not, an error message will appear:
+
 ```
-cancernames <- matrix(c("Acute Myeloid Leukemia (TCGA, Provisional)", "acute myeloid leukemia", "Adrenocortical Carcinoma (TCGA, Provisional)", "adrenocortical carcinoma", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "bladder urothelial carcinoma", "Brain Lower Grade Glioma (TCGA, Provisional)", "brain lower grade glioma", "Breast Invasive Carcinoma (TCGA, Provisional)",  "breast invasive carcinoma"), nrow = 5, ncol=2 , byrow = TRUE)
+Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function first.
 ```
 
-An example of how more options for `process.multiple.studies()` can be altered:
+Otherwise, it continues by preparing and storing the requested heatmaps and informs the user with a progress bar.
+
 ```
-process.multiple.studies(genes, cancernames, "RNA-seq", data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), shorteded.cancer.names = FALSE, resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
+[1] "*** Preparing the requested excel file(s) for test ***"
+|===================================================================| 100%
+```
+If there is no change in the input parameters or the requested excel files already exist, it avoids rewriting them. The number of skipped excel files is then printed:
+
+```
+"--- 1 out of 1 excel file was skipped: It already exists. ---"
 ```
 
 
 
-### First segment of function: obtaining and processing the requested data
 
-Just like the previous function, `process.multiple.studies()` starts by printing that it is obtaining and processing the the requested data. Then, a progress bar will appear in the next line.
 
+## processOneStudy()
+
+This function combines four of the mentioned functions for the ease of use. It is recomended that users only use this parent function to obtain and process gene data across multiple subsections of a cancer study so that child functions work with maximum efficiency. `processOneStudy()` uses the following functions:
+
+- __obtainOneStudy()__
+- __automatedStatistics()__
+- __heatmapOutput()__
+- __xlsxOutput()__
+
+The function code along with all available options is as follows:
 ```
-[1] "[[[ Obtaining and processing the requested data for K.demethylases genes ]]]"
-  |                                                                 |   0%          
-``` 
-  
-The progress bar gradually proceeds to 100%. Large number of genes or cancer studies may prolong the processing time. Upon finishing, another message is printed on console, the function creates and stores a list in the R's global environment with an informative name.
-
+processOneStudy(genesList, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE, validateGenes = TRUE, calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL, round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE, genesToDrop = NULL)
 ```
-[1] "[[[ Obtaining and processing the requested data for K.demethylases genes ]]]"
-  |=================================================================| 100%
-[1] "Preparing a 'list' to fill with the requested data"
+To get more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `obtainMultipleStudies()` function.
+
+The output excel files and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which it's name that is the combination of _submissionName_ and "output for multiple studies", for example "test output for multiple studies".
+
+
+
+
+
+## processMultipleStudies()
+
+This function combines four of the mentioned function for the ease of use. It is recomended that users only use this parent function to obtain and process gene data across multiple cancer studies so that child functions work with maximum efficiency. `processMultipleStudies()` uses the following functions:
+
+- __obtainMultipleStudies()__
+- __automatedStatistics()__
+- __heatmapOutput()__
+- __xlsxOutput()__
+
+The function code along with all available options is as follows:
 ```
-
-Based on user's preference, this list can include some or all of the following groups:
-
-- __Validation.Results__, a character matrix that shows whether or not different cancer studies possess record for various genes. If a cancer study doesn't have a record for a gene but uses an alternative name, it is shown in the matrix.
-- __Frequency.Percentage__, a numerical matrix that is obtained by dividing the number of samples with values greater than specific cutoff by the total sample size for each cancer study.
-- __Top.Genes.of.Frequency.Percentage__, a data.frame that shows genes with highest value in Frequency.Percentage. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.
-- __Frequency.Ratio__, a character matrix of fractions. Each fraction contains the number of samples with values greater than specific cutoff as a numerator and the total sample size for each cancer study as a denominator. 
-- __Mean.Value__, a numerical matrix that shows mean value of samples greater than specific cutoff.
-- __Top.Genes.of.Genes.Expression__, a data.frame that shows genes with highest value in Mean.Value. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.
-- __Median__, a numerical matrix that shows median value of samples greater than specific cutoff.
-- __Top.Genes.of.Median__, a data.frame that shows genes with highest value in Median. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.
-
-
-### Second segment of function: generating three heatmaps and one excel file 
-
-The second part of function saves all subgroups of the list, generated by first part of the function, in the different tabs of an excel file. In addition, three heatmaps are generated for Frequency.Percentage, Mean.Value and Median subgroups of the list; based on user's preference. During the process, a progress bar informs the user about the amount of work that have performed. When finished, a message appears on console that shows the directory where output files can be found.
-
+processMultipleStudies(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE, validateGenes = TRUE, calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL, round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE, genesToDrop = NULL)
 ```
-[1] "Saving the output files"
-  |=================================================================| 100%
-[1] "Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/1. K-demethylases"
-```
----------
+To obtain more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `ontainOneStudy()` function.
 
-The two mentioned steps, then, start for `K.acetyltransferases` gene group, ultimately saving the output files in a separate folder.
-```
-[1] "[[[ Obtaining and processing the requested data for K.acetyltransferases genes ]]]"
-  |=================================================================| 100%
-[1] "Preparing a 'list' to fill with the requested data"
-[1] "Saving the output files"
-  |=================================================================| 100%
-[1] "Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/2. K.acetyltransferases"
-```
-
-If users intend to modify the characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global environment, generating the outputs files without using the internet. To do so, set the `rewrite.output.list` to FLASE. For instance, the following code can be used to change heatmap color to red-green color gradient:
-
-```
-process.multiple.studies(genes, cancernames, "RNA-seq", heatmap.color = "redgreen", rewrite.output.list = FALSE)
-```
-
-
-## process.one.study()
-
-This function Obtains the requested data for the given genes across the multiple subgroups of a cancer study. It is very similar in what it does, to `process.multiple.studies()` as well as using a two-step procedure.
-
-The function code along with all available options:
-```
-process.one.study(genes, cancername, high.throughput.data.type, data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median"), transposedHeatmap=FALSE, desired.case.list="None", genelimit="none", resolution=600, RowCex=0.8, ColCex=0.8, heatmapMargines=c(10,10), cutoff="default", angle.for.heatmap.cancernames=45, heatmap.color = "RdBu", reverse.heatmap.color = TRUE, rewrite.output.list = TRUE, round=TRUE, top.genes = TRUE, validate.genes = TRUE, simplify.visulization=FALSE, simplifiction.cuttoff=FALSE)
-```
-
-The function requires at least three variables:
-
-- __genes__, a list that contains at least one group of genes. There is no limit for the number of gene groups, users can set as many as gene groups they desire.
-- __cancername__, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
-- __high.throughput.data.type__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.
-
-Function contains other options, many of whom are the same as previous function:
-
-- __data.presented.as__ tells the function what to compute. The default is `c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value", "Median")` which causes the function to consider all the four possible statistical procedures. Alternatively, users can decrease the number of requested statistical procedures as long as at least one procedure is given to the function.
-- __transposedHeatmap__, if TRUE, function transposes the rows and columns of heatmaps.
-- __desired.case.list__ a numeric vector that contains the index of desired cancer subgroups, if user knows index of desired subgroups. If set to be `FALSE`, function will ask the user to enter them during the process. The default value is `none`.
-- __genelimit__ can be employed if large number of genes exists in at least one gene group. This option limits the number of genes to be shown on heatmap. For instance, `genelimit=50` will limit the heatmap to show 50 genes showing the most variation. The default value is `none`.
-- __resolution__ adjusts the resolution of the output heatmaps as _dot per inch_. The default value is 600.
-- __RowCex__ specifies letter size in heatmap row names.
-- __ColCex__ specifies letter size in heatmap column names.
-- __heatmapMargines__ sets heatmap margins. The default value is `heatmapMargines=c(15,07)`.
-- __cutoff__ used to limit samples to those that are greater than specific number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, the unit is `observed/expected ratio`, for the rest, it is `z-score`- function can understand the correct unit. TO change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which _desiredNumber_ is the number of interest. 
-- __angle.for.heatmap.cancernames__ determines the angle with which the cancer names are shown in heatmaps. The default value is 45 degree.
-- __heatmap.color__ can be used to set heatmap colors. The default value is "RdBu". "redgreen" is also a popular color in genomic studies. To see the rest of colors, please type `display.brewer.all()`.
-- __reverse.heatmap.color__ can reverse the color gradient for heatmap.
-- __rewrite.output.list__ This option can be used to modify heatmap, e.g. change margin, without obtaining data from internet again. If set to `false`, function will use the values previously stored in the global environment (user's workspace) to draw heatmaps and save an excel file. The default value is `TRUE`.
-- __round__ forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
-- __top.genes__, if set as `TRUE`, cause the function to create three data.frame that contain the gene names with the highest values for each cancer. To get all the three data.frames, `Frequency.Percentage`, `Mean.Value` and `Median` must have been included for `data.presented.as`.
-- __validate.genes__, if set to be `TRUE`, function will checks each cancer study to finds whether or not each gene has a record. If a cancer study doesn't have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.
-- __simplify.visulization__, if `TRUE`, function alters the values under `simplifiction.cuttoff` to zero. It only affects heatmaps to assist finding the candidate genes faster. Therefore, it is not suited for publications.
-- __simplifiction.cuttoff__ a logical value that, if `simplify.visulization = TRUE`, needs to be set as a desired cutoff for `simplify.visulization`. It has the same unit as `cutoff`.
-
-In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _cancername_ is `Breast Invasive Carcinoma (TCGA, Cell 2015)`. and the desired high-throughput study is RNA-seq.
-```
-genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
-
-process.one.study(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq")
-```
-
-
-Here is example of how more options for `process.multiple.studies()` can be altered, including index of desired subgroups for `desired.case.list`:
-```
-process.one.study(genes, cancernames, "RNA-seq", desired.case.list = c(3,4,5), data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
-```
-
-### First segment of function: obtaining and processing the requested data
-
-`process.multiple.studies()` starts by printing that it is obtaining and processing the the requested data. 
-```
-[1] "[[[ Obtaining and processing the requested data for K.demethylases genes ]]]"
-``` 
-Then, assuming `desired.case.list = "none"`, all subgroups of the requested cancer study appear on console, asking the user to chose the index of desired subgroups: 
-```
-[1] "Please enter the numeric index of desired case list(s) for Breast Invasive Carcinoma (TCGA, Cell 2015) separated by comma. For instance two indexes 1 and 2 should be enterd as 1, 2"
- [1] "1. All Complete Tumors"                                "2. All Tumors"                                        
- [3] "3. ER+ breast tumors"                                  "4. ER- breast tumors"                                 
- [5] "5. Her2-positive breast tumors"                        "6. Invasive Ductal Cancer (Luminal A)"                
- [7] "7. Invasive Ductal Cancer (PAM50 Basal-like)"          "8. Invasive Ductal Cancer (PAM50 Her2-enriched)"      
- [9] "9. Invasive Ductal Cancer (PAM50 Luminal B)"           "10. Invasive Lobular Cancer"                          
-[11] "11. Invasive Lobular Cancer (Luminal A)"               "12. Mixed IDC/ILC breast cancer"                      
-[13] "13. Other histologies breast cancer"                   "14. Sequenced Tumors"                                 
-[15] "15. TCGA Freeze 2015"                                  "16. Triple-negative breast tumors"                    
-[17] "17. Tumor Samples with CNA data"                       "18. Tumor Samples with methylation data (HM27)"       
-[19] "19. Tumor Samples with methylation data (HM450)"       "20. Tumor Samples with mRNA data (Agilent microarray)"
-[21] "21. Tumor Samples with mRNA data (RNA Seq V2)"         "22. Tumor Samples with RPPA data"                     
-[23] "23. Tumor Samples with sequencing and CNA data"
-```
-```
-Enter the numeric index(es):                  2,3,4,5
-```  
-  
-  
-Then, a progress bar will appear in the next line. The progress bar gradually proceeds to 100%. Large number of genes may prolong the processing time. Upon finishing, another message is printed on console, the function creates and stores a list in the R's global environment with an informative name.
-
-```
-  |==================================================================| 100%
-[1] "Preparing a 'list' to fill with the requested data"
-```
-
-Based on user's preference, this list can include some or all of the following groups:
-
-- __Validation.Results__, a character matrix that shows whether or not different cancer studies possess record for various genes. If a cancer study doesn't have a record for a gene but uses an alternative name, it is shown in the matrix.
-- __Frequency.Percentage__, a numerical matrix that is obtained by dividing the number of samples with values greater than specific cutoff by the total sample size for each cancer study.
-- __Top.Genes.of.Frequency.Percentage__, a data.frame that shows genes with highest value in Frequency.Percentage. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.
-- __Frequency.Ratio__, a character matrix of fractions. Each fraction contains the number of samples with values greater than specific cutoff as a numerator and the total sample size for each cancer study as a denominator. 
-- __Mean.Value__, a numerical matrix that shows mean value of samples greater than specific cutoff.
-- __Top.Genes.of.Genes.Expression__, a data.frame that shows genes with highest value in Mean.Value. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.
-- __Median__, a numerical matrix that shows median value of samples greater than specific cutoff.
-- __Top.Genes.of.Median__, a data.frame that shows genes with highest value in Median. It contains name of the gene showing the highest value for every cancer study plus the corresponding value.
-
-
-### Second segment of function: generating three heatmaps and one excel file 
-
-The second part of function saves all subgroups of the list, generated by first part of the function, in the different tabs of an excel file. In addition, three heatmaps are generated for Frequency.Percentage, Mean.Value and Median subgroups of the list; based on user's preference. During the process, a progress bar informs the user about the amount of work that have performed. When finished, a message appears on console that shows the directory where output files can be found.
-
-```
-[1] "Saving the output files"
-  |==================================================================| 100%
-[1] "Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/1. K-demethylases""
-```
----------
-
-The two mentioned steps, then, starts for `K.acetyltransferases` gene group, saving the output files in a separate folder in the end.
-```
-[1] "[[[ Obtaining expression data for K.acetyltransferases genes ]]]"
-[1] "Please enter the numeric index of desired case list(s) for Breast Invasive Carcinoma (TCGA, Cell 2015) separated by comma. For instance two indexes 1 and 2 should be enterd as 1, 2"
- [1] "1. All Complete Tumors"                                "2. All Tumors"                                        
- [3] "3. ER+ breast tumors"                                  "4. ER- breast tumors"                                 
- [5] "5. Her2-positive breast tumors"                        "6. Invasive Ductal Cancer (Luminal A)"                
- [7] "7. Invasive Ductal Cancer (PAM50 Basal-like)"          "8. Invasive Ductal Cancer (PAM50 Her2-enriched)"      
- [9] "9. Invasive Ductal Cancer (PAM50 Luminal B)"           "10. Invasive Lobular Cancer"                          
-[11] "11. Invasive Lobular Cancer (Luminal A)"               "12. Mixed IDC/ILC breast cancer"                      
-[13] "13. Other histologies breast cancer"                   "14. Sequenced Tumors"                                 
-[15] "15. TCGA Freeze 2015"                                  "16. Triple-negative breast tumors"                    
-[17] "17. Tumor Samples with CNA data"                       "18. Tumor Samples with methylation data (HM27)"       
-[19] "19. Tumor Samples with methylation data (HM450)"       "20. Tumor Samples with mRNA data (Agilent microarray)"
-[21] "21. Tumor Samples with mRNA data (RNA Seq V2)"         "22. Tumor Samples with RPPA data"                     
-[23] "23. Tumor Samples with sequencing and CNA data"       
-Enter the numeric index(es):                  2,3,4,5
-  |==================================================================| 100%
-[1] "Preparing a 'list' to fill with the requested data"
-[1] "Saving the output files"
-  |==================================================================| 100%
-[1] "Requested excel and PNG files were saved in Z:/cBioAutomatedTools/Source code/cBioAutomatedTools/2. K-acetyltransferases"
-```
-
-If users intend to modify the characteristics of generated heatmaps, e.g. change color, function can use the information that is previously stored in the global environment, generating the outputs files without using the internet. To do so, set the `rewrite.output.list` to FLASE. For instance, the following code can be used to change heatmap color to red-green color gradient:
-
-```
-process.one.study(genes, "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", heatmap.color = "redgreen", rewrite.output.list = FALSE)
-```
-
+The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which it's name that is the combination of _submissionName_ and "output for multiple studies", for example "test output for multiple studies". 

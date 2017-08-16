@@ -94,7 +94,7 @@ xlsxOutput <- function(submissionName){
 
   if(!exists(paste("bfc_", submissionName, sep = ""))){
 
-    stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function")
+    stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function first")
 
   } else if(exists(paste("bfc_", submissionName, sep = ""))){
 

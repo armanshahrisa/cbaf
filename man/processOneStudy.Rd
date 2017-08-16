@@ -59,7 +59,7 @@ cancer names aiming to shorten them. The removed segment usually contains the na
 the experiment.}
 
 \item{genelimit}{if large number of genes exist in at least one gene group, this option can be used to limit the number of
-genes that are shown on hitmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation
+genes that are shown on heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes showing the most variation
 across multiple study / study subgroups.
 The default value is \code{none}.}
 
@@ -76,8 +76,8 @@ The defalut value is 600.}
 \item{angleForYaxisNames}{a number that determines the angle with which the studies/study subgroups names are shown in heatmaps.
 The default value is 45 degree.}
 
-\item{heatmapColor}{a character string that defines heatmao color. The default value is "RdBu". "redgreen" is also a popular
-color in genomic studies. To see the rest of colors, please type \code{display.brewer.all()}.  Default value is 'TRUE'.}
+\item{heatmapColor}{a character string that defines heatmap color. The default value is "RdBu". "redgreen" is also a popular
+color in genomic studies. To see the rest of colors, please type \code{library(RColorBrewer)} and then \code{display.brewer.all()}.}
 
 \item{reverseColor}{a logical value that reverses the color gradiant for heatmap(s).}
 
