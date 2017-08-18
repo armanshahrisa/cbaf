@@ -9,18 +9,19 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-cbat package facilitates working with high-throughput data stored on <http://www.cbioportal.org/>. The official Bioconductor package that is designed for obtaining data from cBioPortal in R, is `cgdsr`. To obtain data with this package, users have to pass a multi-step procedure. Besides, the index of cancers and their subgroups might change frequently, which in turn, requires changing the R code. `cbaf` makes this procedure automated for __RNA-seq__, __microRNA-seq__, __microarray__ and __methylation__ data. In addition, comparing the genetic data across the different cancer studies/cancer study subgroups becomes much faster and easier. The results are presented as excel file(s) and multiple heatmaps.
+cbaf package facilitates working with high-throughput data stored on <http://www.cbioportal.org/>. The official Bioconductor package that is designed for obtaining data from cBioPortal in R, is `cgdsr`. To obtain data with this package, users have to pass a multistep procedure. Besides, the index of cancers and their subgroups changes frequently, which in turn, requires changing the R code. cbaf makes this procedure automated for __RNA-seq__, __microRNA-seq__, __microarray__ and __methylation__ data. In addition, comparing the genetic data across multiple cancer studies/cancer study subgroups becomes much faster and easier. The results are stored as excel file(s) and multiple heatmaps.
 
 The package consists of six main functions: `availableData()`, `obtainOneStudy()`, `obtainMultipleStudies()`, `automatedStatistics()`, `heatmapOutput()` and `xlsxOutput()`.
 
-There are two other functions that combine multiple functions in order to perform automated procedures of obtaining the required data, calculating statistics and exporting the data as heatmaps and excel files: `processOneStudy()` and `processMultipleStudies()`.
+There are two other functions, `processOneStudy()` and `processMultipleStudies()`, that combine multiple functions in order to automatically execute multiple functions following one another. Please use these two functions instead of exceting main functions one by one. This allows functions to work with higher efficiency.
+
 
 
 
 
 ## availableData()
 
-This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a name to lable the output result.
+This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a name to label the output result.
 ```
 availableData("name")
 ```    
@@ -31,7 +32,7 @@ There is another argument that enables the function to save the result as an exc
 availableData("name", excelFile = FALSE)
 ```    
 
-At first, if `excelFile == TRUE`, the function starts looking for an excel file with the given name in the working directory. If it finds the file, the following message is printed, asking the user whether or not it should proceeds.
+At first, if `excelFile == TRUE`, the function starts looking into the working directory for an excel file with the given name. If it finds the file, the following message is printed, asking the user whether or not it should proceeds.
 ```
 [1] "An excel file with the given name already exists in the working directory. Proceeding will cause the function to overwrite the file! If you wish to run the function again with a different given name, please type no ."
 Proceed anyway and overwrite the file? (yes/no):      no
@@ -64,7 +65,7 @@ Upon finishing, the output is accessible with the given name as a variable. if `
 
 ## obtainOneStudy()
 
-This function obtains and stores the supported data for at least one group of genes across multiple subgroups of a cancer study. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. 
+This function obtains and stores the supported data for at least one group of genes across multiple subgroups of a cancer study. It can check whether or not all genes are included in different subgroups of a cancer study and, if not, looks for the alternative gene names. 
 
 It requires at least four arguments:
 
@@ -74,13 +75,11 @@ It requires at least four arguments:
 
 - __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
 
-- __desiredTechnique__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray for mRNA, microarray for microRNA and methylation.
-
-Function also contains two other options:
+- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
 
 - __desiredCaseList__ a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as 'none', function will show the available subgroups and ask the user to enter the desired ones during the process. The default value is 'none'.
 
-- __validateGenes__ a logical value that, if set to be 'TRUE', function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.
+- __validateGenes__ a logical value that, if set to be 'TRUE', function will check each cancer subgroup to find whether or not every gene has a record. If the subgroup doesn't have a record for the specific gene, function checks for alternative gene names that cbioportal might use instead of the given gene name.
 
 In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _submissionName_ is `test`, _cancername_ is `Breast Invasive Carcinoma (TCGA, Cell 2015)` and the _desiredTechnique_ is `RNA-seq`.
 
@@ -92,17 +91,17 @@ obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RN
 ```
 
 
-Here is example of how more options can be used with `obtainOneStudy()`, including index of desired subgroups for `desiredCaseList`:
+Here is another example that shows how the index of desired subgroups can be used:
 ```
-process.one.study(genes, cancernames, "RNA-seq", desired.case.list = c(3,4,5), data.presented.as = c("Frequency.Percentage", "Frequency.Ratio", "Mean.Value"), resolution=300, RowCex=1, ColCex=1, heatmapMargines=c(15,5), cutoff=1.5, angle.for.heatmap.cancernames=30, heatmap.color = "redgreen")
+obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", desiredCaseList = c(2,3,4,5))
 ```
 
-First, it checks whether the requested data has already been obtained and, if the requested data exists, it prints the following message and then stops further processing.
+First, obtainOneStudy() checks whether the requested data has already been obtained. If it can find it, function prints the following message and then stops further processing.
 ```
 [1] "--- Function 'obtainOneStudy()' was skipped: the requested data already exist ---"
 ```
 
-If there is a change in function input data, e.g. gene names, or the requested data has not been obtained, assuming `desired.case.list = "none"`, all subgroups of the requested cancer study appear on console, asking the user to chose the index of desired subgroups: 
+If there is a change in function input data, e.g. gene names, or the requested data has not been obtained, assuming `desired.case.list = "none"`, all subgroups of the requested cancer study appear on console, asking the user to choose the index of desired subgroups: 
 ```
 [1] "Please enter the numeric index of desired case list(s) for Breast Invasive Carcinoma (TCGA, Cell 2015) separated by comma. For instance two indexes 1 and 2 should be enterd as 1, 2"
  [1] "1. All Complete Tumors"                                "2. All Tumors"                                        
@@ -122,13 +121,13 @@ If there is a change in function input data, e.g. gene names, or the requested d
 Enter the numeric index(es):                  2,3,4,5
 ```  
 
-Then, it starts to get the data and infroms the user with a progress bar.
+Then, it starts to get the data and informs the user with a progress bar.
 
 ```
 [1] "*** Obtaining the requested data for test ***"
 |===================================================================| 100%
 ```
-The output is stored as a BiocFileCache object, which its name is the combination of `bfc_` and _submissionName_. Accordingly, in our example the BiocFileCache name is `bfc_test`.
+Output is stored as a _BiocFileCache_ object, which its name is combination of `bfc_` and _submissionName_. Accordingly, in our example the BiocFileCache name is `bfc_test`.
 
 
 
@@ -136,7 +135,7 @@ The output is stored as a BiocFileCache object, which its name is the combinatio
 
 ## obtainMultipleStudies()
 
-This function obtains and stores the supported data for at least one group of genes across multiple cancer studies. It can check whether or not all genes are included in cancer studies and, if not, looks for the alternative gene names. 
+This function obtains and stores the supported data for at least one group of genes across multiple cancer studies. It can check whether or not all genes are included in each cancer study and, if not, it looks for the alternative gene names. 
 
 
 It requires at least four arguments:
@@ -145,17 +144,17 @@ It requires at least four arguments:
 
 - __submissionName__, a character string containing name of interest. It is used for naming the process.
 
-- __cancernames__, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`. Alternatively, a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.
+- __cancernames__, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`. Alternatively, a matrix can be used if user prefers user-defined cancer names. In this case, the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.
 
-- __high.throughput.data.type__, one of the five supported high-throughput studies: RNA-seq, MicroRNA-seq, microarray.mRNA, microarray.microRNA and methylation.
+- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
 
 Function also contains two other options:
 
-- __cancerCode__, if set as `TRUE`, function will use the standard abbreviated cancer names instead of complete cancer names. For example, `laml_tcga_pub` is the shortened name for `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
+- __cancerCode__, if `TRUE`, will force the function to use the standard abbreviated cancer names instead of complete cancer names. For example, `laml_tcga_pub` is the shortened name for `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
 
-- __validateGenes__ a logical value that, if set to be 'TRUE', function will check each cancer study to find whether or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene names that cbioportal might use instead of the given gene name.
+- __validateGenes__ , if `TRUE`, causes the function to check all cancer studies to find which genes from the input data are available. In addition, function checks for alternative gene names that cbioportal might use instead of the given gene name.
 
-In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _submissionName_ is `test`, _cancername_ has complete names of five cancer studies and the desired high-throughput study is `RNA-seq`.
+In the following example, _genes_ consists of two gene groups K.demethylases and K.acetyltransferases, _submissionName_ is `test`, _cancername_ has complete name of five cancer studies and the desired high-throughput study is `RNA-seq`.
 
 ```
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"), K.acetyltransferases = c("CLOCK", "CREBBP", "ELP3", "EP300"))
@@ -167,7 +166,7 @@ cancernames <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical C
 obntainMultipleStudies(genes, "test2", cancernames, "RNA-seq")
 ```
 
-The following code shows how to create a matrix with desired names for `cancernames`:
+The following code shows how to create a matrix with the desired names for `cancernames`:
 ```
 cancernames <- matrix(c("Acute Myeloid Leukemia (TCGA, Provisional)", "acute myeloid leukemia", "Adrenocortical Carcinoma (TCGA, Provisional)", "adrenocortical carcinoma", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "bladder urothelial carcinoma", "Brain Lower Grade Glioma (TCGA, Provisional)", "brain lower grade glioma", "Breast Invasive Carcinoma (TCGA, Provisional)",  "breast invasive carcinoma"), nrow = 5, ncol=2 , byrow = TRUE)
 ```
@@ -188,7 +187,7 @@ If there is a change in function input data, e.g. gene names, or the requested d
 [1] "*** Obtaining the requested data for test2 ***"
 |===================================================================| 100%
 ```
-The output is stored as a BiocFileCache object, which its name is the combination of `bfc_` and _submissionName_. Accordingly, in our example the BiocFileCache name is `bfc_test2`.
+The output is stored as a BiocFileCache object, which its name is combination of `bfc_` and _submissionName_. Accordingly, in our example the BiocFileCache name is `bfc_test2`.
 
 
 
@@ -196,32 +195,32 @@ The output is stored as a BiocFileCache object, which its name is the combinatio
 
 ## automatedStatistics()
 
-This function calculates the statistics for the data obtained by `obtainOneStudy()` or `obtainMultipleStudies()` functions. Based on user's preference, these statistics can include _frequency percentage_, _frequency ratio_, _mean value_ and _median value_ of samples greater than specific value. Furthermore, it can look for the genes that comprise the highest values in each cancer and list the top 5 genes for _frequency percentage_, _mean value_ and _median value_. 
+The function calculates the statistics of the data obtained by `obtainOneStudy()` or `obtainMultipleStudies()` functions. Based on user's preference, these statistics can include _frequency percentage_, _frequency ratio_, _mean value_ and _median value_ of samples greater than specific value. Furthermore, it can look for the genes that comprise the highest values in each cancer and list the top 5 genes for _frequency percentage_, _mean value_ and _median value_. 
 
 
 It requires at least two arguments:
 
-- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same name used for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
+- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same as submissionName for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
 
-- __obtainedDataType__, a character string that identifies the type of input data produced by the previous function. Two options are availabe: 'single study' for `obtainOneStudy()` and `multiple studies` for `obtainMultipleStudies()`. The function uses `obtainedDataType` and `submissionName` to construct the name of the BiocFileCach object and then finds the appropiate data inside it. Default value is `multiple studies`.
+- __obtainedDataType__, a character string that identifies the type of input data produced by the previous function. Two options are available: `single study` for `obtainOneStudy()` and `multiple studies` for `obtainMultipleStudies()`. The function uses `obtainedDataType` and `submissionName` to construct the name of the BiocFileCach object and then finds the appropriate data inside it. Default value is `multiple studies`.
 
 Function also contains four other options:
 
-- __calculate__, a character vector that containes the statistical precedures user desires. Default input is `c("frequencyPercentage", "frequencyRatio", "Mean.Value", "medianValue")`. This will tell the function to compute the followings:
+- __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`. This will tell the function to compute the followings:
 
-    + _frequencyPercentage_, which is the number of samples having the value greather than specific cutoff divided by the total sample size for every study / study subgroup
+    + _frequencyPercentage_, which is the percentage of samples having the value greather than specific cutoff divided by the total sample size for every study / study subgroup
     
-    + _frequency ratio_, which shows the number of selected samples divided by the total number of samples that give the frequency percentage. It shows the selecected and total sample sizes.
+    + _frequency ratio_, which shows the number of selected samples divided by the total number of samples that give the frequency percentage. It shows the selected and total sample sizes.
     
     + _Mean Value_, which contains mean value of selected samples for each study.
     
     + _Median Value_, which shows the median value of selected samples for every study.
     
-- __topGenes__, a logical value that, if `TRUE`, causes the function to calculate the five genes comprising the highest values in _frequencyPercentage_, _Mean.Value_ and _medianValue_ if they are included in __calculate__.
+- __topGenes__, a logical value that, if set as TRUE, causes the function to create three data.frame that contain the five top genes for each cancer. To get all the three data.frames, _frequencyPercentage_, _meanValue_ and _median_ must have been included for __calculate__.
 
-- __cutoff__, a number used to limit samples to those that are greather than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
+- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
 
-- __round__, a logical value that, if set to be `TRUE`, will force the function to round all the calculated values to two decimal places. The default value is `TRUE`.
+- __round__, a logical value that forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
 
 
 In the following example, _submissionName_ is `test`,  and the _obtainedDataType_ is `multiple studies`.
@@ -231,25 +230,25 @@ In the following example, _submissionName_ is `test`,  and the _obtainedDataType
 automatedStatistics("test", obtainedDataType = "multiple studies")
 
 ```
-The following is the same as previous but excludes _mean value_ and _median value_. Not that top genes for these two will also be ignored. 
+The following is the same as previous but excludes _mean value_ and _median value_. Note that top genes for these two statistics will also be skipped. 
 
 
 ```
 automatedStatistics("test", obtainedDataType = "multiple studies", calculate = c("frequencyPercentage", "frequencyRatio"))
 
 ```
-Function starts by checking whether or not output data of the previous function exists. If not, an error message will appear:
+Function starts by checking whether or not output data for the previous function exists. If not, an error message will appear:
 
 ```
 Error: Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first
 ```
-If it can find the desired data but the last execution of the previous function (either `obtainOneStudy()` or `obtainMultipleStudies()`) was skipped, it then checks its own parameters. If the parameters are the same as the last time _automatedStatistics()_ has been run, it will also skip, printing the following message:
+If it can find the desired data but one of the two previous function (either `obtainOneStudy()` or `obtainMultipleStudies()`) was skipped before, function then looks for its own output. If the requested output already exists, function will stop further processing, printing the following message:
 
 ```
 [1] "--- Function 'automatedStatistics()' was skipped: the requested data already exist ---"
 ```
 
-If there is a change in function input data, e.g. chenge in cutoff value, or the requested data does not exist, it continues by computing the requested statistics and informs the user with a progress bar.
+If there is a change in function input data, e.g. change in cutoff value, or the output result of automatedStatistics() does not exist, function continues by computing the requested statistics and informs the user with a progress bar.
 
 ```
 [1] "*** Performing the requested statistical analyses for test2 ***"
@@ -268,11 +267,11 @@ This function prepares heatmap for _frequency percentage_, _mean value_ and _med
 
 It requires at least one arguments:
 
-- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same name used for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
+- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same as submissionName for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
 
 Function also contains thirteen other options:
 
-- __shortenStudyNames__ a logical value, when equals to `TRUE`, function will removes the end part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
+- __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
 
 - __genelimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `genelimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `none`.
 
@@ -282,21 +281,21 @@ Function also contains thirteen other options:
 
 - __ColCex__ a number that specifies letter size in heatmap column names.
 
-- __heatmapMargines__ a numeric vector that can be used to set heatmap margins. The default value is `heatmapMargines=c(15,07)`.
+- __heatmapMargines__ a numeric vector that is used to set heatmap margins. The default value is `heatmapMargines=c(15,07)`.
 
-- __angleForYaxisNames__ a number that determines the angle with which the studies/study subgroups names are shown in heatmaps. The angle is based on degree. The default value is 45.
+- __angleForYaxisNames__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
 
 - __heatmapColor__ a character string that defines heatmap color. The default value is "RdBu". "redgreen" is also a popular color in genomic studies. To see the rest of colors, please type `library(RColorBrewer)` and then `display.brewer.all()`.
 
-- __reverseColor__ a logical value that reverses the color gradiant for heatmap(s).
+- __reverseColor__ a logical value that reverses the color gradient for heatmap(s).
 
-- __transposedHeatmap__ a logical value that changes row and columns of heatmap.
+- __transposedHeatmap__ a logical value that transposes heatmap rows to columns and vice versa.
 
-- __simplify__ a logical value that tells the function whether or not to change values under _simplifictionCuttoff_ to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is not suited for publications.
+- __simplify__ a logical value that tells the function whether or not to change values under _simplifictionCuttoff_ to zero. The purpose behind this option is to facilitate seeing the candidate genes. Therefore, it is not suited for publications.
 
-- __simplifictionCuttoff__ a logical value that, if `simplify.visulization = TRUE`, needs to be set as a desired cuttoff _simplify.visulization_. It has the same unit as _cutoff_.
+- __simplifictionCuttoff__ a logical value that, if `simplify.visulization = TRUE`, needs to be set as a desired cutoff for _simplify.visulization_. It has the same unit as _cutoff_.
 
-- __genesToDrop__ a character vector. Gene names within this vector will be removed from heatmap.
+- __genesToDrop__ a character vector. Gene names within this vector will be omitted from heatmap.
 
 
 In the following example, _submissionName_ is `test`.
@@ -342,7 +341,7 @@ This function exports the output of `automatedStatistics()` and the _gene valida
 
 It requires one argument:
 
-- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same name used for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
+- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same as submissionName for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
 
 
 In the following example, _submissionName_ is `test`.
@@ -377,7 +376,7 @@ If there is no change in the input parameters or the requested excel files alrea
 
 ## processOneStudy()
 
-This function combines four of the mentioned functions for the ease of use. It is recomended that users only use this parent function to obtain and process gene data across multiple subsections of a cancer study so that child functions work with maximum efficiency. `processOneStudy()` uses the following functions:
+This function combines four of the mentioned functions for the ease of use. It is recommended that users only use this parent function to obtain and process gene data across multiple subsections of a cancer study so that child functions work with maximum efficiency. `processOneStudy()` uses the following functions:
 
 - __obtainOneStudy()__
 - __automatedStatistics()__
@@ -385,12 +384,20 @@ This function combines four of the mentioned functions for the ease of use. It i
 - __xlsxOutput()__
 
 The function code along with all available options is as follows:
+
 ```
 processOneStudy(genesList, submissionName, studyName, desiredTechnique, desiredCaseList = FALSE, validateGenes = TRUE, calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL, round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE, genesToDrop = NULL)
 ```
-To get more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `obtainMultipleStudies()` function.
+To get more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `obtainMultipleStudies()` function. The following is an example showing how this function can be used:
 
-The output excel files and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which it's name that is the combination of _submissionName_ and "output for multiple studies", for example "test output for multiple studies".
+```
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2", "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
+
+processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-seq", desiredCaseList = c(3,4), calculate = c("frequencyPercentage",  "frequencyRatio"))
+
+```
+
+The output excel files and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which it's name is the combination of _submissionName_ and "output for single study", for example in our example it is: "test output for single study".
 
 
 
@@ -398,7 +405,7 @@ The output excel files and heatmaps are stored in separate folders for every gen
 
 ## processMultipleStudies()
 
-This function combines four of the mentioned function for the ease of use. It is recomended that users only use this parent function to obtain and process gene data across multiple cancer studies so that child functions work with maximum efficiency. `processMultipleStudies()` uses the following functions:
+This function combines four of the mentioned above functions for the ease of use. It is recommended that users only use this parent function to obtain and process gene data across multiple cancer studies for maximum efficiency. `processMultipleStudies()` uses the following functions:
 
 - __obtainMultipleStudies()__
 - __automatedStatistics()__
@@ -409,6 +416,15 @@ The function code along with all available options is as follows:
 ```
 processMultipleStudies(genesList, submissionName, studiesNames, desiredTechnique, cancerCode = FALSE, validateGenes = TRUE, calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"), cutoff=NULL, round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE, genesToDrop = NULL)
 ```
-To obtain more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `ontainOneStudy()` function.
+To obtain more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `ontainOneStudy()` function. The following example shows how this function can be used:
+
+```
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2", "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
+
+studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
+
+processMultipleStudies(genes, "test2", studies, "RNA-seq", calculate = c("frequencyPercentage", "frequencyRatio"), heatmapMargines = c(15,10))
+
+```
 
 The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which it's name that is the combination of _submissionName_ and "output for multiple studies", for example "test output for multiple studies". 

@@ -5,7 +5,7 @@
 \title{Generating heatmaps for various studies/subgroups of a study.}
 \usage{
 heatmapOutput(submissionName, shortenStudyNames = TRUE, genelimit = "none",
-resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(10,10),
+resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
 angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
 transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
 genesToDrop = NULL)
@@ -13,7 +13,7 @@ genesToDrop = NULL)
 \arguments{
 \item{submissionName}{a character string containing name of interest. It is used for naming the process.}
 
-\item{shortenStudyNames}{a logical value. If the value is set as true, function will try to remove the end part of
+\item{shortenStudyNames}{a logical vector. If the value is set as TRUE, function will try to remove the last part of the
 cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted
 the experiment.}
 
@@ -29,7 +29,7 @@ The defalut value is 600.}
 
 \item{ColCex}{a number that specifies letter size in heatmap column names.}
 
-\item{heatmapMargines}{a numeric vector that can be used to set heatmap margins. The default value is
+\item{heatmapMargines}{a numeric vector that is used to set heatmap margins. The default value is
 \code{heatmapMargines=c(15,07)}.}
 
 \item{angleForYaxisNames}{a number that determines the angle with which the studies/study subgroups names are shown in heatmaps.
@@ -40,7 +40,7 @@ color in genomic studies. To see the rest of colors, please type \code{library(R
 
 \item{reverseColor}{a logical value that reverses the color gradiant for heatmap(s).}
 
-\item{transposedHeatmap}{a logical value that changes row and columns of heatmap.}
+\item{transposedHeatmap}{a logical value that transposes heatmap rows to columns and vice versa.}
 
 \item{simplify}{a logical value that tells the function whether or not to change values under
 \code{simplifictionCuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
@@ -49,7 +49,7 @@ not suited for publications.}
 \item{simplifictionCuttoff}{a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
 for \code{simplify.visulization}. It has the same unit as \code{cutoff}.}
 
-\item{genesToDrop}{a character vector. Gene names within this vector will be removed from heatmap.}
+\item{genesToDrop}{a character vector. Gene names within this vector will be omitted from heatmap.}
 }
 \value{
 Based on preference, three heatmaps for "Frequency.Percentage", "Mean.Value" and "Median.value" can be
@@ -63,13 +63,20 @@ automatedStatistics() function.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 0.99.0 \cr
-Date: \tab 2017-08-10 \cr
+Version: \tab 0.99.1 \cr
+Date: \tab 2017-08-19 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
+# Sample BiocFileCache object which is created by the following code:
+bfc_test <- BiocFileCache::BiocFileCache(system.file("extdata", "test", package = "cbaf"))
+
+
+# Example of function usage:
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
+ "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
+ "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
 obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
 "RNA-seq", desiredCaseList = c(3,4))

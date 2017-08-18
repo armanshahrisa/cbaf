@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-08-10 \cr
+#' Version: \tab 0.99.1 \cr
+#' Date: \tab 2017-08-19 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -25,11 +25,12 @@
 #'
 #' @param outputName a character string that is required to name the output and, if requested, excel file.
 #'
-#' @param excelFile a logical value that tells the function whether or not export the results as an excel file. Default value is TRUE.
+#' @param excelFile a logical value that tells the function whether or not export the results as an excel file.
+#' Default value is TRUE.
 #'
-#' @return A matrix that contain all cancer studies versus available data types. It is stored in the
-#' global enviroment (user's workspace) as a variable according to input name. For convenience, an
-#' excel file is also generated with the same name in the working directory.
+#' @return A matrix that contains all cancer studies versus available data types. It is available
+#' as a variable with outputName. In addition, output data can be stored as an excel file with the same output
+#' in the working directory.
 #'
 #'
 #'

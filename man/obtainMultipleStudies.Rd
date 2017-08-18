@@ -14,7 +14,7 @@ cancerCode = FALSE, validateGenes = TRUE)
 
 \item{studiesNames}{a character vector or a matrix that containes desired cancer names. The character vector containes standard
 names of cancer studies that can be found on cbioportal.org, such as 'Acute Myeloid Leukemia (TCGA, NEJM 2013)'. Alternatively,
-a matrix can be used if users prefer user-defined cancer names, in which the first column of matrix comprises the standard
+a matrix can be used if users prefer user-defined cancer names. In this case, the first column of matrix comprises the standard
 cancer names while the second column must contain the desired cancer names.}
 
 \item{desiredTechnique}{a character string that is one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA',
@@ -28,10 +28,10 @@ or not each gene has a record. If a cancer study doesn't have a record for speci
 that cbioportal might use instead of the given gene name.}
 }
 \value{
-a list that contains the obtained data without further processing. Name of the list starts with 'obS' and contains
-submissionName. Inside the list, there is one subgroup for every gene group, which itself contains one matrix for every cancer study.
-In addition, if validateGenes = TRUE, a secondary list containing gene validation results will be stored. Name of the second
-list starts with 'vaS' and contains submissionName.
+a BiocFileCach object that contains the obtained data without further processing. Name of the object is combination of `bfc_`
+and submissionName. Inside it, there is a section for the obtained data, which is stored as a list. At first level, this list is subdivided into
+diferent groups based on the list of genes that user has given the function, then each gene group itself contains one matrix for every cancer study.
+Additonally, if validateGenes = TRUE, another section that contains gene validation results will be created in the BiocFileCach object.
 }
 \description{
 This function Obtains the requested data for the given genes across multiple cancer studies. It can check
@@ -41,17 +41,17 @@ whether or not all genes are included in cancer studies and, if not, looks for t
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 0.99.0 \cr
-Date: \tab 2017-08-10 \cr
+Version: \tab 0.99.1 \cr
+Date: \tab 2017-08-19 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-# Sample BiocFileCache object which is created by the function
-bfc_test <- BiocFileCache(system.file("extdata", "test", package = "cbaf"))
+# Sample BiocFileCache object which is created by the following code:
+bfc_test2 <- BiocFileCache::BiocFileCache(system.file("extdata", "test2", package = "cbaf"))
 
 
-# Example of function usage
+# Example of function usage:
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
  "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))

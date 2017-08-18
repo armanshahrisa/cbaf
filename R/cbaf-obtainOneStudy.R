@@ -7,8 +7,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-08-10 \cr
+#' Version: \tab 0.99.1 \cr
+#' Date: \tab 2017-08-19 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -25,6 +25,8 @@
 #' @usage obtainOneStudy(genesList, submissionName, studyName, desiredTechnique,
 #' desiredCaseList = FALSE, validateGenes = TRUE)
 #'
+#'
+#'
 #' @param genesList a list that contains at least one gene group
 #'
 #' @param submissionName a character string containing name of interest. It is used for naming the process.
@@ -36,28 +38,28 @@
 #' 'microarray.microRNA' or 'methylation'.
 #'
 #' @param desiredCaseList a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of
-#' desired subgroups. If not, desiredCaseList must be set as 'none', function will show the available subgroups and ask the
+#' desired subgroups. If not, desiredCaseList has been set as 'none', function will show the available subgroups and ask the
 #' user to enter the desired ones during the process. The default value is 'none'.
 #'
-#' @param validateGenes a logical value that, if set to be 'TRUE', function will check each cancer study to find whether
-#' or not each gene has a record. If the given cancer doesn't have a record for specific gene, it checks for alternative gene
+#' @param validateGenes a logical value that, if set to be 'TRUE', causes the function to check each cancer study to find whether
+#' or not each gene has a record. If a cancer doesn't have a record for specific gene, function looks for alternative gene
 #' names that cbioportal might use instead of the given gene name.
 #'
 #'
 #'
-#' @return a list that contains the obtained data without further processing. Name of the list starts with 'obS' and contains
-#' submissionName. Inside the list, there is one subgroup for every gene group, which itself contains one matrix for every study
-#' subgroup. In addition, if validateGenes = TRUE, a secondary list containing gene validation results will be stored.
-#' Name of the second list starts with 'vaS' and containes submissionName.
+#' @return a BiocFileCach object that contains the obtained data without further processing. Name of the object is combination of `bfc_`
+#' and submissionName. Inside it, there is a section for the obtained data, which is stored as a list. At first level, this list is subdivided into
+#' diferent groups based on the list of genes that user has given the function, then each gene group itself contains one matrix for every study subgroup.
+#' Additonally, if validateGenes = TRUE, another section that contains gene validation results will be created in the BiocFileCach object.
 #'
 #'
 #'
 #' @examples
-#' # Sample BiocFileCache object which is created by the function
-#' bfc_test <- BiocFileCache(system.file("extdata", "test", package = "cbaf"))
+#' # Sample BiocFileCache object which is created by the following code:
+#' bfc_test <- BiocFileCache::BiocFileCache(system.file("extdata", "test", package = "cbaf"))
 #'
 #'
-#' # Example of function usage
+#' # Example of function usage:
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
 #'  "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
 #'  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))

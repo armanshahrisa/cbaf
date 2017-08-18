@@ -7,8 +7,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 0.99.0 \cr
-#' Date: \tab 2017-08-10 \cr
+#' Version: \tab 0.99.1 \cr
+#' Date: \tab 2017-08-19 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -32,16 +32,17 @@
 #'
 #'
 #'
-#' @return It generates one excel file for each genegroup.
+#' @return It generates one excel file for each gene group. This excel file contains output of automatedStatistics() and validation result from
+#' output of either obtainOneStudy() or obtainMultipleStudies().
 #'
 #'
 #'
 #' @examples
-#' # Sample BiocFileCache object which is created by the function
-#' bfc_test <- BiocFileCache(system.file("extdata", "test", package = "cbaf"))
+#' # Sample BiocFileCache object which is created by the following code:
+#' bfc_test <- BiocFileCache::BiocFileCache(system.file("extdata", "test", package = "cbaf"))
 #'
 #'
-#' # Example of function usage
+#' # Example of function usage:
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
 #'  "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
 #'  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))

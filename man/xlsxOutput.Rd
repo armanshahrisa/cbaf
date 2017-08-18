@@ -10,7 +10,8 @@ xlsxOutput(submissionName)
 \item{submissionName}{a character string containing name of interest. It is used for naming the process.}
 }
 \value{
-It generates one excel file for each genegroup.
+It generates one excel file for each gene group. This excel file contains output of automatedStatistics() and validation result from
+output of either obtainOneStudy() or obtainMultipleStudies().
 }
 \description{
 This function generates excel files containing gene validation and all selected statistical methods. It
@@ -20,13 +21,20 @@ uses outputs of obtainOneStudy()/obtainMultipleStudies() and automatedStatistics
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 0.99.0 \cr
-Date: \tab 2017-08-10 \cr
+Version: \tab 0.99.1 \cr
+Date: \tab 2017-08-19 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A"))
+# Sample BiocFileCache object which is created by the following code:
+bfc_test <- BiocFileCache::BiocFileCache(system.file("extdata", "test", package = "cbaf"))
+
+
+# Example of function usage:
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
+ "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
+ "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
 obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
 "RNA-seq", desiredCaseList = c(3,4))
