@@ -103,7 +103,8 @@
 #' automatedStatistics("test", obtainedDataType = "single study", calculate =
 #' c("frequencyPercentage", "frequencyRatio"))
 #'
-#' heatmapOutput(submissionName = "test")
+#' heatmapOutput(submissionName = "test", heatmapMargines = c(16, 10),
+#' RowCex = 1, ColCex = 1)
 #'
 #'
 #'

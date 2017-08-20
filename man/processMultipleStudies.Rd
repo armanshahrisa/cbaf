@@ -126,11 +126,14 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
 studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)",
-"Adrenocortical Carcinoma (TCGA, Provisional)")
+"Adrenocortical Carcinoma (TCGA, Provisional)",
+"Bladder Urothelial Carcinoma (TCGA, Provisional)",
+"Brain Lower Grade Glioma (TCGA, Provisional)",
+"Breast Invasive Carcinoma (TCGA, Provisional)")
 
 processMultipleStudies(genes, "test2", studies, "RNA-seq",
 calculate = c("frequencyPercentage", "frequencyRatio"), heatmapMargines =
-c(15,10))
+c(16,10), RowCex = 1, ColCex = 1)
 
 }
 \author{

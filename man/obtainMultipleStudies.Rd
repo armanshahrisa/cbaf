@@ -56,7 +56,11 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
  "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
-studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)")
+studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)",
+"Adrenocortical Carcinoma (TCGA, Provisional)",
+"Bladder Urothelial Carcinoma (TCGA, Provisional)",
+"Brain Lower Grade Glioma (TCGA, Provisional)",
+"Breast Invasive Carcinoma (TCGA, Provisional)")
 
 obtainMultipleStudies(genes, "test2", studies, "RNA-seq")
 
