@@ -1,14 +1,15 @@
-#' @title Generating heatmaps for various studies/subgroups of a study.
+#' @title Generate heatmaps for various studies/subgroups of a study.
 #'
-#' @description This function can prepare heatmap for 'frequency percentage', 'mean value' and 'median value' data provided by
+#' @description This function can prepare heatmap for 'frequency percentage',
+#' 'mean value' and 'median value' data provided by
 #' automatedStatistics() function.
 #'
 #' @details
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 0.99.1 \cr
-#' Date: \tab 2017-08-19 \cr
+#' Version: \tab 1.0.0 \cr
+#' Date: \tab 2017-09-10 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -28,71 +29,80 @@
 #'
 #'
 #'
-#' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R cbaf-automatedStatistics.R
+#' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R
+#' cbaf-automatedStatistics.R
 #'
 #'
 #'
-#' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE, genelimit = "none",
-#' resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
-#' angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
-#' transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
-#' genesToDrop = NULL)
+#' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE,
+#'   genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
+#'   heatmapMargines = c(15,07), angleForYaxisNames = 45, heatmapColor = "RdBu",
+#'   reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE,
+#'   simplifictionCuttoff = FALSE, genesToDrop = NULL)
 #'
 #'
 #'
-#' @param submissionName a character string containing name of interest. It is used for naming the process.
+#' @param submissionName a character string containing name of interest. It is
+#' used for naming the process.
 #'
-#' @param shortenStudyNames a logical vector. If the value is set as TRUE, function will try to remove the last part of the
-#' cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted
-#' the experiment.
+#' @param shortenStudyNames a logical vector. If the value is set as TRUE,
+#' function will try to remove the last part of the cancer names aiming to
+#' shorten them. The removed segment usually contains the name of scientific
+#' group that has conducted the experiment.
 #'
-#' @param genelimit if large number of genes exist in at least one gene group, this option can be used to limit the number of
-#' genes that are shown on heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes that show the most variation
-#' across multiple study / study subgroups.
-#' The default value is \code{none}.
+#' @param genelimit if large number of genes exist in at least one gene group,
+#' this option can be used to limit the number of genes that are shown on
+#' heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes
+#' that show the most variation across multiple study / study subgroups. The
+#' default value is \code{none}.
 #'
-#' @param resolution a number. This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'.
-#' The defalut value is 600.
+#' @param resolution a number. This option can be used to adjust the resolution
+#' of the output heatmaps as 'dot per inch'. The defalut value is 600.
 #'
 #' @param RowCex a number that specifies letter size in heatmap row names.
 #'
 #' @param ColCex a number that specifies letter size in heatmap column names.
 #'
-#' @param heatmapMargines a numeric vector that is used to set heatmap margins. The default value is
-#' \code{heatmapMargines=c(15,07)}.
+#' @param heatmapMargines a numeric vector that is used to set heatmap margins.
+#' The default value is \code{heatmapMargines=c(15,07)}.
 #'
-#' @param angleForYaxisNames a number that determines the angle with which the studies/study subgroups names are shown in heatmaps.
-#' The default value is 45 degree.
+#' @param angleForYaxisNames a number that determines the angle with which the
+#' studies/study subgroups names are shown in heatmaps. The default value is 45
+#' degree.
 #'
-#' @param heatmapColor a character string that defines heatmap color. The default value is "RdBu". "redgreen" is also a popular
-#' color in genomic studies. To see the rest of colors, please type \code{library(RColorBrewer)} and then \code{display.brewer.all()}.
+#' @param heatmapColor a character string that defines heatmap color. The
+#' default value is "RdBu". "redgreen" is also a popular color in genomic
+#' studies. To see the rest of colors, please type \code{library(RColorBrewer)}
+#' and then \code{display.brewer.all()}.
 #'
-#' @param reverseColor a logical value that reverses the color gradiant for heatmap(s).
+#' @param reverseColor a logical value that reverses the color gradiant for
+#' heatmap(s).
 #'
-#' @param transposedHeatmap a logical value that transposes heatmap rows to columns and vice versa.
+#' @param transposedHeatmap a logical value that transposes heatmap rows to
+#' columns and vice versa.
 #'
-#' @param simplify a logical value that tells the function whether or not to change values under
-#' \code{simplifictionCuttoff} to zero. The purpose behind this option is to facilitate seeing candidate genes. Therefore, it is
-#' not suited for publications.
+#' @param simplify a logical value that tells the function whether or not to
+#' change values under \code{simplifictionCuttoff} to zero. The purpose behind
+#' this option is to facilitate seeing candidate genes. Therefore, it is not
+#' suited for publications.
 #'
-#' @param simplifictionCuttoff a logical value that, if \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff
-#' for \code{simplify.visulization}. It has the same unit as \code{cutoff}.
+#' @param simplifictionCuttoff a logical value that, if
+#' \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff for
+#' \code{simplify.visulization}. It has the same unit as \code{cutoff}.
 #'
-#' @param genesToDrop a character vector. Gene names within this vector will be omitted from heatmap.
+#' @param genesToDrop a character vector. Gene names within this vector will be
+#' omitted from heatmap.
 #'
 #'
 #'
-#' @return Based on preference, three heatmaps for "Frequency.Percentage", "Mean.Value" and "Median.value" can be
-#' generated. If more than one group of genes are entered, output for each group will be strored in a separate sub-directory.
+#' @return Based on preference, three heatmaps for "Frequency.Percentage",
+#' "Mean.Value" and "Median.value" can be generated. If more than one group of
+#' genes are entered, output for each group will be strored in a separate
+#' sub-directory.
 #'
 #'
 #'
 #' @examples
-#' # Sample BiocFileCache object which is created by the following code:
-#' bfc_test <- BiocFileCache::BiocFileCache(system.file("extdata", "test", package = "cbaf"))
-#'
-#'
-#' # Example of function usage:
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
 #'  "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
 #'  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
@@ -108,26 +118,33 @@
 #'
 #'
 #'
-#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
+#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer,
+#' copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}s
 #'
 #' @export
 
 
 
-#########################################################################
-#########################################################################
-################ Generating heatmap for processed data ##################
-#########################################################################
-#########################################################################
+################################################################################
+################################################################################
+################## Generating heatmap for the processed data ###################
+################################################################################
+################################################################################
 
-heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
+heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit =
 
-                          heatmapMargines = c(15,07), angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
+                            "none", resolution = 600, RowCex = 0.8, ColCex = 0.8
 
-                          simplify = FALSE, simplifictionCuttoff = FALSE, genesToDrop = NULL){
+                          , heatmapMargines = c(15,07), angleForYaxisNames = 45,
 
-  ##########################################################################
+                          heatmapColor = "RdBu", reverseColor = TRUE,
+
+                          transposedHeatmap = FALSE, simplify = FALSE,
+
+                          simplifictionCuttoff = FALSE, genesToDrop = NULL){
+
+  ##############################################################################
   ########## Prerequisites
 
   # Check submissionName
@@ -142,22 +159,28 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
 
 
-  ##########################################################################
+  ##############################################################################
   ########## Decide whether function should stops now!
 
   # Check wheather the requested data exists
 
-  if(!exists(paste("bfc_", submissionName, sep = ""))){
+  database <- paste(system.file("extdata", package = "cbaf"), submissionName,
+
+                    sep = "/")
+
+  if(!dir.exists(database)){
 
     stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function first")
 
-  } else if(exists(paste("bfc_", submissionName, sep = ""))){
+  } else if(dir.exists(database)){
 
-    bfc <- get(paste("bfc_", submissionName, sep = ""))
+    bfc <- BiocFileCache(file.path(system.file("extdata", package = "cbaf"),
+
+                                   submissionName))
 
     if(!nrow(bfcquery(bfc, c("Parameters for automatedStatistics()"))) == 1){
 
-      stop("Please run the automatedStatistics() function")
+      stop("Please run the automatedStatistics() function first")
 
     }
 
@@ -167,7 +190,11 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   # obtain parameters for prevous function
 
-  previousFunctionParam <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid))
+  previousFunctionParam <-
+
+    readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()")
+
+                                  )$rid))
 
 
 
@@ -236,7 +263,11 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   if(nrow(bfcquery(bfc, "Parameters for heatmapOutput()")) == 1){
 
-    oldParameters <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for heatmapOutput()"))$rid))
+    oldParameters <-
+
+      readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for heatmapOutput()"))$
+
+                        rid))
 
     # Check whether the previous function is skipped
 
@@ -270,11 +301,13 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   # Getting the source data
 
-  statisticsData <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Calculated statistics"))$rid))
+  statisticsData <-
+
+    readRDS(bfcpath(bfc, bfcquery(bfc, c("Calculated statistics"))$rid))
 
   if(!is.list(statisticsData)){
 
-    stop(paste("Input database must be a list.", sep = ""))
+    stop("Input database must be a list.")
 
   }
 
@@ -288,16 +321,16 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
 
 
-  ##########################################################################
+  ##############################################################################
   ########## Set the function ready to work
 
   # Report
 
-  print(paste("***", "Preparing the requested heatmaps for", submissionName, "***", sep = " "))
+  message("***", " Preparing the requested heatmaps for ", submissionName, " ***")
 
-  if(simplify == TRUE & is.numeric(simplifictionCuttoff) & !is.numeric(genelimit)){
+  if(simplify & is.numeric(simplifictionCuttoff) & !is.numeric(genelimit)){
 
-    print("--- Only significant results will be used to draw heatmaps ---")
+    warning("--- Only significant results will be used to draw heatmaps ---")
 
   }
 
@@ -311,9 +344,18 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   # Create progressbar
 
-  total.number <- length(statisticsData)*length((statisticsData[[1]]) [names(statisticsData[[1]]) %in% c("Frequency.Percentage", "Mean.Value", "Median.Value")])
+  total.number <- l
 
-  heatmapOutputProgressBar <- txtProgressBar(min = 0, max = total.number, style = 3)
+  ength(statisticsData)*length((statisticsData[[1]])[
+
+    names(statisticsData[[1]]) %in% c("Frequency.Percentage", "Mean.Value",
+
+                                      "Median.Value")])
+
+
+  heatmapOutputProgressBar <-
+
+    txtProgressBar(min = 0, max = total.number, style = 3)
 
   ExtH <- 0
 
@@ -321,32 +363,41 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
 
 
-  ##########################################################################
+  ##############################################################################
   ########## Core segment
 
   # Save heatmaps in separate folder
 
-  for(gr in 1:length(statisticsData)){
+  for(gr in seq_along(statisticsData)){
 
     # Subset data that can be presented as heatmap
 
     subset.name <- names(statisticsData)[gr]
 
-    subset.data <- (statisticsData[[gr]]) [names(statisticsData[[gr]]) %in% c("Frequency.Percentage", "Mean.Value", "Median.Value")]
+    subset.data <-
+
+      (statisticsData[[gr]])[names(statisticsData[[gr]]) %in% c(
+
+        "Frequency.Percentage", "Mean.Value", "Median.Value")]
 
 
 
     # Create a directory and set it as desired folder
 
-    child.directory <- paste(gr, ". ", sub(x = subset.name, pattern = "\\.", replacement = "-"), sep="")
+    child.directory <- paste(gr, ". ", sub(x = subset.name, pattern = "\\.",
 
-    dir.create(paste(parent.directory, child.directory, sep = "/"), showWarnings = FALSE)
+                                           replacement = "-"), sep="")
+
+
+    dir.create(paste(parent.directory, child.directory, sep = "/"), showWarnings
+
+               = FALSE)
 
     setwd(paste(parent.directory, child.directory, sep = "/"))
 
 
 
-    for(possible in 1:length(subset.data)){
+    for(possible in seq_along(subset.data)){
 
       # subset statistics
 
@@ -364,7 +415,9 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
         } else{
 
-          statistics.data <- statistics.data[, !(colnames(statistics.data) %in% genesToDrop), drop = FALSE]
+          statistics.data <- statistics.data[, !(colnames(statistics.data) %in%
+
+                                                   genesToDrop), drop = FALSE]
 
         }
 
@@ -376,7 +429,13 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
       # determine ourput file name
 
-      output.file.name <- paste(gsub(x = name.statistics.data, pattern = "\\.", replacement = "-"), ", ", gsub(x = subset.name, pattern = "\\.", replacement = " "), " (",cutoff.phrase, "=", cutoff, ")", ".PNG" , sep="")
+      output.file.name <-
+
+        paste(gsub(x = name.statistics.data, pattern = "\\.", replacement = "-")
+
+              , ", ", gsub(x = subset.name, pattern = "\\.", replacement = " "),
+
+              " (",cutoff.phrase, "=", cutoff, ")", ".PNG" , sep="")
 
 
 
@@ -384,16 +443,20 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
       # Check continue permission
 
-      if(continue == TRUE | continue == FALSE & !file.exists(output.file.name)){
+      if(continue | !continue & !file.exists(output.file.name)){
 
 
 
 
         # Check whether study names should be shorted
 
-        if(shortenStudyNames == TRUE){
+        if(shortenStudyNames){
 
-          rownames(statistics.data) <- sapply(strsplit(as.character(rownames(statistics.data)), split=" (", fixed=TRUE), function(x) (x[1]))
+          rownames(statistics.data) <-
+
+            sapply(strsplit(as.character(rownames(statistics.data)),
+
+                            split=" (", fixed=TRUE), function(x) (x[1]))
 
         }
 
@@ -403,7 +466,9 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
         # Removing NA
 
-        heatmap.data <- heatmap.data[(apply(heatmap.data, 1, function(x) any(!is.na(x)==TRUE))),]
+        heatmap.data <- heatmap.data[(apply(heatmap.data, 1,
+
+                                            function(x) any(!is.na(x)==TRUE))),]
 
         # Removing NaN
 
@@ -426,15 +491,19 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
             # !!! Simplifying heatmap for easy assessment !!!
 
-            if(simplify == TRUE & is.numeric(simplifictionCuttoff) & !is.numeric(genelimit)){
+            if(simplify & is.numeric(simplifictionCuttoff) &
+
+               !is.numeric(genelimit)){
 
               heatmap.data[heatmap.data < simplifictionCuttoff] <- 0
 
-            } else if(simplify == TRUE & !is.numeric(simplifictionCuttoff)){
+            } else if(simplify & !is.numeric(simplifictionCuttoff)){
 
               stop("Please set your desired cutoff for simplification in 'simplifictionCuttoff'")
 
-            } else if(simplify == TRUE & is.numeric(simplifictionCuttoff) & is.numeric(genelimit)){
+            } else if(simplify & is.numeric(simplifictionCuttoff) &
+
+                      is.numeric(genelimit)){
 
               warning("There is no need to limit gene number because simplification option possibly limits the gene number even below the specified number")
 
@@ -466,7 +535,7 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
             # Heatmap color
 
-            if(reverseColor == TRUE){
+            if(reverseColor){
 
               if(heatmapColor == "redgreen"){
 
@@ -479,7 +548,7 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
               }
 
 
-            } else if (reverseColor == FALSE){
+            } else if (!reverseColor){
 
               if(heatmapColor == "redgreen"){
 
@@ -498,21 +567,31 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
             # Drawing heatmap
 
-            png(filename=paste(getwd(), output.file.name, sep="/"), width=9.5, height= 11, units = "in", res=resolution)
+            png(filename=paste(getwd(), output.file.name, sep="/"), width=9.5,
+
+                height= 11, units = "in", res=resolution)
 
 
 
-            if(transposedHeatmap==FALSE){
+            if(!transposedHeatmap){
 
-              heatmap.2(heatmap.data, labCol=colnames(heatmap.data), na.color="light gray", trace="none", symbreaks = TRUE, col=hmcol, cexRow = RowCex, cexCol= ColCex,
+              heatmap.2(heatmap.data, labCol=colnames(heatmap.data), na.color=
 
-                        margins = heatmapMargines, srtCol = angleForYaxisNames)
+                          "light gray", trace="none", symbreaks = TRUE, col=
 
-            } else if(transposedHeatmap==TRUE){
+                          hmcol, cexRow = RowCex, cexCol= ColCex, margins =
 
-              heatmap.2(t(heatmap.data), labCol=colnames(heatmap.data), na.color="light gray", trace="none", symbreaks = TRUE, col=hmcol, cexRow = RowCex, cexCol= ColCex,
+                          heatmapMargines, srtCol = angleForYaxisNames)
 
-                        margins = heatmapMargines, srtCol = angleForYaxisNames)
+            } else if(transposedHeatmap){
+
+              heatmap.2(t(heatmap.data), labCol=colnames(heatmap.data),
+
+                        na.color="light gray", trace="none", symbreaks = TRUE,
+
+                        col=hmcol, cexRow = RowCex, cexCol= ColCex, margins =
+
+                          heatmapMargines, srtCol = angleForYaxisNames)
 
             }
 
@@ -548,11 +627,11 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   if(skipped > 0 & skipped != 1){
 
-    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," heatmaps were skipped: They already exist. ---", sep = ""))
+    message("--- ", as.character(skipped), " out of ", as.character(total.number)," heatmaps were skipped: They already exist. ---")
 
   } else if(skipped > 0 & skipped == 1){
 
-    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," heatmaps was skipped: It already exist. ---", sep = ""))
+    message("--- ", as.character(skipped), " out of ", as.character(total.number)," heatmaps was skipped: It already exist. ---")
 
   }
 
@@ -567,19 +646,17 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit = 
 
   if(nrow(bfcquery(bfc, "Parameters for heatmapOutput()")) == 0){
 
-    saveRDS(oldParamHeatmapOutput, file=bfcnew(bfc, "Parameters for heatmapOutput()", ext="RDS"))
+    saveRDS(oldParamHeatmapOutput,
+
+            file=bfcnew(bfc, "Parameters for heatmapOutput()", ext="RDS"))
 
   } else if(nrow(bfcquery(bfc, "Parameters for heatmapOutput()")) == 1){
 
-    saveRDS(oldParamHeatmapOutput, file=bfc[[bfcquery(bfc, "Parameters for heatmapOutput()")$rid]])
+    saveRDS(oldParamHeatmapOutput,
+
+            file=bfc[[bfcquery(bfc, "Parameters for heatmapOutput()")$rid]])
 
   }
-
-
-
-  # Store bfc in global environmet
-
-  assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
 
 
 

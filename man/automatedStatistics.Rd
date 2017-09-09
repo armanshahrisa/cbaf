@@ -2,67 +2,84 @@
 % Please edit documentation in R/cbaf-automatedStatistics.R
 \name{automatedStatistics}
 \alias{automatedStatistics}
-\title{Performing the requested statistics for various studies / subgroups of a study.}
+\title{Perform the requested statistics for various studies / subgroups of a
+study.}
 \usage{
-automatedStatistics(submissionName, obtainedDataType = "multiple studies",
-calculate = c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue"),
-topGenes = TRUE, cutoff=NULL, round=TRUE)
+automatedStatistics(submissionName, obtainedDataType =
+  "multiple studies", calculate = c("frequencyPercentage", "frequencyRatio",
+  "meanValue"), topGenes = TRUE, cutoff=NULL, round=TRUE)
 }
 \arguments{
-\item{submissionName}{a character string containing name of interest. It is used for naming the process.}
+\item{submissionName}{a character string containing name of interest. It is
+used for naming the process.}
 
-\item{obtainedDataType}{a character string that specifies the type of input data produced by the previous function. Two options are availabe:
-'single study' for obtainOneStudy() and 'multiple studies' for obtainMultipleStudies(). The function uses obtainedDataType and submissionName
- to construct the name of the BiocFileCach object and then finds the appropriate data inside it. Default value is `multiple studies`.}
+\item{obtainedDataType}{a character string that specifies the type of input
+data produced by the previous function. Two options are availabe:
+'single study' for obtainOneStudy() and 'multiple studies' for
+obtainMultipleStudies(). The function uses obtainedDataType and
+submissionName to construct the name of the BiocFileCach object and then
+finds the appropriate data inside it. Default value is `multiple studies`.}
 
-\item{calculate}{a character vector that containes the statistical procedures users prefer the function to compute.
-Default input is \code{c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")}. This will tell the function to
-compute the following:
-'frequencyPercentage', which is the percentge of samples having the value greather than specific cutoff divided by the total sample
-size for every study / study subgroup;
-'frequency ratio', which shows the number of selected samples divided by the total number of samples that give the frequency
-percentage for every study / study subgroup. It shows the selected and total sample sizes.;
+\item{calculate}{a character vector that containes the statistical procedures
+ users prefer the function to compute. The complete input is
+\code{c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")}
+ . This will tell the function to compute the following:
+'frequencyPercentage', which is the percentge of samples having the value
+greather than specific cutoff divided by the total sample size for every
+study / study subgroup;
+'frequency ratio', which shows the number of selected samples divided by the
+total number of samples that give the frequency percentage for every study /
+study subgroup. It shows the selected and total sample sizes.;
 'Mean Value', that contains mean value of selected samples for each study;
-'Median Value', which shows the median value of selected samples for each study.}
+'Median Value', which shows the median value of selected samples for each
+study.
+The default input is \code{calculate = c("frequencyPercentage",
+"frequencyRatio", "meanValue")}.}
 
-\item{topGenes}{a logical value that, if set as TRUE, causes the function to create three data.frame that contain the five
-top genes for each cancer. To get all the three data.frames, "frequencyPercentage", "meanValue" and "MedianValue" must have been
-included for \code{calculate}.}
+\item{topGenes}{a logical value that, if set as TRUE, causes the function to
+create three data.frame that contain the five top genes for each cancer. To
+get all the three data.frames, "frequencyPercentage", "meanValue" and
+"MedianValue" must have been included for \code{calculate}.}
 
-\item{cutoff}{a number used to limit samples to those that are greather than this number (cutoff). The default value for
-methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is
-\code{observed/expected ratio}, for the rest, it is 'z-score'. To change the cutoff to any desired number, change the
-option to \code{cutoff = desiredNumber} in which desiredNumber is the number of interest.}
+\item{cutoff}{a number used to limit samples to those that are greather than
+this number (cutoff). The default value for methylation data is 0.6 while
+gene expression studies use default value of 2. For methylation studies, it
+is \code{observed/expected ratio}, for the rest, it is 'z-score'. To change
+the cutoff to any desired number, change the option to
+\code{cutoff = desiredNumber} in which desiredNumber is the number of
+interest.}
 
-\item{round}{a logical value that, if set to be TRUE, will force the function to round all the calculated values
-to two decimal places. The default value is TRUE.}
+\item{round}{a logical value that, if set to be TRUE, will force the function
+to round all the calculated values to two decimal places. The default value
+is TRUE.}
 }
 \value{
-A new section in the BiocFileCache object that was created by one of the obtainOneStudy() or obtainMultipleStudies() functions. It contains
-a list that contains some or all of the following statistical measurements for every gene group, based on what user has chosen:
-\code{Frequency.Percentage}, \code{Top.Genes.of.Frequency.Percentage}, \code{Frequency.Ratio}, \code{Mean.Value}, \code{Top.Genes.of.Mean.Value},
-\code{Median}, \code{Top.Genes.of.Median}.
+A new section in the BiocFileCache object that was created by one of
+the obtainOneStudy() or obtainMultipleStudies() functions. It contains a list
+ that contains some or all of the following statistical measurements for
+ every gene group, based on what user has chosen: \code{Frequency.Percentage}
+ , \code{Top.Genes.of.Frequency.Percentage}, \code{Frequency.Ratio},
+ \code{Mean.Value}, \code{Top.Genes.of.Mean.Value}, \code{Median},
+ \code{Top.Genes.of.Median}.
 }
 \description{
-This function calculates frequency percentage, frequency ratio, mean value and median value of samples greather than
-specific cutoff in the selected study / subgroups of the study. Furthermore, it can looks for the five genes that contain the highest values
-in each study / study subgroup. It uses the data generated by obtainOneStudy()/obtainMultipleStudies() function.
+This function calculates frequency percentage, frequency ratio,
+mean value and median value of samples greather than specific cutoff in the
+selected study / subgroups of the study. Furthermore, it can looks for the
+five genes that contain the highest values in each study / study subgroup.
+It uses the data generated by obtainOneStudy()/obtainMultipleStudies()
+function.
 }
 \details{
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 0.99.1 \cr
-Date: \tab 2017-08-19 \cr
+Version: \tab 1.0.0 \cr
+Date: \tab 2017-09-10 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-# Sample BiocFileCache object which is created by the following code:
-bfc_test <- BiocFileCache::BiocFileCache(system.file("extdata", "test", package = "cbaf"))
-
-
-# Example of function usage:
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
  "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
@@ -75,7 +92,8 @@ c("frequencyPercentage", "frequencyRatio"))
 
 }
 \author{
-Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
+Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer,
+copyright holder]
 
 Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
 }

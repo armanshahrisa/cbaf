@@ -1,27 +1,47 @@
-cbat 1.0.0 - 2017-06-28
+cbaf 1.0.0 - 2017-09-10
 -------------------------
 
 New Functions:
 
-- New available.data.types() functon to check all the cancer studies from
-  cbioportal.org to examine whether or not they contain RNA-seq, microRNA-seq,
-  microarray(mRNA), microarray(miRNA) and methylation data.
+- New availableData() functon to scan all the cancer studies to examine presence
+  of RNA-seq, microRNA-seq, microarray(mRNA), microarray(miRNA) and methylation
+  data.
 
+- New obtainOneStudy() function to obtain and store the supported data for at
+  least one group of genes across multiple subgroups of a cancer study. In
+  addion, it can check whether or not all genes are included in different
+  subgroups of a cancer study and, if not, looks for the alternative gene names.
 
-- New process.multiple.studies() function to Obtain the requested data for
-  the given genes across multiple cancer studies. It can check whether or not
-  all genes are included in cancer studies and, if not, looks for the alternative
-  gene names. Tha main part of function calculates frequency percentage, frequency
-  ratio, mean expression and median of samples greather than specific value in the
-  selected cancer studiess. Furthermore, it looks for the genes that comprise the
-  highest values in each cancer study.
+- New obtainMultipleStudies() function to obtain and store the supported data
+  for at least one group of genes across multiple cancer studies. It can check
+  whether or not all genes are included in each cancer study and, if not, it
+  looks for the alternative gene names.
 
-- New process.one.study() functions to Obtain the requested data for the given
-  genes across multiple subgroups of a cancer. It can check whether or not all
-  genes are included in subgroups of a cancer study and, if not, looks for the
-  alternative gene names. The main part of function calculates frequency percentage,
-  frequency ratio, mean expression and median of samples greather than specific value
-  in the selected subgroups of the cancer. Furthermore, it looks for the genes that
-  comprise the highest values in each cancer subgroup.
+- New automatedStatistics() function to calculate the statistics of the data
+  obtained by obtainOneStudy() or obtainMultipleStudies() functions. Based
+  on user's preference, these statistics can include frequency percentage,
+  frequency ratio, mean value and median value of samples greater than specific
+  value. Furthermore, it can look for the genes that comprise the highest values
+  in each cancer and list the top 5 genes for frequency percentage, mean value
+  and median value.
 
+- New heatmapOutput() function to prepare heatmap for frequency percentage,
+  mean value and  median value data provided by automatedStatistics() function.
+  Heatmaps for every gene group are stored in separate folder.
 
+- New xlsxOutput() function to export the output of automatedStatistics() and
+  the gene validation result of one of the obtainOneStudy() or
+  obtainMultipleStudies() functions as an excel file. For every gene group, an
+  excel file will be generated and stored in the same folder as heatmaps.
+
+- New cleanDatabase() function to remove the created databases in the cbaf
+  package directory. This helps users to obtain the fresh data from
+  cbioportal.org.
+
+- New processOneStudy() function to combine obtainOneStudy(),
+  automatedStatistics(), heatmapOutput() and xlsxOutput() functions for the ease
+  of use.
+
+- New processMultipleStudies() function to combine obtainMultipleStudies(),
+  automatedStatistics(), heatmapOutput() and xlsxOutput() functions for the ease
+  of use.

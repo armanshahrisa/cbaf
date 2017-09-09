@@ -2,32 +2,34 @@
 % Please edit documentation in R/cbaf-availableData.R
 \name{availableData}
 \alias{availableData}
-\title{Checking which Data types are available for Each Cancer study.}
+\title{Check which Data types are available for each cancer study.}
 \usage{
-availableData(outputName, excelFile = TRUE)
+availableData(excelFileName)
 }
 \arguments{
-\item{outputName}{a character string that is required to name the output and, if requested, excel file.}
+\item{outputName}{a character string that is required to name the output and,
+if requested, excel file.}
 
-\item{excelFile}{a logical value that tells the function whether or not export the results as an excel file.
+\item{excelFile}{a logical value that tells the function whether or not
+export the results as an excel file.
 Default value is TRUE.}
 }
 \value{
-A matrix that contains all cancer studies versus available data types. It is available
-as a variable with outputName. In addition, output data can be stored as an excel file with the same output
-in the working directory.
+A matrix that contains all cancer studies versus available data types
+. It is available as a variable with outputName. In addition, output data can
+ be stored as an excel file with the same output in the working directory.
 }
 \description{
-This function checks all the cancer studies that are registered in 'cbioportal.org' to
-examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA), microarray(miRNA)
-and methylation data.
+This function checks all the cancer studies that are registered
+in 'cbioportal.org' to examine whether or not they contain RNA-seq,
+microRNA-seq, microarray(mRNA), microarray(miRNA) and methylation data.
 }
 \details{
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 0.99.1 \cr
-Date: \tab 2017-08-19 \cr
+Version: \tab 1.0.0 \cr
+Date: \tab 2017-09-10 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

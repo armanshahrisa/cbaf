@@ -1,14 +1,15 @@
-#' @title Generating excel output for various studies/subgroups of a study.
+#' @title Generate excel output for various studies/subgroups of a study.
 #'
-#' @description This function generates excel files containing gene validation and all selected statistical methods. It
-#' uses outputs of obtainOneStudy()/obtainMultipleStudies() and automatedStatistics() functions.
+#' @description This function generates excel files containing gene validation
+#' and all selected statistical methods. It uses outputs of
+#' obtainOneStudy()/obtainMultipleStudies() and automatedStatistics() functions.
 #'
 #' @details
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 0.99.1 \cr
-#' Date: \tab 2017-08-19 \cr
+#' Version: \tab 1.0.0 \cr
+#' Date: \tab 2017-09-10 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -20,7 +21,10 @@
 #'
 #' @importFrom utils head setTxtProgressBar txtProgressBar
 #'
-#' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R cbaf-automatedStatistics.R
+#'
+#'
+#' @include cbaf-obtainOneStudy.R cbaf-obtainMultipleStudies.R
+#' cbaf-automatedStatistics.R
 #'
 #'
 #'
@@ -28,21 +32,18 @@
 #'
 #'
 #'
-#' @param submissionName a character string containing name of interest. It is used for naming the process.
+#' @param submissionName a character string containing name of interest. It is
+#' used for naming the process.
 #'
 #'
 #'
-#' @return It generates one excel file for each gene group. This excel file contains output of automatedStatistics() and validation result from
-#' output of either obtainOneStudy() or obtainMultipleStudies().
+#' @return It generates one excel file for each gene group. This excel file
+#' contains output of automatedStatistics() and validation result from output of
+#' either obtainOneStudy() or obtainMultipleStudies().
 #'
 #'
 #'
 #' @examples
-#' # Sample BiocFileCache object which is created by the following code:
-#' bfc_test <- BiocFileCache::BiocFileCache(system.file("extdata", "test", package = "cbaf"))
-#'
-#'
-#' # Example of function usage:
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
 #'  "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
 #'  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
@@ -57,22 +58,23 @@
 #'
 #'
 #'
-#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
+#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer,
+#' copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
 #'
 #' @export
 
 
 
-#########################################################################
-#########################################################################
-############# Obtain the requested data for multiple Cancer #############
-#########################################################################
-#########################################################################
+################################################################################
+################################################################################
+########## Generating excel file for the processed and validation data #########
+################################################################################
+################################################################################
 
 xlsxOutput <- function(submissionName){
 
-  ##########################################################################
+  ##############################################################################
   ########## Prerequisites
 
   # Check submissionName
@@ -95,18 +97,24 @@ xlsxOutput <- function(submissionName){
 
 
 
-  ##########################################################################
+  ##############################################################################
   ########## Decide whether functions should stop now!
 
   # Check wheather the requested data exists
 
-  if(!exists(paste("bfc_", submissionName, sep = ""))){
+  database <-
+
+    paste(system.file("extdata", package = "cbaf"), submissionName, sep = "/")
+
+  if(!dir.exists(database)){
 
     stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function first")
 
-  } else if(exists(paste("bfc_", submissionName, sep = ""))){
+  } else if(dir.exists(database)){
 
-    bfc <- get(paste("bfc_", submissionName, sep = ""))
+    bfc <- BiocFileCache(file.path(system.file("extdata", package = "cbaf"),
+
+                                   submissionName))
 
     if(!nrow(bfcquery(bfc, c("Parameters for automatedStatistics()"))) == 1){
 
@@ -120,7 +128,11 @@ xlsxOutput <- function(submissionName){
 
   # obtain parameters for prevous function
 
-  previousFunctionParam <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid))
+  previousFunctionParam <-
+
+    readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()")
+
+                                  )$rid))
 
 
 
@@ -165,7 +177,9 @@ xlsxOutput <- function(submissionName){
 
   if(nrow(bfcquery(bfc, "Parameters for xlsxOutput()")) == 1){
 
-    oldParameters <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for xlsxOutput()"))$rid))
+    oldParameters <-
+
+      readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for xlsxOutput()"))$rid))
 
     # Check whether the previous function is skipped
 
@@ -201,11 +215,13 @@ xlsxOutput <- function(submissionName){
 
   # Getting the source data
 
-  statisticsData <- readRDS(bfcpath(bfc, bfcquery(bfc, c("Calculated statistics"))$rid))
+  statisticsData <-
+
+    readRDS(bfcpath(bfc, bfcquery(bfc, c("Calculated statistics"))$rid))
 
   if(!is.list(statisticsData)){
 
-    stop(paste("Input database must be a list.", sep = ""))
+    stop("Input database must be a list.")
 
   }
 
@@ -241,12 +257,12 @@ xlsxOutput <- function(submissionName){
 
 
 
-  ##########################################################################
+  ##############################################################################
   ########## Set the function ready to work
 
   # Report
 
-  print(paste("***", "Preparing the requested excel file(s) for", submissionName, "***", sep = " "))
+  message("***", " Preparing the requested excel file(s) for ", submissionName, " ***")
 
 
 
@@ -260,7 +276,9 @@ xlsxOutput <- function(submissionName){
 
   total.number <- length(statisticsData)
 
-  heatmapOutputProgressBar <- txtProgressBar(min = 0, max = total.number, style = 3)
+  heatmapOutputProgressBar <-
+
+    txtProgressBar(min = 0, max = total.number, style = 3)
 
   ExtH <- 0
 
@@ -268,12 +286,12 @@ xlsxOutput <- function(submissionName){
 
 
 
-  ##########################################################################
+  ##############################################################################
   ########## Core segment
 
   # Save heatmaps in separate folder
 
-  for(gr in 1:length(statisticsData)){
+  for(gr in seq_along(statisticsData)){
 
     # Subset data that can be presented as heatmap
 
@@ -299,7 +317,9 @@ xlsxOutput <- function(submissionName){
 
         subset.data$Validation.Result <- v.subset.data
 
-        subset.data <- subset.data[match(c("Validation.Result", sheet.names), names(subset.data))]
+        subset.data <- subset.data[match(c("Validation.Result", sheet.names),
+
+                                         names(subset.data))]
 
       }
 
@@ -313,9 +333,14 @@ xlsxOutput <- function(submissionName){
 
     # Create a directory and set it as desired folder
 
-    child.directory <- paste(gr, ". ", sub(x = subset.name, pattern = "\\.", replacement = "-"), sep="")
+    child.directory <- paste(gr, ". ", sub(x = subset.name, pattern = "\\.",
 
-    dir.create(paste(parent.directory, child.directory, sep = "/"), showWarnings = FALSE)
+                                           replacement = "-"), sep="")
+
+    dir.create(paste(parent.directory, child.directory, sep = "/"),
+
+               showWarnings = FALSE)
+
 
     setwd(paste(parent.directory, child.directory, sep = "/"))
 
@@ -323,17 +348,21 @@ xlsxOutput <- function(submissionName){
 
     # determine ourput file name
 
-    name.of.excel.file <- paste(gsub(x = subset.name, pattern = "\\.", replacement = "-"), " (",cutoff.phrase, "=", cutoff, ")" , ".xlsx", sep = "")
+    name.of.excel.file <-
+
+      paste(gsub(x = subset.name, pattern = "\\.", replacement = "-"), " (",
+
+            cutoff.phrase, "=", cutoff, ")" , ".xlsx", sep = "")
 
     # Check if excel file already exists
 
-    if(continue == TRUE & file.exists(name.of.excel.file)){
+    if(continue & file.exists(name.of.excel.file)){
 
       file.remove(name.of.excel.file)
 
       hault <- FALSE
 
-    }else if(continue == TRUE | continue == FALSE & !file.exists(name.of.excel.file)){
+    }else if(continue| !continue & !file.exists(name.of.excel.file)){
 
       hault <- FALSE
 
@@ -348,9 +377,9 @@ xlsxOutput <- function(submissionName){
 
 
 
-    for(possible in 1:length(subset.data)){
+    for(possible in seq_along(subset.data)){
 
-      if(hault == FALSE){
+      if(!hault){
 
         # subset statistics
 
@@ -360,7 +389,9 @@ xlsxOutput <- function(submissionName){
 
 
 
-        if(name.statistics.data %in% c("Frequency.Percentage", "Mean.Value", "Median.Value")){
+        if(name.statistics.data %in% c("Frequency.Percentage", "Mean.Value",
+
+                                       "Median.Value")){
 
           # Replace 'NaN' values with character string
 
@@ -376,7 +407,11 @@ xlsxOutput <- function(submissionName){
 
         # Saving the expression profile
 
-        write.xlsx(statistics.data, file = name.of.excel.file, sheetName = gsub(x = name.statistics.data, pattern = "\\.", replacement = " "), append = TRUE)
+        write.xlsx(statistics.data, file = name.of.excel.file, sheetName =
+
+                     gsub(x = name.statistics.data, pattern = "\\.",
+
+                          replacement = " "), append = TRUE)
 
       }
 
@@ -398,11 +433,11 @@ xlsxOutput <- function(submissionName){
 
   if(skipped > 0 & skipped != 1){
 
-    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," excel files were skipped: They already exist. ---", sep = ""))
+    message("--- ", as.character(skipped), " out of ", as.character(total.number), " excel files were skipped: They already exist. ---")
 
   } else if(skipped > 0 & skipped == 1){
 
-    print(paste("--- ", as.character(skipped), " out of ", as.character(total.number)," excel file was skipped: It already exists. ---", sep = ""))
+    message("--- ", as.character(skipped), " out of ", as.character(total.number), " excel file was skipped: It already exists. ---")
 
   }
 
@@ -417,19 +452,17 @@ xlsxOutput <- function(submissionName){
 
   if(nrow(bfcquery(bfc, "Parameters for xlsxOutput()")) == 0){
 
-    saveRDS(oldParamXlsxOutput, file=bfcnew(bfc, "Parameters for xlsxOutput()", ext="RDS"))
+    saveRDS(oldParamXlsxOutput,
+
+            file=bfcnew(bfc, "Parameters for xlsxOutput()", ext="RDS"))
 
   } else if(nrow(bfcquery(bfc, "Parameters for xlsxOutput()")) == 1){
 
-    saveRDS(oldParamXlsxOutput, file=bfc[[bfcquery(bfc, "Parameters for xlsxOutput()")$rid]])
+    saveRDS(oldParamXlsxOutput,
+
+            file=bfc[[bfcquery(bfc, "Parameters for xlsxOutput()")$rid]])
 
   }
-
-
-
-  # Store bfc in global environmet
-
-  assign(paste("bfc_", submissionName, sep = ""), bfc, envir = globalenv())
 
 
 

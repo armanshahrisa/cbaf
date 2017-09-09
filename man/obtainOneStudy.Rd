@@ -2,55 +2,63 @@
 % Please edit documentation in R/cbaf-obtainOneStudy.R
 \name{obtainOneStudy}
 \alias{obtainOneStudy}
-\title{Obtaining the requested data for various subgroups of a cancer study.}
+\title{Obtain the requested data for various subgroups of a cancer study.}
 \usage{
 obtainOneStudy(genesList, submissionName, studyName, desiredTechnique,
-desiredCaseList = FALSE, validateGenes = TRUE)
+  desiredCaseList = FALSE, validateGenes = TRUE)
 }
 \arguments{
 \item{genesList}{a list that contains at least one gene group}
 
-\item{submissionName}{a character string containing name of interest. It is used for naming the process.}
+\item{submissionName}{a character string containing name of interest. It is
+used for naming the process.}
 
-\item{studyName}{a character string showing the desired cancer name. It is an standard cancer study name that can be found on
-cbioportal.org, such as 'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.}
+\item{studyName}{a character string showing the desired cancer name. It is an
+standard cancer study name that can be found on cbioportal.org, such as
+'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.}
 
-\item{desiredTechnique}{a character string that is one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA',
+\item{desiredTechnique}{a character string that is one of the following
+techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA',
 'microarray.microRNA' or 'methylation'.}
 
-\item{desiredCaseList}{a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of
-desired subgroups. If not, desiredCaseList has been set as 'none', function will show the available subgroups and ask the
-user to enter the desired ones during the process. The default value is 'none'.}
+\item{desiredCaseList}{a numeric vector that contains the index of desired
+cancer subgroups, assuming the user knows index of desired subgroups. If not,
+ desiredCaseList has been set as 'none', function will show the available
+ subgroups and ask the user to enter the desired ones during the process.
+ The default value is 'none'.}
 
-\item{validateGenes}{a logical value that, if set to be 'TRUE', causes the function to check each cancer study to find whether
-or not each gene has a record. If a cancer doesn't have a record for specific gene, function looks for alternative gene
-names that cbioportal might use instead of the given gene name.}
+\item{validateGenes}{a logical value that, if set to be 'TRUE', causes the
+function to check each cancer study to find whether or not each gene has a
+record. If a cancer doesn't have a record for specific gene, function looks
+for alternative gene names that cbioportal might use instead of the given
+gene name.}
 }
 \value{
-a BiocFileCach object that contains the obtained data without further processing. Name of the object is combination of `bfc_`
-and submissionName. Inside it, there is a section for the obtained data, which is stored as a list. At first level, this list is subdivided into
-diferent groups based on the list of genes that user has given the function, then each gene group itself contains one matrix for every study subgroup.
-Additonally, if validateGenes = TRUE, another section that contains gene validation results will be created in the BiocFileCach object.
+a BiocFileCach object that contains the obtained data without further
+ processing. Name of the object is combination of `bfc_` and submissionName.
+ Inside it, there is a section for the obtained data, which is stored as a
+ list. At first level, this list is subdivided into diferent groups based on
+ the list of genes that user has given the function, then each gene group
+ itself contains one matrix for every study subgroup. Additonally, if
+ validateGenes = TRUE, another section that contains gene validation results
+ will be created in the BiocFileCach object.
 }
 \description{
-This function Obtains the requested data for the given genes across multiple subgroups of a cancer. It can
-check whether or not all genes are included in subgroups of a cancer study and, if not, looks for the alternative gene names.
+This function Obtains the requested data for the given genes
+across multiple subgroups of a cancer. It can check whether or not all genes
+are included in subgroups of a cancer study and, if not, looks for the
+alternative gene names.
 }
 \details{
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 0.99.1 \cr
-Date: \tab 2017-08-19 \cr
+Version: \tab 1.0.0 \cr
+Date: \tab 2017-09-10 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
 \examples{
-# Sample BiocFileCache object which is created by the following code:
-bfc_test <- BiocFileCache::BiocFileCache(system.file("extdata", "test", package = "cbaf"))
-
-
-# Example of function usage:
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
  "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2",
  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
@@ -62,7 +70,8 @@ obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
 
 }
 \author{
-Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
+Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer,
+copyright holder]
 
 Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
 }

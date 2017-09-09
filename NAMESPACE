@@ -2,6 +2,7 @@
 
 export(automatedStatistics)
 export(availableData)
+export(cleanDatabase)
 export(heatmapOutput)
 export(obtainMultipleStudies)
 export(obtainOneStudy)

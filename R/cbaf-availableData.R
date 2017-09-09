@@ -1,15 +1,15 @@
-#' @title Checking which Data types are available for Each Cancer study.
+#' @title Check which Data types are available for each cancer study.
 #'
-#' @description This function checks all the cancer studies that are registered in 'cbioportal.org' to
-#' examine whether or not they contain RNA-seq, microRNA-seq, microarray(mRNA), microarray(miRNA)
-#' and methylation data.
+#' @description This function checks all the cancer studies that are registered
+#' in 'cbioportal.org' to examine whether or not they contain RNA-seq,
+#' microRNA-seq, microarray(mRNA), microarray(miRNA) and methylation data.
 #'
 #' @details
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 0.99.1 \cr
-#' Date: \tab 2017-08-19 \cr
+#' Version: \tab 1.0.0 \cr
+#' Date: \tab 2017-09-10 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -21,16 +21,20 @@
 #'
 #' @importFrom utils head setTxtProgressBar txtProgressBar
 #'
-#' @usage availableData(outputName, excelFile = TRUE)
 #'
-#' @param outputName a character string that is required to name the output and, if requested, excel file.
 #'
-#' @param excelFile a logical value that tells the function whether or not export the results as an excel file.
+#' @usage availableData(excelFileName)
+#'
+#' @param outputName a character string that is required to name the output and,
+#' if requested, excel file.
+#'
+#' @param excelFile a logical value that tells the function whether or not
+#' export the results as an excel file.
 #' Default value is TRUE.
 #'
-#' @return A matrix that contains all cancer studies versus available data types. It is available
-#' as a variable with outputName. In addition, output data can be stored as an excel file with the same output
-#' in the working directory.
+#' @return A matrix that contains all cancer studies versus available data types
+#' . It is available as a variable with outputName. In addition, output data can
+#'  be stored as an excel file with the same output in the working directory.
 #'
 #'
 #'
@@ -41,49 +45,29 @@
 
 
 
-###################################################################################################
-###################################################################################################
-########################## Dataset availability in all cBioportal Cancers #########################
-###################################################################################################
-###################################################################################################
+################################################################################
+################################################################################
+################ Dataset availability in all cBioportal Cancers ################
+################################################################################
+################################################################################
 
-availableData <- function(outputName, excelFile = TRUE){
+availableData <- function(excelFileName){
 
 
-  ############################################
+  ##############################################################################
   # Check input parameters
 
-  if(exists("outputName")){
+  if(!is.character(excelFileName)){
 
-    if(!is.character(outputName)){
-
-      stop("'outputName' must be entered as a character string")
-
-    }
-
-  } else{
-
-    stop("'outputName' must be entered as a character string")
+    stop("'excelFileName' must be entered as a character string.")
 
   }
 
 
 
-  if(!is.logical(excelFile)){
+  if(file.exists(paste(excelFileName, ".xlsx", sep = ""))){
 
-    stop("'excelFile' must be either TRUE or FALSE")
-
-  }
-
-
-
-
-
-  if(excelFile == TRUE & file.exists(paste(outputName, ".xlsx", sep = ""))){
-
-    print("An excel file with the given name already exists in the working directory. Proceeding will cause the function to overwrite the file! If you wish to run the function again with a different given name, please type 'no' .")
-
-    choiceYesNo <- readline(prompt = "Proceed anyway and overwrite the file? (yes/no):      ")
+    choiceYesNo <- readline(prompt = "An excel file with the given name already exists in the working directory. Proceed anyway and overwrite the file? (yes/no):      ")
 
     if(choiceYesNo == "yes"){
 
@@ -107,9 +91,9 @@ availableData <- function(outputName, excelFile = TRUE){
 
 
 
-  if(continue == TRUE){
+  if(continue){
 
-    ############################################
+    ############################################################################
     # Prerequisites
 
     # Prerequisites for cBioportal
@@ -165,7 +149,7 @@ availableData <- function(outputName, excelFile = TRUE){
 
 
 
-    print("Cheching the available data for every cancer study")
+    message("Cheching the available data for every cancer study")
 
 
     # create progress bar
@@ -176,12 +160,14 @@ availableData <- function(outputName, excelFile = TRUE){
 
 
 
-    ############################################
+    ############################################################################
     ## core segment
 
     # looking for supported technique data
 
-    list.of.available.data <- sapply(list.of.studies[, "cancer_study_id"], function(cs, cgds) {
+    list.of.available.data <- sapply(list.of.studies[, "cancer_study_id"],
+
+                                     function(cs, cgds) {
 
       # Obtain available techniques
 
@@ -217,15 +203,15 @@ availableData <- function(outputName, excelFile = TRUE){
       } else{
 
 
-        c(RNA.seq = "FALSE",
+        c(RNA.seq = FALSE,
 
-          microRNA.seq = "FALSE",
+          microRNA.seq = FALSE,
 
-          microarray_of_mRNA = "FALSE",
+          microarray_of_mRNA = FALSE,
 
-          microarray_of_miRNA = "FALSE",
+          microarray_of_miRNA = FALSE,
 
-          methylation = "FALSE")
+          methylation = FALSE)
 
 
       }
@@ -250,44 +236,48 @@ availableData <- function(outputName, excelFile = TRUE){
 
     # joining list.of.available.data to list.of.studies
 
-    combined.list <- cbind(list.of.studies[,"cancer_study_id"], list.of.studies[,"name"], t(list.of.available.data), list.of.studies[,"description"])
+    combined.list <- cbind(list.of.studies[,"cancer_study_id"],
 
-    colnames(combined.list) <- c("cancer_study_id", "cancer_study_name", "RNA.seq", "microRNA.seq", "microarray_of_mRNA",
+                           list.of.studies[,"name"], t(list.of.available.data),
 
-                                 "microarray_of_microRNA", "methylation", "description")
+                           list.of.studies[,"description"])
+
+    colnames(combined.list) <- c("cancer_study_id", "cancer_study_name",
+
+                                 "RNA.seq", "microRNA.seq", "microarray_of_mRNA"
+
+                                 , "microarray_of_microRNA", "methylation",
+
+                                 "description")
 
     rownames(combined.list) <- 1:nrow(combined.list)
 
 
 
-    ################################################
+    ############################################################################
     # Exporting results
 
-    # Storing the output as a variable
+    # Converting matrix to data.frame, and the store as an excel file
 
-    assign(outputName, combined.list, envir = globalenv())
+    combined.list.dataframe <- data.frame(combined.list)
 
+    colnames(combined.list.dataframe) <- gsub("_", " ",
 
+                                              colnames(combined.list.dataframe))
 
-    # Converting matrix to data.frame
+    colnames(combined.list.dataframe) <- gsub("\\.", "-",
 
-    if(excelFile == TRUE){
+                                              colnames(combined.list.dataframe))
 
-      combined.list.dataframe <- data.frame(combined.list)
+    rownames(combined.list.dataframe) <- 1:nrow(combined.list)
 
-      colnames(combined.list.dataframe) <- gsub("_", " ", colnames(combined.list.dataframe))
+    write.xlsx(combined.list.dataframe,
 
-      colnames(combined.list.dataframe) <- gsub("\\.", "-", colnames(combined.list.dataframe))
-
-      rownames(combined.list.dataframe) <- 1:nrow(combined.list)
-
-      write.xlsx(combined.list.dataframe, file=paste(outputName, ".xlsx", sep = ""))
-
-    }
+               file=paste(excelFileName, ".xlsx", sep = ""))
 
   }else{
 
-    print("--- Function 'availableData()' was skipped. ---")
+    message("--- Function 'availableData()' was skipped. ---")
 
   }
 

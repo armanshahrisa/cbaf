@@ -1,7 +1,7 @@
 Package: cbaf
 biocViews: Technology
-Title: CBAF
-Version: 0.99.2
+Title: Multiple automated functions for cbioportal.org.
+Version: 0.99.3
 Authors@R: c(person("Arman", "Shahrisa", role = c("aut", "cre", "cph"),
                      email = "shahrisa.arman@hotmail.com"),
             person("Maryam", "Tahmasebi Birgani", role = "aut",
@@ -16,15 +16,15 @@ LazyData: true
 Imports: BiocFileCache, RColorBrewer, cgdsr, genefilter, gplots, grDevices, stats, utils, xlsx 
 NeedsCompilation: no
 RoxygenNote: 6.0.1
-Suggests: knitr,
-    rmarkdown
+Suggests: knitr, rmarkdown, BiocStyle
 VignetteBuilder: knitr
 Collate: 
     'cbaf-obtainMultipleStudies.R'
     'cbaf-obtainOneStudy.R'
     'cbaf-automatedStatistics.R'
     'cbaf-availableData.R'
+    'cbaf-cleanDatabase.R'
     'cbaf-heatmapOutput.R'
-    'cbaf-xlsxOutput.R'
     'cbaf-processMultipleStudies.R'
     'cbaf-processOneStudy.R'
+    'cbaf-xlsxOutput.R'
