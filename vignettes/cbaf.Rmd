@@ -251,14 +251,6 @@ automatedStatistics("two-groups2", obtainedDataType = "multiple studies", calcul
 ##   |===================================================================| 100%
 ```
 
-If the function is run before one of the `obtainOneStudy()` or `obtainMultipleStudies()` functions, an error message will appear (Note `submissionName`):
-
-```{r, eval=FALSE}
-automatedStatistics("three-groups", obtainedDataType = "multiple studies", calculate = c("frequencyPercentage", "frequencyRatio"))
-## Error in automatedStatistics("three-groups", obtainedDataType = "multiple studies",  : 
-##   Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first
-```
-
 If the requested output already exists, function will stop further processing, printing the following message:
 
 ```{r, eval=FALSE}
@@ -316,14 +308,6 @@ heatmapOutput("two-groups2", shortenStudyNames = TRUE, heatmapMargines = c(13,5)
 ##   |===================================================================| 100%
 ```
 
-If the function is run before the `automatedStatistics()` functions, an error message will appear (Note `submissionName`):
-
-```{r, eval=FALSE}
-heatmapOutput("four-groups", shortenStudyNames = TRUE, heatmapMargines = c(13,5), heatmapColor = "redgreen", genesToDrop = c("PVT1", "SNHG6"), RowCex = 1, ColCex = 1, reverseColor = FALSE)
-## Error in heatmapOutput("four-groups", shortenStudyNames = TRUE, heatmapMargines = c(13,  : 
-##   Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function first
-```
-
 If the requested heatmaps already exist, it doesn't rewrite the heatmaps. The number of skipped heatmaps is then printed:
 
 ```{r, eval=FALSE}
@@ -353,14 +337,6 @@ In the following example, _submissionName_ is `test`.
 xlsxOutput("two-groups2")
 ## *** Preparing the requested excel file(s) for two-groups2 ***
 ##   |===================================================================| 100%
-```
-
-If the function is run before the `automatedStatistics()` functions, an error message will appear (Note `submissionName`):
-
-```{r, eval=FALSE}
-xlsxOutput("four-groups")
-## Error in xlsxOutput("four-groups") : 
-##   Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function first
 ```
 
 If the requested excel files already exist, the function avoids rewriting them. The number of skipped excel files is then printed:
