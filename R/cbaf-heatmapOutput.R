@@ -344,9 +344,9 @@ heatmapOutput <- function(submissionName, shortenStudyNames = TRUE, genelimit =
 
   # Create progressbar
 
-  total.number <- l
+  total.number <-
 
-  ength(statisticsData)*length((statisticsData[[1]])[
+  length(statisticsData)*length((statisticsData[[1]])[
 
     names(statisticsData[[1]]) %in% c("Frequency.Percentage", "Mean.Value",
 

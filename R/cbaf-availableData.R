@@ -25,16 +25,12 @@
 #'
 #' @usage availableData(excelFileName)
 #'
-#' @param outputName a character string that is required to name the output and,
-#' if requested, excel file.
+#' @param excelFileName a character string that is required to name the output
+#' and, if requested, excel file.
 #'
-#' @param excelFile a logical value that tells the function whether or not
-#' export the results as an excel file.
-#' Default value is TRUE.
 #'
 #' @return A matrix that contains all cancer studies versus available data types
-#' . It is available as a variable with outputName. In addition, output data can
-#'  be stored as an excel file with the same output in the working directory.
+#' . It is available as an excel file with the given name.
 #'
 #'
 #'
