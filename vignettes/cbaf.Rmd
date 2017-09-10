@@ -236,7 +236,7 @@ Function also contains thirteen other options:
 
 In the following example, _submissionName_ is `test`.
 
-```{r}
+```{r, eval = FALSE}
 heatmapOutput("test", shortenStudyNames = TRUE, heatmapMargines = c(13,5), heatmapColor = "redgreen", genesToDrop = c("PVT1", "SNHG6"), RowCex = 1, ColCex = 1, reverseColor = FALSE)
 ```
 
@@ -258,7 +258,7 @@ It requires one argument:
 
 In the following example, _submissionName_ is `test`.
 
-```{r}
+```{r, eval = FALSE}
 xlsxOutput("test")
 ```
 
@@ -277,10 +277,10 @@ It contains one optional argument:
 
 - __databaseNames__, a character vector that contains name of databases that will be removed. The default value in null.
 
-In the following example, _databaseNames_ is `empty`.
+In the following example, _databaseNames_ is `Whole2`.
 
 ```{r, eval=FALSE}
-cleanDatabase("empty")
+cleanDatabase("Whole2")
 ```
 
 If the _databaseNames_ left unentered, it will print the available databases and allow the user to choose the desired ones.

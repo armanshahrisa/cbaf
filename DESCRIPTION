@@ -1,7 +1,7 @@
 Package: cbaf
 biocViews: Technology
 Title: Multiple automated functions for cbioportal.org.
-Version: 0.99.5
+Version: 0.99.6
 Authors@R: c(person("Arman", "Shahrisa", role = c("aut", "cre", "cph"),
                      email = "shahrisa.arman@hotmail.com"),
             person("Maryam", "Tahmasebi Birgani", role = "aut",
