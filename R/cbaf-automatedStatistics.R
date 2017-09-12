@@ -423,7 +423,7 @@ automatedStatistics<- function(submissionName, obtainedDataType =
       }
 
 
-      if("medianValue" %in% calculate){
+      if("meanValue" %in% calculate){
 
         Mean.Value <- vector("list", length(sourceDataList[[1]]))
 
@@ -1305,7 +1305,7 @@ automatedStatistics<- function(submissionName, obtainedDataType =
       }
 
 
-      if("medianValue" %in% calculate){
+      if("meanValue" %in% calculate){
 
         temList$Mean.Value <- do.call("rbind", Mean.Value)
 
