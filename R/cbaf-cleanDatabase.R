@@ -9,7 +9,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-10 \cr
+#' Date: \tab 2017-09-26 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -33,7 +33,8 @@
 #'
 #'
 #'
-#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
+#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer,
+#' copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
 #'
 #' @export
@@ -55,11 +56,20 @@ cleanDatabase <- function(databaseNames = NULL){
 
   package.path <- system.file("extdata", package = "cbaf")
 
-  just.names <- sapply(strsplit(as.character(list.dirs(path = package.path)),
+  just.names <- sapply(
 
-                                split="extdata/", fixed=TRUE)
+    strsplit(
 
-                       , function(x) (x[2]))
+      as.character(list.dirs(path = package.path)),
+
+      split="extdata/",
+
+      fixed=TRUE
+
+      ) ,
+
+    function(x) (x[2])
+    )
 
   removable.directories <- just.names[!(just.names %in% c(NA, "test", "test2"))]
 
@@ -102,21 +112,19 @@ cleanDatabase <- function(databaseNames = NULL){
 
   correct.directories <- input[input %in% removable.directories]
 
-  full.path.of.correct.directories <- paste0(package.path, "/",
+  number.of.correct.directories <- length(correct.directories)
 
-                                             correct.directories)
+  full.path.of.correct.directories <-
+
+    paste0(package.path, "/", correct.directories)
 
 
 
   # Remove directories
 
-  if(length(correct.directories) != 0){
+  if(number.of.correct.directories  != 0){
 
-    for(cl in seq_along(full.path.of.correct.directories)){
-
-      unlink(full.path.of.correct.directories[cl], recursive = TRUE)
-
-    }
+    unlink(full.path.of.correct.directories, recursive = TRUE)
 
   }
 
@@ -124,13 +132,13 @@ cleanDatabase <- function(databaseNames = NULL){
 
   # Inform the user
 
-  if(length(correct.directories) != 0){
+  if(number.of.correct.directories  != 0){
 
-    if(length(correct.directories) == 1){
+    if(number.of.correct.directories  == 1){
 
       message("1 database was removed")
 
-    }else if((length(correct.directories) > 1)){
+    }else if((number.of.correct.directories  > 1)){
 
       message(sum(!dir.exists(full.path.of.correct.directories)), " databases were removed")
 

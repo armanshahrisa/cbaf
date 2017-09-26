@@ -13,7 +13,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-10 \cr
+#' Date: \tab 2017-09-26 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -118,15 +118,21 @@
 ################################################################################
 ################################################################################
 
-automatedStatistics<- function(submissionName, obtainedDataType =
+automatedStatistics<- function(
 
-                                 "multiple studies", calculate =
+  submissionName,
 
-                                 c("frequencyPercentage", "frequencyRatio",
+  obtainedDataType = "multiple studies",
 
-                                   "meanValue"), topGenes = TRUE, cutoff = NULL,
+  calculate = c("frequencyPercentage", "frequencyRatio", "meanValue"),
 
-                               round=TRUE){
+  topGenes = TRUE,
+
+  cutoff = NULL,
+
+  round=TRUE
+
+  ){
 
   ##############################################################################
   ########## Prerequisites
@@ -173,9 +179,15 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
   if(is.character(calculate)){
 
-    if(!any(calculate %in% c("frequencyPercentage", "frequencyRatio",
+    if(!any(calculate %in% c("frequencyPercentage",
 
-                             "meanValue", "medianValue"))){
+                             "frequencyRatio",
+
+                             "meanValue",
+
+                             "medianValue"))
+
+       ){
 
       stop("'calculate' must contain at least one of the following: 'frequencyPercentage', 'frequencyRatio', 'meanValue' and 'medianValue'.")
 
@@ -190,9 +202,7 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
   # Check wheather the requested data exists
 
-  database <- paste(system.file("extdata", package = "cbaf"), submissionName,
-
-                    sep = "/")
+  database <- system.file("extdata", submissionName, package="cbaf")
 
   if(!dir.exists(database)){
 
@@ -200,9 +210,11 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
   } else if(dir.exists(database)){
 
-    bfc <- BiocFileCache(file.path(system.file("extdata", package = "cbaf"),
+    bfc <- BiocFileCache(
 
-                                   submissionName))
+      file.path(system.file("extdata", package = "cbaf"), submissionName)
+
+      )
 
     if(!nrow(bfcquery(bfc, previousParamName)) == 1){
 
@@ -279,23 +291,30 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
   # Check wheather the requested data exists
 
-  if(nrow(bfcquery(bfc, "Parameters for automatedStatistics()")) == 1){
+  number.of.rows.parameters <-
+
+    nrow(bfcquery(bfc, "Parameters for automatedStatistics()"))
+
+
+  if(number.of.rows.parameters == 1){
 
     oldParameters <-
 
-      readRDS(bfcpath(bfc, bfcquery(bfc,
+      readRDS(bfcpath(
 
-                                    c("Parameters for automatedStatistics()"))$
+        bfc,
 
-                        rid))
+        bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid)
+
+    )
 
     # Check whether the previous function is skipped
 
     if(previousFunctionParam$lastRunStatus == "skipped"){
 
-      if(identical(oldParameters[-8], newParameters) | submissionName %in%
+      if(identical(oldParameters[-8], newParameters) |
 
-         c("test", "test2")){
+         submissionName %in% c("test", "test2")){
 
         continue <- FALSE
 
@@ -305,11 +324,13 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
         oldParamAutomatedStatistics <- newParameters
 
-        saveRDS(oldParamAutomatedStatistics,
+        saveRDS(
 
-                file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")
+          oldParamAutomatedStatistics,
 
-                          $rid]])
+          file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")$rid]]
+
+          )
 
         if(submissionName %in% c("test", "test2")){
 
@@ -347,6 +368,8 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
     sourceDataList <- readRDS(bfcpath(bfc, bfcquery(bfc, databaseType)$rid))
 
+    number.of.gene.groups <- sourceDataList[[1]]
+
     if(!is.list(sourceDataList)){
 
       stop("Input database must be a list.")
@@ -376,11 +399,11 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
     # Create a progressbar
 
-    total.number <- length(sourceDataList)*length(sourceDataList[[1]])
+    total.number <- length(sourceDataList)*length(number.of.gene.groups)
 
-    automatedStatisticsProgressBar <- txtProgressBar(min = 0, max = total.number
+    automatedStatisticsProgressBar <-
 
-                                                     , style = 3)
+      txtProgressBar(min = 0, max = total.number , style = 3)
 
     ExtA <- 0
 
@@ -403,13 +426,13 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
       if("frequencyPercentage" %in% calculate){
 
-        Frequency.Percentage <- vector("list", length(sourceDataList[[1]]))
+        Frequency.Percentage <- vector("list", length(number.of.gene.groups))
 
         if(topGenes){
 
           Top.Genes.of.Frequency.Percentage <-
 
-            vector("list", length(sourceDataList[[1]]))
+            vector("list", length(number.of.gene.groups))
 
         }
 
@@ -418,18 +441,20 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
       if("frequencyRatio" %in% calculate){
 
-        Frequency.Ratio <- vector("list", length(sourceDataList[[1]]))
+        Frequency.Ratio <- vector("list", length(number.of.gene.groups))
 
       }
 
 
       if("meanValue" %in% calculate){
 
-        Mean.Value <- vector("list", length(sourceDataList[[1]]))
+        Mean.Value <- vector("list", length(number.of.gene.groups))
 
         if(topGenes){
 
-          Top.Genes.of.Mean.Value <- vector("list", length(sourceDataList[[1]]))
+          Top.Genes.of.Mean.Value <-
+
+            vector("list", length(number.of.gene.groups))
 
         }
 
@@ -438,13 +463,13 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
       if("medianValue" %in% calculate){
 
-        Median.Value <- vector("list", length(sourceDataList[[1]]))
+        Median.Value <- vector("list", length(number.of.gene.groups))
 
         if(topGenes){
 
           Top.Genes.of.Median.Value <-
 
-            vector("list", length(sourceDataList[[1]]))
+            vector("list", length(number.of.gene.groups))
 
         }
 
@@ -454,7 +479,7 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
 
 
-      for(cs in seq_along(sourceDataList[[1]])){
+      for(cs in seq_along(number.of.gene.groups)){
 
         # start working on one study
 
@@ -487,7 +512,7 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
           # calculate frequency percentage
 
-          for(fp in 1:geneNumber){
+          for(fp in seq_len(geneNumber)){
 
             # Subset a column
 
@@ -499,16 +524,26 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
             # General statements for core statistics conditions
 
-            frequency <- mean(as.vector(a.column.with.absolute.values >= cutoff)
+            frequency <-
 
-                              , na.rm=TRUE)
+              mean(
+
+                as.vector(a.column.with.absolute.values >= cutoff),
+
+                na.rm=TRUE
+
+                )
 
 
             mean.with.cutoff.minus.NA <-
 
-              mean(as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+              mean(
 
-                   na.rm=TRUE)
+                as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+
+                na.rm=TRUE
+
+                )
 
 
             mean.is.not.na <- !is.na(mean(as.vector(a.column)))
@@ -529,17 +564,21 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               # Check all members are NaN
 
-            } else if(number.of.not.nan.members == 0 & all.members.are.infinite
+            } else if(number.of.not.nan.members == 0 &
 
-                       & mean.is.nan.with.cutoff){
+                      all.members.are.infinite &
+
+                      mean.is.nan.with.cutoff){
 
               frequency.percentage.for.a.subset[1, fp] <- NaN
 
               # Check all members are NA
 
-            } else if(number.of.not.nan.members > 0 & all.members.are.infinite
+            } else if(number.of.not.nan.members > 0 &
 
-                       & mean.is.nan.with.cutoff){
+                      all.members.are.infinite &
+
+                      mean.is.nan.with.cutoff){
 
               frequency.percentage.for.a.subset[1, fp] <- NA
 
@@ -620,19 +659,27 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               if(round){
 
-                complete.top <- data.frame(topGene = topGene.name, topValue =
+                complete.top <- data.frame(
 
-                               round(topGenes.values[topV], digits = 2),
+                  topGene = topGene.name,
 
-                             stringsAsFactors = FALSE)
+                  topValue = round(topGenes.values[topV], digits = 2)
+
+                  , stringsAsFactors = FALSE
+
+                             )
 
               } else{
 
-                complete.top <-
+                complete.top <- data.frame(
 
-                  data.frame(topGene = topGene.name, topValue =
+                  topGene = topGene.name,
 
-                               topGenes.values[topV], stringsAsFactors = FALSE)
+                  topValue = topGenes.values[topV],
+
+                  stringsAsFactors = FALSE
+
+                             )
 
               }
 
@@ -663,9 +710,15 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               # Repeat unit
 
-              fix.dataframe <- data.frame(topGene = "-", topValue = "-",
+              fix.dataframe <- data.frame(
 
-                                          stringsAsFactors = FALSE)
+                topGene = "-",
+
+                topValue = "-",
+
+                stringsAsFactors = FALSE
+
+                           )
 
               # number of new units
 
@@ -675,7 +728,7 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               oldUnits <- length(topGenes.values)
 
-              for(empty in 1:newUnits){
+              for(empty in seq_len(newUnits)){
 
                 colnames(fix.dataframe) <-
 
@@ -722,7 +775,7 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
           # calculate frequency ratio
 
-          for(fr in 1:geneNumber){
+          for(fr in seq_len(geneNumber)){
 
             # Subset a column
 
@@ -734,16 +787,26 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
             # General statements for core statistics conditions
 
-            frequency <- mean(as.vector(a.column.with.absolute.values >= cutoff)
+            frequency <-
 
-                              , na.rm=TRUE)
+              mean(
+
+                as.vector(a.column.with.absolute.values >= cutoff),
+
+                na.rm=TRUE
+
+              )
 
 
             mean.with.cutoff.minus.NA <-
 
-              mean(as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+              mean(
 
-                   na.rm=TRUE)
+                as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+
+                na.rm=TRUE
+
+                )
 
 
             mean.is.not.na <- !is.na(mean(as.vector(a.column)))
@@ -762,23 +825,25 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               frequency.ratio.for.a.subset[1, fr] <-
 
-                paste(as.character(0), " out of ",
-
-                      as.character(length(as.vector(a.column))), sep="")
+                paste0("0 out of ", as.character(length(as.vector(a.column))))
 
               # Check all members are NaN
 
-            } else if (number.of.not.nan.members == 0 & all.members.are.infinite
+            } else if (number.of.not.nan.members == 0 &
 
-                       & mean.is.nan.with.cutoff){
+                       all.members.are.infinite &
+
+                       mean.is.nan.with.cutoff){
 
               frequency.ratio.for.a.subset[1, fr] <- NaN
 
               # Check all members are NA
 
-            } else if (number.of.not.nan.members > 0 & all.members.are.infinite
+            } else if (number.of.not.nan.members > 0 &
 
-                       & mean.is.nan.with.cutoff){
+                       all.members.are.infinite &
+
+                       mean.is.nan.with.cutoff){
 
               frequency.ratio.for.a.subset[1, fr] <- NA
 
@@ -823,15 +888,15 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
           mean.value.for.a.subset <- matrix(, nrow = 1, ncol = geneNumber)
 
-          dimnames(mean.value.for.a.subset) <- list(source.data.subset.name,
+          dimnames(mean.value.for.a.subset) <-
 
-                                                    genes.involved)
+            list(source.data.subset.name, genes.involved)
 
 
 
           # calculate Mean value
 
-          for(mv in 1:geneNumber){
+          for(mv in seq_len(geneNumber)){
 
             # Subset a column
 
@@ -843,16 +908,26 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
             # General statements for core statistics conditions
 
-            frequency <- mean(as.vector(a.column.with.absolute.values >= cutoff)
+            frequency <-
 
-                              , na.rm=TRUE)
+              mean(
+
+                as.vector(a.column.with.absolute.values >= cutoff),
+
+                na.rm=TRUE
+
+                )
 
 
             mean.with.cutoff.minus.NA <-
 
-              mean(as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+              mean(
 
-                   na.rm=TRUE)
+                as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+
+                na.rm=TRUE
+
+                )
 
             mean.is.not.na <- !is.na(mean(as.vector(a.column)))
 
@@ -872,17 +947,21 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               # Check all members are NaN
 
-            } else if (number.of.not.nan.members == 0 & all.members.are.infinite
+            } else if (number.of.not.nan.members == 0 &
 
-                       & mean.is.nan.with.cutoff){
+                       all.members.are.infinite &
+
+                       mean.is.nan.with.cutoff){
 
               mean.value.for.a.subset[1, mv] <- NaN
 
               # Check all members are NA
 
-            } else if (number.of.not.nan.members > 0 & all.members.are.infinite
+            } else if (number.of.not.nan.members > 0 &
 
-                       & mean.is.nan.with.cutoff){
+                       all.members.are.infinite &
+
+                       mean.is.nan.with.cutoff){
 
               mean.value.for.a.subset[1, mv] <- NA
 
@@ -892,9 +971,13 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               mean.value.for.a.subset[1, mv] <-
 
-                mean(as.vector(a.column)[a.column.with.absolute.values >=
+                mean(
 
-                                           cutoff], na.rm=TRUE)
+                  as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+
+                  na.rm=TRUE
+
+                )
 
             }
 
@@ -959,21 +1042,27 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               if(round){
 
-                complete.top <-
+                complete.top <- data.frame(
 
-                  data.frame(topGene = topGene.name, topValue =
+                  topGene = topGene.name,
 
-                               round(topGenes.values[topV], digits = 2),
+                  topValue = round(topGenes.values[topV], digits = 2)
 
-                             stringsAsFactors = FALSE)
+                  , stringsAsFactors = FALSE
+
+                )
 
               } else{
 
-                complete.top <-
+                complete.top <- data.frame(
 
-                  data.frame(topGene = topGene.name, topValue =
+                  topGene = topGene.name,
 
-                               topGenes.values[topV], stringsAsFactors = FALSE)
+                  topValue = topGenes.values[topV],
+
+                  stringsAsFactors = FALSE
+
+                )
 
               }
 
@@ -1005,9 +1094,15 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               # Repeat unit
 
-              fix.dataframe <- data.frame(topGene = "-", topValue = "-",
+              fix.dataframe <- data.frame(
 
-                                          stringsAsFactors = FALSE)
+                  topGene = "-",
+
+                  topValue = "-",
+
+                  stringsAsFactors = FALSE
+
+                  )
 
               # number of new units
 
@@ -1017,7 +1112,7 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               oldUnits <- length(topGenes.values)
 
-              for(empty in 1:newUnits){
+              for(empty in seq_len(newUnits)){
 
                 colnames(fix.dataframe) <-
 
@@ -1056,15 +1151,15 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
           median.value.for.a.subset <- matrix(, nrow = 1, ncol = geneNumber)
 
-          dimnames(median.value.for.a.subset) <- list(source.data.subset.name,
+          dimnames(median.value.for.a.subset) <-
 
-                                                      genes.involved)
+            list(source.data.subset.name, genes.involved)
 
 
 
           # calculate median value
 
-          for(mdv in 1:geneNumber){
+          for(mdv in seq_len(geneNumber)){
 
             # Subset a column
 
@@ -1076,16 +1171,26 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
             # General statements for core statistics conditions
 
-            frequency <- mean(as.vector(a.column.with.absolute.values >= cutoff)
+            frequency <-
 
-                              , na.rm=TRUE)
+              mean(
+
+                as.vector(a.column.with.absolute.values >= cutoff),
+
+                na.rm=TRUE
+
+                )
 
 
             mean.with.cutoff.minus.NA <-
 
-              mean(as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+              mean(
 
-                   na.rm=TRUE)
+                as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+
+                na.rm=TRUE
+
+                )
 
 
             mean.is.not.na <- !is.na(mean(as.vector(a.column)))
@@ -1106,17 +1211,21 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               # Check all members are NaN
 
-            } else if (number.of.not.nan.members == 0 & all.members.are.infinite
+            } else if (number.of.not.nan.members == 0 &
 
-                       & mean.is.nan.with.cutoff){
+                       all.members.are.infinite &
+
+                       mean.is.nan.with.cutoff){
 
               median.value.for.a.subset[1, mdv] <- NaN
 
               # Check all members are NA
 
-            } else if (number.of.not.nan.members > 0 & all.members.are.infinite
+            } else if (number.of.not.nan.members > 0 &
 
-                       & mean.is.nan.with.cutoff){
+                       all.members.are.infinite &
+
+                       mean.is.nan.with.cutoff){
 
               median.value.for.a.subset[1, mdv] <- NA
 
@@ -1126,9 +1235,13 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               median.value.for.a.subset[1, mdv] <-
 
-                median(as.vector(a.column)[a.column.with.absolute.values >=
+                median(
 
-                                             cutoff], na.rm=TRUE)
+                  as.vector(a.column)[a.column.with.absolute.values >= cutoff],
+
+                  na.rm=TRUE
+
+                  )
 
             }
 
@@ -1193,21 +1306,27 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               if(round){
 
-                complete.top <-
+                complete.top <- data.frame(
 
-                  data.frame(topGene = topGene.name, topValue =
+                  topGene = topGene.name,
 
-                               round(topGenes.values[topV], digits = 2),
+                  topValue = round(topGenes.values[topV], digits = 2)
 
-                             stringsAsFactors = FALSE)
+                  , stringsAsFactors = FALSE
+
+                )
 
               } else{
 
-                complete.top <-
+                complete.top <- data.frame(
 
-                  data.frame(topGene = topGene.name, topValue =
+                  topGene = topGene.name,
 
-                               topGenes.values[topV], stringsAsFactors = FALSE)
+                  topValue = topGenes.values[topV],
+
+                  stringsAsFactors = FALSE
+
+                )
 
               }
 
@@ -1239,9 +1358,15 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               # Repeat unit
 
-              fix.dataframe <- data.frame(topGene = "-", topValue = "-",
+              fix.dataframe <- data.frame(
 
-                                          stringsAsFactors = FALSE)
+                topGene = "-",
+
+                topValue = "-",
+
+                stringsAsFactors = FALSE
+
+              )
 
               # number of new units
 
@@ -1251,7 +1376,7 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
               oldUnits <- length(topGenes.values)
 
-              for(empty in 1:newUnits){
+              for(empty in seq_len(newUnits)){
 
                 colnames(fix.dataframe) <-
 
@@ -1350,19 +1475,31 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
 
 
-    # Store the obtained Data
+    # Store the prepared Data
 
-    if(nrow(bfcquery(bfc, "Calculated statistics")) == 0){
+    number.of.rows.calculated.data <-
 
-      saveRDS(processedList,
+      nrow(bfcquery(bfc, "Calculated statistics"))
 
-              file=bfcnew(bfc, "Calculated statistics", ext="RDS"))
+    if(number.of.rows.calculated.data == 0){
 
-    } else if(nrow(bfcquery(bfc, "Calculated statistics")) == 1){
+      saveRDS(
 
-      saveRDS(processedList,
+        processedList,
 
-              file=bfc[[bfcquery(bfc, "Calculated statistics")$rid]])
+        file=bfcnew(bfc, "Calculated statistics", ext="RDS")
+
+        )
+
+    } else if(number.of.rows.calculated.data == 1){
+
+      saveRDS(
+
+        processedList,
+
+        file=bfc[[bfcquery(bfc, "Calculated statistics")$rid]]
+
+        )
 
     }
 
@@ -1377,21 +1514,25 @@ automatedStatistics<- function(submissionName, obtainedDataType =
 
     # Store the parameters for this run
 
-    if(nrow(bfcquery(bfc, "Parameters for automatedStatistics()")) == 0){
+    if(number.of.rows.parameters == 0){
 
-      saveRDS(oldParamAutomatedStatistics,
+      saveRDS(
 
-              file=bfcnew(bfc, "Parameters for automatedStatistics()", ext="RDS"
+        oldParamAutomatedStatistics,
 
-                          ))
+        file=bfcnew(bfc, "Parameters for automatedStatistics()", ext="RDS")
 
-    } else if(nrow(bfcquery(bfc, "Parameters for automatedStatistics()")) == 1){
+        )
 
-      saveRDS(oldParamAutomatedStatistics,
+    } else if(number.of.rows.parameters == 1){
 
-              file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")
+      saveRDS(
 
-                        $rid]])
+        oldParamAutomatedStatistics,
+
+        file=bfc[[bfcquery(bfc, "Parameters for automatedStatistics()")$rid]]
+
+        )
 
     }
 

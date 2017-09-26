@@ -14,7 +14,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-10 \cr
+#' Date: \tab 2017-09-26 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -174,51 +174,95 @@
 ################################################################################
 ################################################################################
 
-processOneStudy <- function(genesList, submissionName, studyName,
+processOneStudy <- function(
 
-                            desiredTechnique, desiredCaseList = FALSE,
+  genesList,
 
-                            validateGenes = TRUE, calculate = c(
+  submissionName,
 
-                              "frequencyPercentage", "frequencyRatio",
+  studyName,
 
-                              "meanValue"), cutoff=NULL, round=TRUE,
+  desiredTechnique,
 
-                            topGenes = TRUE, shortenStudyNames = TRUE,
+  desiredCaseList = FALSE,
 
-                            genelimit = "none", resolution = 600, RowCex = 0.8,
+  validateGenes = TRUE,
 
-                            ColCex = 0.8, heatmapMargines = c(15,07),
+  calculate = c("frequencyPercentage", "frequencyRatio", "meanValue"),
 
-                            angleForYaxisNames = 45, heatmapColor = "RdBu",
+  cutoff=NULL,
 
-                            reverseColor = TRUE, transposedHeatmap = FALSE,
+  round=TRUE,
 
-                            simplify = FALSE, simplifictionCuttoff = FALSE,
+  topGenes = TRUE,
 
-                            genesToDrop = NULL){
+  shortenStudyNames = TRUE,
+
+  genelimit = "none",
+
+  resolution = 600,
+
+  RowCex = 0.8,
+
+  ColCex = 0.8,
+
+  heatmapMargines = c(15,07),
+
+  angleForYaxisNames = 45,
+
+  heatmapColor = "RdBu",
+
+  reverseColor = TRUE,
+
+  transposedHeatmap = FALSE,
+
+  simplify = FALSE,
+
+  simplifictionCuttoff = FALSE,
+
+  genesToDrop = NULL
+
+  ){
 
   ##############################################################################
   ### Obtaining data
 
-  obtainOneStudy(genesList = genesList, submissionName = submissionName,
+  obtainOneStudy(
 
-                 studyName = studyName, desiredTechnique = desiredTechnique,
+    genesList = genesList,
 
-                 desiredCaseList = desiredCaseList, validateGenes =
+    submissionName = submissionName,
 
-                   validateGenes)
+    studyName = studyName,
+
+    desiredTechnique = desiredTechnique,
+
+    desiredCaseList = desiredCaseList,
+
+    validateGenes = validateGenes
+
+    )
 
 
 
   ##############################################################################
   ### Calculating statistics
 
-  automatedStatistics(submissionName = submissionName, obtainedDataType =
+  automatedStatistics(
 
-                        "single study", calculate = calculate, cutoff = cutoff,
+    submissionName = submissionName,
 
-                      round = round, topGenes = topGenes)
+    obtainedDataType = "single study",
+
+    calculate = calculate,
+
+    cutoff = cutoff,
+
+    round = round,
+
+    topGenes = topGenes
+
+    )
 
 
 
@@ -228,36 +272,53 @@ processOneStudy <- function(genesList, submissionName, studyName,
 
   present.directory <- getwd()
 
-  dir.create(paste(present.directory, "/", submissionName,
+  new.directory <- paste0(
 
-                   " output for a single study", sep = ""),
+    present.directory, "/", submissionName, " output for a single study"
 
-             showWarnings = FALSE)
+    )
 
-  setwd(paste(present.directory, "/", submissionName,
 
-              " output for a single study", sep = ""))
+  dir.create(new.directory, showWarnings = FALSE)
+
+  setwd(new.directory)
 
 
 
   ##############################################################################
   ### Preparing for heatmap output
 
-  heatmapOutput(submissionName = submissionName, shortenStudyNames =
+  heatmapOutput(
 
-                  shortenStudyNames, genelimit = genelimit, resolution =
+    submissionName = submissionName,
 
-                  resolution, RowCex = RowCex, ColCex = ColCex, heatmapMargines
+    shortenStudyNames = shortenStudyNames,
 
-                = heatmapMargines, angleForYaxisNames = angleForYaxisNames,
+    genelimit = genelimit,
 
-                heatmapColor = heatmapColor, reverseColor = reverseColor,
+    resolution = resolution,
 
-                transposedHeatmap = transposedHeatmap, simplify = simplify,
+    RowCex = RowCex,
 
-                simplifictionCuttoff = simplifictionCuttoff, genesToDrop =
+    ColCex = ColCex,
 
-                  genesToDrop)
+    heatmapMargines = heatmapMargines,
+
+    angleForYaxisNames = angleForYaxisNames,
+
+    heatmapColor = heatmapColor,
+
+    reverseColor = reverseColor,
+
+    transposedHeatmap = transposedHeatmap,
+
+    simplify = simplify,
+
+    simplifictionCuttoff = simplifictionCuttoff,
+
+    genesToDrop = genesToDrop
+
+    )
 
 
 

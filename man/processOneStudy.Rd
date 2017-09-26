@@ -146,7 +146,7 @@ ratio, mean value and median value of samples greather than specific value in
 Package: \tab cbaf \cr
 Type: \tab Package \cr
 Version: \tab 1.0.0 \cr
-Date: \tab 2017-09-10 \cr
+Date: \tab 2017-09-26 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

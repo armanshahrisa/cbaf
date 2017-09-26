@@ -10,7 +10,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-10 \cr
+#' Date: \tab 2017-09-26 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -92,11 +92,21 @@
 ################################################################################
 ################################################################################
 
-obtainOneStudy <- function(genesList, submissionName, studyName,
+obtainOneStudy <- function(
 
-                           desiredTechnique, desiredCaseList = FALSE,
+  genesList,
 
-                           validateGenes = TRUE){
+  submissionName,
+
+  studyName,
+
+  desiredTechnique,
+
+  desiredCaseList = FALSE,
+
+  validateGenes = TRUE
+
+  ){
 
   ##############################################################################
   ########## Prerequisites
@@ -135,15 +145,21 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
   if(is.character(desiredTechnique)){
 
-    if(!(desiredTechnique %in% c("RNA-seq", "microRNA-Seq", "Microarray.mRNA",
+    supported.techniques <- c("RNA-seq",
 
-                                 "Microarray.microRNA", "methylation"))
+                              "microRNA-Seq",
 
-       | length(desiredTechnique)!= 1){
+                              "Microarray.mRNA",
 
-      stop("'desiredTechnique' must contain one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA' or
+                              "Microarray.microRNA",
 
-           'methylation'")
+                              "methylation")
+
+    if(!(desiredTechnique %in% supported.techniques) |
+
+       length(desiredTechnique)!= 1){
+
+      stop("'desiredTechnique' must contain one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA' or 'methylation'")
 
     }
 
@@ -152,6 +168,7 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
     stop("'desiredTechnique' must be entered as a character string describing a technique name")
 
   }
+
 
 
 
@@ -234,9 +251,7 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
   # Check the database
 
-  database <- paste(system.file("extdata", package = "cbaf"), submissionName,
-
-                    sep = "/")
+  database <- system.file("extdata", submissionName, package="cbaf")
 
 
 
@@ -244,21 +259,15 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
   if(dir.exists(database) & !(submissionName %in% c("test", "test2"))){
 
-    creation.time <- file.info(paste(system.file("extdata", package = "cbaf"),
+    creation.time <- file.info(database , extra_cols = FALSE)$ctime
 
-                                     submissionName, sep = "/"), extra_cols =
+    past.time <-
 
-                                 FALSE)$ctime
-
-    past.time <- as.numeric(difftime(Sys.time(), creation.time, units =
-
-                                       c("days")))
+      as.numeric(difftime(Sys.time(), creation.time, units = c("days")))
 
     if(past.time >= 5){
 
-      unlink(paste(system.file("extdata", package = "cbaf"),
-
-                   submissionName, sep = "/"), recursive = TRUE)
+      unlink(database, recursive = TRUE)
 
     }
 
@@ -270,21 +279,23 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
   if(dir.exists(database)){
 
-    bfc <- BiocFileCache(file.path(system.file("extdata", package = "cbaf"),
+    bfc <- BiocFileCache(
 
-                                   submissionName))
+      file.path(system.file("extdata", package = "cbaf"), submissionName)
+
+    )
 
     if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 1){
 
-      oldParameters <-
+      oldParameters <- readRDS(
 
-        readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for obtainOneStudy()"))
+        bfcpath(bfc, bfcquery(bfc, c("Parameters for obtainOneStudy()"))$rid)
 
-                        $rid))
+      )
 
-      if(identical(oldParameters[-7], newParameters) | submissionName %in%
+      if(identical(oldParameters[-7], newParameters) |
 
-         c("test", "test2")){
+         submissionName %in% c("test", "test2")){
 
         continue <- FALSE
 
@@ -294,11 +305,13 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
         oldParamObtainOneStudy <- newParameters
 
-        saveRDS(oldParamObtainOneStudy,
+        saveRDS(
 
-                file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$
+          oldParamObtainOneStudy,
 
-                            rid]])
+          file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]]
+
+        )
 
         if(submissionName %in% c("test", "test2")){
 
@@ -341,9 +354,9 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
     # First step of procedure
 
-    mycancerstudy = getCancerStudies(mycgds)[which(getCancerStudies(mycgds)[,2]
+    mycancerstudy =
 
-                                                   ==studyName),1]
+      getCancerStudies(mycgds)[which(getCancerStudies(mycgds)[,2]==studyName),1]
 
     caseList <- getCaseLists(mycgds,mycancerstudy)
 
@@ -394,29 +407,37 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
     # Finding the second characteristic of data in the cancer
 
+    existing.L2.charac <-
+
+      getGeneticProfiles(mycgds,mycancerstudy)[,2] %in% L2.characteristics
+
+
     s.condition <-
 
-      (getGeneticProfiles(mycgds,mycancerstudy)[,2])[getGeneticProfiles(
+      (getGeneticProfiles(mycgds,mycancerstudy)[,2])[existing.L2.charac]
 
-        mycgds,mycancerstudy)[,2] %in% L2.characteristics]
 
+    s.condition <-
+
+      if(length(s.condition) >= 1){
+
+        s.condition[1]
+
+      } else if(length(s.condition) == 0){
+
+        stop(studyName, "lacks", desiredTechnique, "data!", sep=" ")
+
+      }
+
+
+    s.condition.idx <-
+
+      which(getGeneticProfiles(mycgds,mycancerstudy)[,2] == s.condition)
 
 
     mygeneticprofile =
 
-      getGeneticProfiles(mycgds,mycancerstudy)[which(
-
-        getGeneticProfiles(mycgds,mycancerstudy)[,2] == if(length(s.condition)
-
-                                                           >= 1){
-
-      s.condition[1]
-
-    } else if (length(s.condition) == 0){
-
-      stop(studyName, "lacks", desiredTechnique, "data!", sep=" ")
-
-    }) ,1]
+      getGeneticProfiles(mycgds,mycancerstudy)[s.condition.idx ,1]
 
 
     # Shorten studyName - Temporarily inactive
@@ -439,9 +460,9 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
     for(nname in seq_along(genesList)){
 
-      rawList[[nname]] <- list()
+      rawList[[nname]] <- list(); names(rawList)[nname] <-
 
-      names(rawList)[nname] <- names(genesList)[nname]
+        names(genesList)[nname]
 
     }
 
@@ -453,9 +474,9 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
       for(nname in seq_along(genesList)){
 
-        validationResult[[nname]] <- "x"
+        validationResult[[nname]] <- "x"; names(validationResult)[nname] <-
 
-        names(validationResult)[nname] <- names(genesList)[nname]
+          names(genesList)[nname]
 
       }
 
@@ -475,9 +496,9 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
     # Creating progress bar
 
-    obtainOneStudyProgressBar <- txtProgressBar(min = 0, max =
+    obtainOneStudyProgressBar <-
 
-                                                  length(inputCases), style = 3)
+      txtProgressBar(min = 0, max = length(inputCases), style = 3)
 
 
 
@@ -493,13 +514,21 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
       # Correcting possible errors of list names
 
-      groupName <- gsub(groupName, pattern = "\\+ ", replacement = " possitive "
+      groupName <- gsub(
 
-                        , ignore.case = TRUE)
+        groupName, pattern = "\\+ ", replacement = " possitive ",
 
-      groupName <- gsub(groupName, pattern = "\\- ", replacement = " negative ",
+        ignore.case = TRUE
 
-                        ignore.case = TRUE)
+      )
+
+      groupName <- gsub(
+
+        groupName, pattern = "\\- ", replacement = " negative ",
+
+        ignore.case = TRUE
+
+      )
 
 
 
@@ -527,12 +556,14 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
         # Assaign data to specific list member
 
-        rawList[[group]][[i]] <-
+        ProfileData <- getProfileData(
 
-          data.matrix(getProfileData(mycgds,genesNames[order(genesNames)],
+          mycgds,genesNames[order(genesNames)], mygeneticprofile, mycaselist
 
-                                     mygeneticprofile,mycaselist))
+        )
 
+
+        rawList[[group]][[i]] <- data.matrix(ProfileData)
 
         names(rawList[[group]])[i] <- groupName
 
@@ -550,37 +581,46 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
         # Obtain name of genes that are absent in requested cancer
 
-        absentGenes <- alteredGeneNames[!alteredGeneNames %in%
+        absentGenes <-
 
-                                          colnames(this.segment)]
+          alteredGeneNames[!alteredGeneNames %in% colnames(this.segment)]
 
         # For loop for determining changed genes
 
 
         if(length(absentGenes) != 0){
 
-          alternativeGeneNames <- vector("character", length =
+          alternativeGeneNames <-
 
-                                           length(absentGenes))
+            vector("character", length = length(absentGenes))
 
           # For loop
 
           for(ab in seq_along(absentGenes)){
 
-            absentGeneProfileData <-
+            absent.gene.profile.data <- getProfileData(
 
-              colnames(data.matrix(getProfileData(mycgds, absentGenes[ab],
+              mycgds, absentGenes[ab], mygeneticprofile, mycaselist
 
-                                                  mygeneticprofile,mycaselist)))
+            )
 
 
-            # Check wheter gene has an alternative name or missed in the database
+            alternative.gene.name <- colnames(
 
-            if(length(absentGeneProfileData) == 1){
+              data.matrix(absent.gene.profile.data)
 
-              alternativeGeneNames[ab] <- absentGeneProfileData
+            )
 
-            } else if(length(absentGeneProfileData) == 0){
+
+            # Check wheter gene has an alternative name or missed from the
+
+            # database
+
+            if(length(alternative.gene.name) == 1){
+
+              alternativeGeneNames[ab] <- alternative.gene.name
+
+            } else if(length(alternative.gene.name) == 0){
 
               alternativeGeneNames[ab] <- "-"
 
@@ -604,13 +644,14 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
           for(re in seq_along(genesWithData)){
 
-            colnames(rawList[[group]][[i]])[colnames(rawList[[group]][[i]]) %in%
+            colnames.idx <-
 
-                                              genesWithData[re]] <-
+              colnames(rawList[[group]][[i]]) %in% genesWithData[re]
 
-              paste(genesWithData[re], " (", names(genesWithData[re]), ")", sep
 
-                    = "")
+            colnames(rawList[[group]][[i]])[colnames.idx] <-
+
+              paste0(genesWithData[re], " (", names(genesWithData[re]), ")")
 
           }
 
@@ -639,11 +680,13 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
           if(length(genesLackData) != 0){
 
-            dimnames(validationMatrix) <-
+            dimnames(validationMatrix) <- list(
 
-              list(inputCases.names[i], c(colnames(this.segment),
+              inputCases.names[i],
 
-                                          names(genesLackData)))
+              c(colnames(this.segment), names(genesLackData))
+
+            )
 
           } else{
 
@@ -661,13 +704,14 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
             for(re in seq_along(genesWithData)){
 
-              colnames(validationMatrix)[colnames(validationMatrix) %in%
+              colnames.idx <-
 
-                                           genesWithData[re]] <-
+                colnames(validationMatrix) %in% genesWithData[re]
 
-                paste(genesWithData[re], " (", names(genesWithData[re]), ")",
 
-                      sep = "")
+              colnames(validationMatrix)[colnames.idx] <-
+
+                paste0(genesWithData[re], " (", names(genesWithData[re]), ")")
 
             }
 
@@ -679,13 +723,13 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
           # Puting value for genes lacking data
 
-          validationMatrix[,colnames(validationMatrix) %in%
+          colnames.idx <- colnames(validationMatrix) %in% names(genesLackData)
 
-                             names(genesLackData)] <- "-"
+          validationMatrix[,colnames.idx] <- "-"
 
 
 
-          for(eval in 1:ncol(this.segment)){
+          for(eval in seq_len(ncol(this.segment))){
 
             loop.section <- (this.segment)[,eval]
 
@@ -713,13 +757,13 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
           # Storing the results in validationMList
 
-          validationMatrix <- validationMatrix[,sort(colnames(validationMatrix))
+          validationMatrix <-
 
-                                               , drop=FALSE]
+            validationMatrix[,sort(colnames(validationMatrix)), drop=FALSE]
 
-          validationMList[[((group-1)*length(inputCases))+i]] <-
+          idx <- ((group-1)*length(inputCases))+i
 
-            validationMatrix
+          validationMList[[idx]] <- validationMatrix
 
         }
 
@@ -744,9 +788,11 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
     if(!dir.exists(database)){
 
-      bfc <- BiocFileCache(file.path(system.file("extdata", package = "cbaf"),
+      bfc <- BiocFileCache(
 
-                                     submissionName))
+        file.path(system.file("extdata", package = "cbaf"), submissionName)
+
+      )
 
     }
 
@@ -754,17 +800,29 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
     # Store the obtained Data
 
-    if(nrow(bfcquery(bfc, "Obtained data for single study")) == 0){
+    number.of.rows.obtained.data <-
 
-      saveRDS(rawList, file=bfcnew(bfc, "Obtained data for single study",
+      nrow(bfcquery(bfc, "Obtained data for single study"))
 
-                                   ext="RDS"))
+    if(number.of.rows.obtained.data == 0){
 
-    } else if(nrow(bfcquery(bfc, "Obtained data for single study")) == 1){
+      saveRDS(
 
-      saveRDS(rawList, file=bfc[[bfcquery(bfc, "Obtained data for single study")
+        rawList,
 
-                                 $rid]])
+        file=bfcnew(bfc, "Obtained data for single study", ext="RDS")
+
+      )
+
+    } else if(number.of.rows.obtained.data == 1){
+
+      saveRDS(
+
+        rawList,
+
+        file=bfc[[bfcquery(bfc, "Obtained data for single study")$rid]]
+
+      )
 
     }
 
@@ -774,11 +832,13 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
     for(mix in seq_along(genesList)){
 
-      validationResult[[mix]] <-
+      validationResult[[mix]] <- do.call(
 
-        do.call("rbind", validationMList[((mix-1)*length(inputCases))+seq_along(
+        "rbind",
 
-          inputCases)])
+        validationMList[((mix-1)*length(inputCases))+seq_along(inputCases)]
+
+      )
 
     }
 
@@ -786,19 +846,31 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
     if(validateGenes){
 
-      if(nrow(bfcquery(bfc, "Validation data for single study")) == 0){
 
-        saveRDS(validationResult,
+      number.of.rows.validaion.data <-
 
-                file=bfcnew(bfc, "Validation data for single study", ext="RDS"))
+        nrow(bfcquery(bfc, "Validation data for single study"))
 
-      } else if(nrow(bfcquery(bfc, "Validation data for single study")) == 1){
 
-        saveRDS(validationResult,
+      if(number.of.rows.validaion.data == 0){
 
-                file=bfc[[bfcquery(bfc, "Validation data for single study")$
+        saveRDS(
 
-                            rid]])
+          validationResult,
+
+          file=bfcnew(bfc, "Validation data for single study", ext="RDS")
+
+        )
+
+      } else if(number.of.rows.validaion.data == 1){
+
+        saveRDS(
+
+          validationResult,
+
+          file=bfc[[bfcquery(bfc, "Validation data for single study")$rid]]
+
+        )
 
       }
 
@@ -813,17 +885,29 @@ obtainOneStudy <- function(genesList, submissionName, studyName,
 
     # Store the parameters for this run
 
-    if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 0){
+    number.of.rows.parameters <-
 
-      saveRDS(oldParamObtainOneStudy,
+      nrow(bfcquery(bfc, "Parameters for obtainOneStudy()"))
 
-              file=bfcnew(bfc, "Parameters for obtainOneStudy()", ext="RDS"))
+    if(number.of.rows.parameters == 0){
 
-    } else if(nrow(bfcquery(bfc, "Parameters for obtainOneStudy()")) == 1){
+      saveRDS(
 
-      saveRDS(oldParamObtainOneStudy,
+        oldParamObtainOneStudy,
 
-              file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]])
+        file=bfcnew(bfc, "Parameters for obtainOneStudy()", ext="RDS")
+
+      )
+
+    } else if(number.of.rows.parameters == 1){
+
+      saveRDS(
+
+        oldParamObtainOneStudy,
+
+        file=bfc[[bfcquery(bfc, "Parameters for obtainOneStudy()")$rid]]
+
+      )
 
     }
 

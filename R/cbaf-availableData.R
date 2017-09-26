@@ -9,7 +9,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-10 \cr
+#' Date: \tab 2017-09-26 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -34,7 +34,8 @@
 #'
 #'
 #'
-#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer, copyright holder]
+#' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer,
+#' copyright holder]
 #' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
 #'
 #' @export
@@ -161,9 +162,9 @@ availableData <- function(excelFileName){
 
     # looking for supported technique data
 
-    list.of.available.data <- sapply(list.of.studies[, "cancer_study_id"],
+    list.of.available.data <- sapply(
 
-                                     function(cs, cgds) {
+      list.of.studies[, "cancer_study_id"], function(cs, cgds) {
 
       # Obtain available techniques
 
@@ -185,29 +186,53 @@ availableData <- function(excelFileName){
         description <- available.options[, "case_list_name"]
 
 
-        c(RNA.seq = any(RNA_seq.terms %in% description),
+        c(RNA.seq = as.character(
 
-          microRNA.seq = any(microRNA_seq.terms %in% description),
+          any(RNA_seq.terms %in% description)
 
-          microarray_of_mRNA = any(microarray.for.mRNA.term %in% description),
+          ),
 
-          microarray_of_miRNA = any(microarray.for.miRNA.term %in% description),
 
-          methylation = any(methylation.term %in% description))
+          microRNA.seq = as.character(
+
+            any(microRNA_seq.terms %in% description)
+
+            ),
+
+
+          microarray_of_mRNA = as.character(
+
+            any(microarray.for.mRNA.term %in% description)
+
+            ),
+
+
+          microarray_of_miRNA = as.character(
+
+            any(microarray.for.miRNA.term %in% description)
+
+            ),
+
+
+          methylation = as.character(
+
+            any(methylation.term %in% description))
+
+          )
 
 
       } else{
 
 
-        c(RNA.seq = FALSE,
+        c(RNA.seq = "FALSE",
 
-          microRNA.seq = FALSE,
+          microRNA.seq = "FALSE",
 
-          microarray_of_mRNA = FALSE,
+          microarray_of_mRNA = "FALSE",
 
-          microarray_of_miRNA = FALSE,
+          microarray_of_miRNA = "FALSE",
 
-          methylation = FALSE)
+          methylation = "FALSE")
 
 
       }
@@ -238,15 +263,15 @@ availableData <- function(excelFileName){
 
                            list.of.studies[,"description"])
 
-    colnames(combined.list) <- c("cancer_study_id", "cancer_study_name",
+    colnames(combined.list) <-
 
-                                 "RNA.seq", "microRNA.seq", "microarray_of_mRNA"
+      c("cancer_study_id", "cancer_study_name", "RNA.seq", "microRNA.seq",
 
-                                 , "microarray_of_microRNA", "methylation",
+        "microarray_of_mRNA" , "microarray_of_microRNA", "methylation",
 
-                                 "description")
+        "description")
 
-    rownames(combined.list) <- 1:nrow(combined.list)
+    rownames(combined.list) <- seq_len(nrow(combined.list))
 
 
 
@@ -257,19 +282,21 @@ availableData <- function(excelFileName){
 
     combined.list.dataframe <- data.frame(combined.list)
 
-    colnames(combined.list.dataframe) <- gsub("_", " ",
+    colnames(combined.list.dataframe) <-
 
-                                              colnames(combined.list.dataframe))
+      gsub("_", " ", colnames(combined.list.dataframe))
 
-    colnames(combined.list.dataframe) <- gsub("\\.", "-",
+    colnames(combined.list.dataframe) <-
 
-                                              colnames(combined.list.dataframe))
+      gsub("\\.", "-", colnames(combined.list.dataframe))
 
-    rownames(combined.list.dataframe) <- 1:nrow(combined.list)
+    rownames(combined.list.dataframe) <- seq_len(nrow(combined.list))
 
-    write.xlsx(combined.list.dataframe,
+    write.xlsx(
 
-               file=paste(excelFileName, ".xlsx", sep = ""))
+      combined.list.dataframe, file=paste(excelFileName, ".xlsx", sep = "")
+
+      )
 
   }else{
 

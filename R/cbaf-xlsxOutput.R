@@ -9,7 +9,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-10 \cr
+#' Date: \tab 2017-09-26 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -104,7 +104,7 @@ xlsxOutput <- function(submissionName){
 
   database <-
 
-    paste(system.file("extdata", package = "cbaf"), submissionName, sep = "/")
+    system.file("extdata", submissionName, package="cbaf")
 
   if(!dir.exists(database)){
 
@@ -112,9 +112,11 @@ xlsxOutput <- function(submissionName){
 
   } else if(dir.exists(database)){
 
-    bfc <- BiocFileCache(file.path(system.file("extdata", package = "cbaf"),
+    bfc <- BiocFileCache(
 
-                                   submissionName))
+      file.path(system.file("extdata", package = "cbaf"), submissionName)
+
+      )
 
     if(!nrow(bfcquery(bfc, c("Parameters for automatedStatistics()"))) == 1){
 
@@ -130,9 +132,11 @@ xlsxOutput <- function(submissionName){
 
   previousFunctionParam <-
 
-    readRDS(bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()")
+    readRDS(
 
-                                  )$rid))
+      bfcpath(bfc, bfcquery(bfc, c("Parameters for automatedStatistics()"))$rid)
+
+      )
 
 
 
@@ -175,7 +179,12 @@ xlsxOutput <- function(submissionName){
 
   # Check wheather the requested data exists
 
-  if(nrow(bfcquery(bfc, "Parameters for xlsxOutput()")) == 1){
+  number.of.rows.parameters <-
+
+    nrow(bfcquery(bfc, "Parameters for xlsxOutput()"))
+
+
+  if(number.of.rows.parameters == 1){
 
     oldParameters <-
 
@@ -317,9 +326,11 @@ xlsxOutput <- function(submissionName){
 
         subset.data$Validation.Result <- v.subset.data
 
-        subset.data <- subset.data[match(c("Validation.Result", sheet.names),
+        reorder <-
 
-                                         names(subset.data))]
+          match(c("Validation.Result", sheet.names), names(subset.data))
+
+        subset.data <- subset.data[reorder]
 
       }
 
@@ -333,13 +344,17 @@ xlsxOutput <- function(submissionName){
 
     # Create a directory and set it as desired folder
 
-    child.directory <- paste(gr, ". ", sub(x = subset.name, pattern = "\\.",
+    child.directory <-
 
-                                           replacement = "-"), sep="")
+      paste0(gr, ". ", sub(x = subset.name, pattern = "\\.", replacement = "-"))
 
-    dir.create(paste(parent.directory, child.directory, sep = "/"),
+    dir.create(
 
-               showWarnings = FALSE)
+      paste(parent.directory, child.directory, sep = "/"),
+
+      showWarnings = FALSE
+
+      )
 
 
     setwd(paste(parent.directory, child.directory, sep = "/"))
@@ -350,9 +365,23 @@ xlsxOutput <- function(submissionName){
 
     name.of.excel.file <-
 
-      paste(gsub(x = subset.name, pattern = "\\.", replacement = "-"), " (",
+      paste0(
 
-            cutoff.phrase, "=", cutoff, ")" , ".xlsx", sep = "")
+        gsub(x = subset.name, pattern = "\\.", replacement = "-"),
+
+        " (",
+
+        cutoff.phrase,
+
+        "=",
+
+        cutoff,
+
+        ")" ,
+
+        ".xlsx"
+
+        )
 
     # Check if excel file already exists
 
@@ -389,7 +418,9 @@ xlsxOutput <- function(submissionName){
 
 
 
-        if(name.statistics.data %in% c("Frequency.Percentage", "Mean.Value",
+        if(name.statistics.data %in% c("Frequency.Percentage",
+
+                                       "Mean.Value",
 
                                        "Median.Value")){
 
@@ -407,11 +438,23 @@ xlsxOutput <- function(submissionName){
 
         # Saving the expression profile
 
-        write.xlsx(statistics.data, file = name.of.excel.file, sheetName =
+        write.xlsx(
 
-                     gsub(x = name.statistics.data, pattern = "\\.",
+          statistics.data,
 
-                          replacement = " "), append = TRUE)
+          file = name.of.excel.file,
+
+          sheetName = gsub(
+
+            x = name.statistics.data,
+
+            pattern = "\\.",
+
+            replacement = " "
+
+            ),
+
+          append = TRUE)
 
       }
 
@@ -450,17 +493,25 @@ xlsxOutput <- function(submissionName){
 
   # Store the parameters for this run
 
-  if(nrow(bfcquery(bfc, "Parameters for xlsxOutput()")) == 0){
+  if(number.of.rows.parameters == 0){
 
-    saveRDS(oldParamXlsxOutput,
+    saveRDS(
 
-            file=bfcnew(bfc, "Parameters for xlsxOutput()", ext="RDS"))
+      oldParamXlsxOutput,
 
-  } else if(nrow(bfcquery(bfc, "Parameters for xlsxOutput()")) == 1){
+      file=bfcnew(bfc, "Parameters for xlsxOutput()", ext="RDS")
 
-    saveRDS(oldParamXlsxOutput,
+      )
 
-            file=bfc[[bfcquery(bfc, "Parameters for xlsxOutput()")$rid]])
+  } else if(number.of.rows.parameters == 1){
+
+    saveRDS(
+
+      oldParamXlsxOutput,
+
+      file=bfc[[bfcquery(bfc, "Parameters for xlsxOutput()")$rid]]
+
+      )
 
   }
 
