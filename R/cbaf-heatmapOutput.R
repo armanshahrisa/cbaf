@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-26 \cr
+#' Version: \tab 1.1.1 \cr
+#' Date: \tab 2017-11-11 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -23,7 +23,7 @@
 #'
 #' @importFrom BiocFileCache bfcnew bfcquery bfcpath
 #'
-#' @importFrom grDevices colorRampPalette dev.off png
+#' @importFrom grDevices colorRampPalette dev.off tiff png bmp jpeg
 #'
 #' @importFrom utils head setTxtProgressBar txtProgressBar
 #'
@@ -35,10 +35,11 @@
 #'
 #'
 #' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE,
-#'   genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
-#'   heatmapMargines = c(15,07), angleForYaxisNames = 45, heatmapColor = "RdBu",
-#'   reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE,
-#'   simplifictionCuttoff = FALSE, genesToDrop = NULL)
+#'   genelimit = "none", rankingMethod = "variation", heatmapFileFormat = "TIFF"
+#'   , resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
+#'   angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
+#'   transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
+#'   genesToDrop = NULL)
 #'
 #'
 #'
@@ -55,6 +56,17 @@
 #' heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes
 #' that show the most variation across multiple study / study subgroups. The
 #' default value is \code{none}.
+#'
+#' @param rankingMethod a character value that determines how genes will be
+#' ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
+#' unique values in one or few cancer studies while \code{"highValue"} ranks the
+#'  genes when they cotain high values in multiple / many cancer studies. This
+#'  option is useful when number of genes are too much so that user has to limit
+#'  the number of genes on heatmap by \code{genelimit}.
+#'
+#' @param heatmapFileFormat This option enables the user to select the desired
+#' image file format of the heatmaps. The default value is \code{"TIFF"}. Other
+#' suppoeted formats include \code{"PNG"}, \code{"BMP"}, and \code{"JPG"}.
 #'
 #' @param resolution a number. This option can be used to adjust the resolution
 #' of the output heatmaps as 'dot per inch'. The defalut value is 600.
@@ -95,10 +107,10 @@
 #'
 #'
 #'
-#' @return Based on preference, three heatmaps for "Frequency.Percentage",
-#' "Mean.Value" and "Median.value" can be generated. If more than one group of
-#' genes are entered, output for each group will be strored in a separate
-#' sub-directory.
+#' @return Based on preference, three heatmaps for \code{"Frequency.Percentage"}
+#' , \code{"Mean.Value"} and \code{"Median.value"} can be generated. If more
+#' than one group of genes are entered, output for each group will be strored in
+#'  a separate sub-directory.
 #'
 #'
 #'
@@ -140,6 +152,10 @@ heatmapOutput <- function(
 
   genelimit = "none",
 
+  rankingMethod = "variation",
+
+  heatmapFileFormat = "TIFF",
+
   resolution = 600,
 
   RowCex = 0.8,
@@ -176,6 +192,14 @@ heatmapOutput <- function(
   }
 
 
+
+  # Check heatmap image file format
+
+  if(!(heatmapFileFormat %in% c("TIFF", "PNG", "JPG", "BMP"))){
+
+    stop("'heatmapFileFormat' must be one of the supported image formats: 'TIFF', 'PNG', 'JPG', or 'BMP'")
+
+  }
 
 
 
@@ -458,6 +482,7 @@ heatmapOutput <- function(
 
       name.statistics.data <- names(subset.data)[possible]
 
+
       # determine ourput file name
 
       output.file.name <- paste0(
@@ -478,9 +503,26 @@ heatmapOutput <- function(
 
         ")",
 
-        ".PNG"
+        if(heatmapFileFormat == "TIFF"){
+
+          ".tiff"
+
+        }else if(heatmapFileFormat == "PNG"){
+
+          ".png"
+
+        }else if(heatmapFileFormat == "JPG"){
+
+          ".jpg"
+
+        }else if(heatmapFileFormat == "BMP"){
+
+          ".bmp"
+
+        }
 
       )
+
 
 
 
@@ -581,9 +623,19 @@ heatmapOutput <- function(
 
               heatmap.data <- heatmap.data
 
-            } else if(is.numeric(genelimit) & genelimit <= ncol(heatmap.data)){
+            } else if(is.numeric(genelimit) & genelimit <= ncol(heatmap.data) &
+
+                      rankingMethod == "variation"){
 
               ordering <- order(abs(rowVars(heatmap.data)), decreasing=TRUE)
+
+              heatmap.data <- heatmap.data[ordering[seq_len(genelimit)],]
+
+            } else if(is.numeric(genelimit) & genelimit <= ncol(heatmap.data) &
+
+                      rankingMethod == "highValue"){
+
+              ordering <- order(abs(rowSums(heatmap.data)), decreasing=TRUE)
 
               heatmap.data <- heatmap.data[ordering[seq_len(genelimit)],]
 
@@ -630,19 +682,79 @@ heatmapOutput <- function(
 
             # Drawing heatmap
 
-            png(
+            if(heatmapFileFormat == "TIFF"){
 
-              filename=paste(getwd(), output.file.name, sep="/"),
 
-              width=9.5,
+              tiff(
 
-              height= 11,
+                filename=paste(getwd(), output.file.name, sep="/"),
 
-              units = "in",
+                width=9.5,
 
-              res=resolution
+                height= 11,
+
+                units = "in",
+
+                res=resolution
 
               )
+
+
+            }else if(heatmapFileFormat == "PNG"){
+
+
+              png(
+
+                filename=paste(getwd(), output.file.name, sep="/"),
+
+                width=9.5,
+
+                height= 11,
+
+                units = "in",
+
+                res=resolution
+
+              )
+
+
+            }else if(heatmapFileFormat == "BMP"){
+
+
+              bmp(
+
+                filename=paste(getwd(), output.file.name, sep="/"),
+
+                width=9.5,
+
+                height= 11,
+
+                units = "in",
+
+                res=resolution
+
+              )
+
+
+            }else if(heatmapFileFormat == "JPG"){
+
+
+              jpeg(
+
+                filename=paste(getwd(), output.file.name, sep="/"),
+
+                width=9.5,
+
+                height= 11,
+
+                units = "in",
+
+                res=resolution
+
+              )
+
+
+            }
 
 
 

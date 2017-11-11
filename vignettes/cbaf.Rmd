@@ -1,5 +1,5 @@
 ---
-title: "cbaf: cBioPortal Automated Functions"
+title: "cbaf: Automated Functions for cBioPortal"
 author: Arman Shahrisa
 date: "`r Sys.Date()`"
 output: BiocStyle::html_document
@@ -72,10 +72,10 @@ It is recommended that users only work with two low-level functions - `available
 
 ### availableData()
 
-This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a name to label the output excel file. In the following example, the entered name is `"list.2017-09-08"`.
+This function scans all the cancer studies to examine presence of _RNA-seq_, _microRNA-seq_, _microarray_ and _methylation_ data. It requires a name to label the output excel file. In the following example, the entered name is `"list.2017-11-05"`.
 
 ```{r, eval = FALSE}
-availableData("list.2017-09-08")
+availableData("list.2017-11-05")
 ```    
 
 Upon finishing, the output excel file is accessible at the present (working) directory. It contains different columns: cancer_study_id, cancer_study_name, RNA.seq, microRNA.seq, microarray of mRNA, microarray of miRNA, methylation and description.
@@ -171,7 +171,7 @@ It requires at least two arguments:
 
 Function also contains four other options:
 
-- __calculate__, a character vector that contains the desired statistical procedures. The complete input is `c("frequencyPercentage", "frequencyRatio", "meanValue")` while the complete input is `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`. This will tell the function to compute the following:
+- __calculate__, a character vector that contains the desired statistical procedures. The default input is `c("frequencyPercentage", "frequencyRatio", "meanValue")` while the complete input is `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`. This will tell the function to compute the following:
 
     + _frequencyPercentage_, which is the percentage of samples having the value greather than specific cutoff divided by the total sample size for every study / study subgroup
     
@@ -210,7 +210,12 @@ Function also contains thirteen other options:
 
 - __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
 
-- __genelimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `genelimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `none`.
+- __genelimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `genelimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `"none"`.
+
+- __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
+unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `genelimit`.
+
+- __heatmapFileFormat__ This option enables the user to select the desired image file format of the heatmaps. The default value is `"TIFF"`. Other suppoeted formats include `"BMP"`, `"JPG"`, and `"PNG"`.
 
 - __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
 
@@ -316,7 +321,7 @@ Function also contains nineteen other options:
 
 - __validateGenes__ a logical value that, if set to be `TRUE`, function will check each cancer subgroup to find whether or not every gene has a record. If the subgroup doesn't have a record for the specific gene, function checks for alternative gene names that cbioportal might use instead of the given gene name.
 
-- __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
+- __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue")`. To get all the statistics, use the following instead: `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
 
 - __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
 
@@ -327,6 +332,11 @@ Function also contains nineteen other options:
 - __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
 
 - __genelimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `genelimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `none`.
+
+- __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
+unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `genelimit`.
+
+- __heatmapFileFormat__ This option enables the user to select the desired image file format of the heatmaps. The default value is `"TIFF"`. Other suppoeted formats include `"BMP"`, `"JPG"`, and `"PNG"`.
 
 - __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
 
@@ -389,7 +399,7 @@ Function also contains nineteen other options:
 
 - __validateGenes__ a logical value that, if set to be `TRUE`, function will check each cancer subgroup to find whether or not every gene has a record. If the subgroup doesn't have a record for the specific gene, function checks for alternative gene names that cbioportal might use instead of the given gene name.
 
-- __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
+- __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue")`. To get all the statistics, use the following instead: `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
 
 - __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
 
@@ -400,6 +410,11 @@ Function also contains nineteen other options:
 - __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
 
 - __genelimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `genelimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `none`.
+
+- __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
+unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `genelimit`.
+
+- __heatmapFileFormat__ This option enables the user to select the desired image file format of the heatmaps. The default value is `"TIFF"`. Other suppoeted formats include `"BMP"`, `"JPG"`, and `"PNG"`.
 
 - __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
 

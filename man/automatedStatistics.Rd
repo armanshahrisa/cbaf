@@ -15,24 +15,25 @@ used for naming the process.}
 
 \item{obtainedDataType}{a character string that specifies the type of input
 data produced by the previous function. Two options are availabe:
-'single study' for obtainOneStudy() and 'multiple studies' for
+\code{"single study"} for obtainOneStudy() and \code{"multiple studies"} for
 obtainMultipleStudies(). The function uses obtainedDataType and
 submissionName to construct the name of the BiocFileCach object and then
-finds the appropriate data inside it. Default value is `multiple studies`.}
+finds the appropriate data inside it. Default value is multiple studies`.}
 
 \item{calculate}{a character vector that containes the statistical procedures
- users prefer the function to compute. The complete input is
-\code{c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")}
- . This will tell the function to compute the following:
-'frequencyPercentage', which is the percentge of samples having the value
-greather than specific cutoff divided by the total sample size for every
-study / study subgroup;
-'frequency ratio', which shows the number of selected samples divided by the
-total number of samples that give the frequency percentage for every study /
-study subgroup. It shows the selected and total sample sizes.;
-'Mean Value', that contains mean value of selected samples for each study;
-'Median Value', which shows the median value of selected samples for each
-study.
+users prefer the function to compute. The complete results can be obtained
+by \code{c("frequencyPercentage", "frequencyRatio", "meanValue",
+"medianValue")}. This will tell the function to compute the following:
+\code{"frequencyPercentage"}, which is the percentge of samples having the
+value greather than specific cutoff divided by the total sample size for
+every study / study subgroup;
+\code{"frequency ratio"}, which shows the number of selected samples divided
+by the total number of samples that give the frequency percentage for every
+study / study subgroup. It shows the selected and total sample sizes.;
+\code{"Mean Value"}, that contains mean value of selected samples for each
+study;
+\code{"Median Value"}, which shows the median value of selected samples for
+each study.
 The default input is \code{calculate = c("frequencyPercentage",
 "frequencyRatio", "meanValue")}.}
 
@@ -42,16 +43,16 @@ get all the three data.frames, "frequencyPercentage", "meanValue" and
 "MedianValue" must have been included for \code{calculate}.}
 
 \item{cutoff}{a number used to limit samples to those that are greather than
-this number (cutoff). The default value for methylation data is 0.6 while
-gene expression studies use default value of 2. For methylation studies, it
-is \code{observed/expected ratio}, for the rest, it is 'z-score'. To change
-the cutoff to any desired number, change the option to
-\code{cutoff = desiredNumber} in which desiredNumber is the number of
-interest.}
+this number (cutoff). The default value for methylation data is \code{0.6}
+while gene expression studies use default value of \code{2}. For methylation
+studies, it is \code{observed/expected ratio}, for the rest, it is
+\code{"z-score"}. To change the cutoff to any desired number, change the
+option to \code{cutoff = desiredNumber} in which desiredNumber is the number
+of interest.}
 
-\item{round}{a logical value that, if set to be TRUE, will force the function
-to round all the calculated values to two decimal places. The default value
-is TRUE.}
+\item{round}{a logical value that, if set to be \code{TRUE}, will force the
+function to round all the calculated values to two decimal places. The
+default value is \code{TRUE}.}
 }
 \value{
 A new section in the BiocFileCache object that was created by one of
@@ -74,8 +75,8 @@ function.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.0.0 \cr
-Date: \tab 2017-09-26 \cr
+Version: \tab 1.1.1 \cr
+Date: \tab 2017-11-11 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

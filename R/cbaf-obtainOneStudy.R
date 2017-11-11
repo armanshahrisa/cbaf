@@ -9,15 +9,14 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-26 \cr
+#' Version: \tab 1.1.1 \cr
+#' Date: \tab 2017-11-11 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
 #'
 #'
-#' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles
-#' getProfileData
+#' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData
 #'
 #' @importFrom BiocFileCache BiocFileCache bfcnew bfcquery bfcpath
 #'
@@ -37,17 +36,17 @@
 #'
 #' @param studyName a character string showing the desired cancer name. It is an
 #'  standard cancer study name that can be found on cbioportal.org, such as
-#'  'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.
+#'  \code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}.
 #'
 #' @param desiredTechnique a character string that is one of the following
-#' techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA',
-#' 'microarray.microRNA' or 'methylation'.
+#' techniques: \code{"RNA-seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
+#' , \code{"microarray.microRNA"} or \code{"methylation"}.
 #'
 #' @param desiredCaseList a numeric vector that contains the index of desired
 #' cancer subgroups, assuming the user knows index of desired subgroups. If not,
-#'  desiredCaseList has been set as 'none', function will show the available
-#'  subgroups and ask the user to enter the desired ones during the process.
-#'  The default value is 'none'.
+#'  desiredCaseList is set to \code{"none"}, function will show the available
+#'  subgroups and ask the user to enter the desired ones during the
+#'  process. The default value is \code{"none"}.
 #'
 #' @param validateGenes a logical value that, if set to be 'TRUE', causes the
 #' function to check each cancer study to find whether or not each gene has a
@@ -147,7 +146,7 @@ obtainOneStudy <- function(
 
     supported.techniques <- c("RNA-seq",
 
-                              "microRNA-Seq",
+                              "microRNA-seq",
 
                               "Microarray.mRNA",
 
@@ -180,7 +179,7 @@ obtainOneStudy <- function(
 
                             "mRNA Expression z-Scores (RNA Seq RPKM)")
 
-  } else if(desiredTechnique == "microRNA-Seq"){
+  } else if(desiredTechnique == "microRNA-seq"){
 
     L2.characteristics <- c("microRNA expression Z-scores")
 

@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-26 \cr
+#' Version: \tab 1.1.1 \cr
+#' Date: \tab 2017-11-11 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'

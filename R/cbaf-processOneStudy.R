@@ -13,8 +13,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.0.0 \cr
-#' Date: \tab 2017-09-26 \cr
+#' Version: \tab 1.1.1 \cr
+#' Date: \tab 2017-11-11 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -26,7 +26,8 @@
 #'   , desiredCaseList = FALSE, validateGenes = TRUE, calculate =
 #'   c("frequencyPercentage", "frequencyRatio", "meanValue"), cutoff=NULL,
 #'   round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none",
-#'   resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
+#'   rankingMethod = "variation", heatmapFileFormat = "TIFF", resolution = 600,
+#'   RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
 #'   angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
 #'   transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
 #'   genesToDrop = NULL)
@@ -40,67 +41,80 @@
 #'
 #' @param studyName a character string showing the desired cancer name. It is an
 #'  standard cancer study name that can be found on cbioportal.org, such as
-#'  'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.
+#'  \code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}.
 #'
 #' @param desiredTechnique a character string that is one of the following
-#' techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA',
-#' 'microarray.microRNA' or 'methylation'.
+#' techniques: \code{"RNA-seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
+#' , \code{"microarray.microRNA"} or \code{"methylation"}.
 #'
 #' @param desiredCaseList a numeric vector that contains the index of desired
 #' cancer subgroups, assuming the user knows index of desired subgroups. If not,
-#'  desiredCaseList has been set as 'none', function will show the available
-#'  subgroups and ask the user to enter the desired ones during the process. The
-#'   default value is 'none'.
+#'  desiredCaseList is set to \code{"none"}, function will show the available
+#'  subgroups and ask the user to enter the desired ones during the
+#'  process. The default value is \code{"none"}.
 #'
-#' @param validateGenes a logical value that, if set to be 'TRUE', causes the
-#' function to check each cancer study to find whether or not each gene has a
-#' record. If a cancer doesn't have a record for specific gene, function looks
+#' @param validateGenes a logical value that, if set to be \code{TRUE}, causes
+#' the function to check each cancer study to find whether or not each gene has
+#' a record. If a cancer doesn't have a record for specific gene, function looks
 #' for alternative gene names that cbioportal might use instead of the given
 #' gene name.
 #'
 #' @param calculate a character vector that containes the statistical procedures
-#'  users prefer the function to compute. The complete input is
-#' \code{c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")}
-#'  . This will tell the function to compute the following:
-#' 'frequencyPercentage', which is the percentge of samples having the value
-#' greather than specific cutoff divided by the total sample size for every
-#' study / study subgroup;
-#' 'frequency ratio', which shows the number of selected samples divided by the
-#' total number of samples that give the frequency percentage for every study /
-#' study subgroup. It shows the selected and total sample sizes.;
-#' 'Mean Value', that contains mean value of selected samples for each study;
-#' 'Median Value', which shows the median value of selected samples for each
-#' study.
+#' users prefer the function to compute. The complete results can be obtained
+#' by \code{c("frequencyPercentage", "frequencyRatio", "meanValue",
+#' "medianValue")}. This will tell the function to compute the following:
+#' \code{"frequencyPercentage"}, which is the percentge of samples having the
+#' value greather than specific cutoff divided by the total sample size for
+#' every study / study subgroup;
+#' \code{"frequency ratio"}, which shows the number of selected samples divided
+#' by the total number of samples that give the frequency percentage for every
+#' study / study subgroup. It shows the selected and total sample sizes.;
+#' \code{"Mean Value"}, that contains mean value of selected samples for each
+#' study;
+#' \code{"Median Value"}, which shows the median value of selected samples for
+#' each study.
 #' The default input is \code{calculate = c("frequencyPercentage",
 #' "frequencyRatio", "meanValue")}.
 #'
 #' @param cutoff a number used to limit samples to those that are greather than
 #' specific number (cutoff). The default value for methylation data is 0.6 while
 #'  gene expression studies use default value of 2. For methylation studies, it
-#'  is \code{observed/expected ratio}, for the rest, it is 'z-score'. To change
-#'  the cutoff to any desired number, change the option to
+#'  is \code{observed/expected ratio}, for the rest, it is \code{"z-score"}.
+#'  To change the cutoff to any desired number, change the option to
 #'  \code{cutoff = desiredNumber}, in which desiredNumber is the number of
 #'  interest.
 #'
-#' @param round a logical value that, if set to be TRUE, will force the function
-#'  to round all the calculated values to two decimal places. The default value
-#'  is TRUE.
+#' @param round a logical value that, if set to be \code{TRUE}, will force the
+#' function to round all the calculated values to two decimal places. The
+#' default value is \code{TRUE}.
 #'
-#' @param topGenes a logical value that, if set as TRUE, causes the function to
-#' create three data.frame that contain the five top genes for each cancer. To
-#' get all the three data.frames, "frequencyPercentage", "meanValue" and
-#' "medianValue" must have been included for \code{calculate}.
+#' @param topGenes a logical value that, if set as \code{TRUE}, causes the
+#' function to create three dataframes that contain the five top genes for each
+#' cancer. To get all the three dataframes, \code{"frequencyPercentage"},
+#' \code{"meanValue"} and \code{"medianValue"} must have been included for
+#' \code{"calculate"}.
 #'
-#' @param shortenStudyNames a logical vector. If the value is set as TRUE,
-#' function will try to remove the last part of the cancer names aiming to
-#' shorten them. The removed segment usually contains the name of scientific
-#' group that has conducted the experiment.
+#' @param shortenStudyNames a logical vector. If the value is set as
+#' \code{TRUE}, function will try to remove the last part of the cancer names
+#' aiming to shorten them. The removed segment usually contains the name of
+#' scientific group that has conducted the experiment.
 #'
 #' @param genelimit if large number of genes exist in at least one gene group,
 #' this option can be used to limit the number of genes that are shown on
 #' heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes
 #'  showing the most variation across multiple study / study subgroups. The
 #'  default value is \code{none}.
+#'
+#' @param rankingMethod a character value that determines how genes will be
+#' ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
+#' unique values in one or few cancer studies while \code{"highValue"} ranks the
+#'  genes when they cotain high values in multiple / many cancer studies. This
+#'  option is useful when number of genes are too much so that user has to limit
+#'  the number of genes on heatmap by \code{genelimit}.
+#'
+#' @param heatmapFileFormat This option enables the user to select the desired
+#' image file format of the heatmaps. The default value is \code{"TIFF"}. Other
+#' suppoeted formats include \code{"PNG"}, \code{"BMP"}, and \code{"JPG"}.
 #'
 #' @param resolution a number. This option can be used to adjust the resolution
 #' of the output heatmaps as 'dot per inch'. The defalut value is 600.
@@ -110,12 +124,11 @@
 #' @param ColCex a number that specifies letter size in heatmap column names.
 #'
 #' @param heatmapMargines a numeric vector that is used to set heatmap margins.
-#' The default value is
-#' \code{heatmapMargines=c(15,07)}.
+#' The default value is \code{heatmapMargines=c(15,07)}.
 #'
 #' @param angleForYaxisNames a number that determines the angle with which the
-#' studies/study subgroups names are shown in heatmaps. The default value is 45
-#' degree.
+#' studies/study subgroups names are shown in heatmaps. The default value is
+#' \code{"45"} degree.
 #'
 #' @param heatmapColor a character string that defines heatmap color. The
 #' default value is "RdBu". "redgreen" is also a popular color in genomic
@@ -131,7 +144,7 @@
 #' @param simplify a logical value that tells the function whether or not to
 #' change values under \code{simplifiction.cuttoff} to zero. The purpose behind
 #' this option is to facilitate seeing candidate genes. Therefore, it is not
-#' suited for publications. Default value is 'FALSE'.
+#' suited for publications. Default value is \code{"FALSE"}.
 #'
 #' @param simplifictionCuttoff a logical value that, if
 #' \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff for
@@ -143,13 +156,15 @@
 #'
 #'
 #' @return a BiocFileCache object that containes some or all of the following
-#' groups, based on what user has chosen: ObtainedData, validationResults,
-#' frequencyPercentage, Top.Genes.of.Frequency.Percentage, frequencyRatio,
-#' meanValue, Top.Genes.of.Mean.Value, medianValue, Top.Genes.of.Median.Value.
-#' It also saves these results in one excel files for convenience.
-#' Based on preference, three heatmaps for frequency percentage, mean value and
-#' median can be generated. If more than one group of genes is entered, output
-#' for each group will be strored in a separate sub-directory.
+#' groups, based on what user has chosen: \code{ObtainedData},
+#' \code{validationResults}, \code{frequencyPercentage},
+#' \code{Top.Genes.of.Frequency.Percentage}, \code{frequencyRatio},
+#' \code{meanValue}, \code{Top.Genes.of.Mean.Value}, \code{medianValue},
+#' \code{Top.Genes.of.Median.Value}. It also saves these results in one excel
+#' files for convenience. Based on preference, three heatmaps for frequency
+#' percentage, mean value and median can be generated. If more than one group of
+#'  genes is entered, output for each group will be strored in a separate
+#'  sub-directory.
 #'
 #' @examples
 #' genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
@@ -199,6 +214,10 @@ processOneStudy <- function(
   shortenStudyNames = TRUE,
 
   genelimit = "none",
+
+  rankingMethod = "variation",
+
+  heatmapFileFormat = "TIFF",
 
   resolution = 600,
 
@@ -295,6 +314,10 @@ processOneStudy <- function(
     shortenStudyNames = shortenStudyNames,
 
     genelimit = genelimit,
+
+    rankingMethod = rankingMethod,
+
+    heatmapFileFormat = heatmapFileFormat,
 
     resolution = resolution,
 

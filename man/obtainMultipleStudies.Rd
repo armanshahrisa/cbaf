@@ -16,19 +16,19 @@ used for naming the process.}
 \item{studiesNames}{a character vector or a matrix that containes desired
 cancer names. The character vector containes standard
 names of cancer studies that can be found on cbioportal.org, such as
-'Acute Myeloid Leukemia (TCGA, NEJM 2013)'. Alternatively, a matrix can be
+\code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}. Alternatively, a matrix can
 used if users prefer user-defined cancer names. In this case, the first
 column of matrix comprises the standard cancer names while the second column
 must contain the desired cancer names.}
 
 \item{desiredTechnique}{a character string that is one of the following
-techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA',
-'microarray.microRNA' or 'methylation'.}
+techniques: \code{"RNA-seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
+, \code{"microarray.microRNA"} or \code{"methylation"}.}
 
 \item{cancerCode}{a logical value that tells the function to use cbioportal
 abbreviated cancer names instead of complete cancer names, if set to be
-'TRUE'. For example, 'laml_tcga_pub' is the abbreviated name for
-'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.}
+\code{TRUE}. For example, \code{"laml_tcga_pub"} is the abbreviated name for
+\code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}.}
 
 \item{validateGenes}{a logical value that, if set to be \code{TRUE}, function
 will check each cancer study to find whether or not each gene has a record.
@@ -38,13 +38,13 @@ name.}
 }
 \value{
 a BiocFileCach object that contains the obtained data without further
- processing. Name of the object is combination of `bfc_` and submissionName.
- Inside it, there is a section for the obtained data, which is stored as a
- list. At first level, this list is subdivided into diferent groups based on
- the list of genes that user has given the function, then each gene group
- itself contains one matrix for every cancer study. Additonally, if
- validateGenes = TRUE, another section that contains gene validation results
- will be created in the BiocFileCach object.
+ processing. Name of the object is combination of \code{bfc_} and
+ \code{submissionName}. Inside it, there is a section for the obtained data,
+ which is stored as a list. At first level, this list is subdivided into
+ diferent groups based on the list of genes that user has given the function,
+  then each gene group itself contains one matrix for every cancer study.
+  Additonally, if \code{validateGenes = TRUE}, another section that contains
+  gene validation results will be created in the BiocFileCach object.
 }
 \description{
 This function Obtains the requested data for the given genes
@@ -55,8 +55,8 @@ included in cancer studies and, if not, looks for the alternative gene names.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.0.0 \cr
-Date: \tab 2017-09-26 \cr
+Version: \tab 1.1.1 \cr
+Date: \tab 2017-11-11 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

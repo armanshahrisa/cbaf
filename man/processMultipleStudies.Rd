@@ -8,7 +8,8 @@ processMultipleStudies(genesList, submissionName, studiesNames,
   desiredTechnique, cancerCode = FALSE, validateGenes = TRUE, calculate =
   c("frequencyPercentage", "frequencyRatio", "meanValue"), cutoff=NULL,
   round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none",
-  resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
+  rankingMethod = "variation", heatmapFileFormat = "TIFF", resolution = 600,
+  RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
   angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
   transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
   genesToDrop = NULL)
@@ -22,58 +23,60 @@ used for naming the process.}
 \item{studiesNames}{a character vector or a matrix that containes desired
 cancer names. The character vector containes standard names of cancer studies
  that can be found on cbioportal.org, such as
- 'Acute Myeloid Leukemia (TCGA, NEJM 2013)'. Alternatively, a matrix can be
- used if users prefer user-defined cancer names. In this case, the first
- column of matrix comprises the standard cancer names while the second column
-  must contain the desired cancer names.}
+ \code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}. Alternatively, a matrix
+ can be used if users prefer user-defined cancer names. In this case, the
+ first column of matrix comprises the standard cancer names while the second
+ column must contain the desired cancer names.}
 
 \item{desiredTechnique}{a character string that is one of the following
-techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA',
-'microarray.microRNA' or 'methylation'.}
+techniques: \code{"RNA-seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
+, \code{"microarray.microRNA"} or \code{"methylation"}.}
 
 \item{cancerCode}{a logical value that tells the function to use cbioportal
 abbreviated cancer names instead of complete cancer names, if set to be
-'TRUE'. For example, 'laml_tcga_pub' is the abbreviated name for
-'Acute Myeloid Leukemia (TCGA, NEJM 2013)'.}
+\code{"TRUE"}. For example, \code{"laml_tcga_pub"} is the abbreviated name
+for \code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}.}
 
-\item{validateGenes}{a logical value that, if set to be 'TRUE', causes the
-function to check each cancer study to find whether or not each gene has a
-record. If a cancer doesn't have a record for specific gene, function looks
-for alternative gene names that cbioportal might use instead of the given
-gene name.}
+\item{validateGenes}{a logical value that, if set to be \code{TRUE}, causes
+the function to check each cancer study to find whether or not each gene has
+a record. If a cancer doesn't have a record for specific gene, function
+looks for alternative gene names that cbioportal might use instead of the
+given gene name.}
 
 \item{calculate}{a character vector that containes the statistical procedures
- users prefer the function to compute. The complete input is
-\code{c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")}
- . This will tell the function to compute the following:
-'frequencyPercentage', which is the percentge of samples having the value
-greather than specific cutoff divided by the total sample size for every
-study / study subgroup;
-'frequency ratio', which shows the number of selected samples divided by the
-total number of samples that give the frequency percentage for every study /
-study subgroup. It shows the selected and total sample sizes.;
-'Mean Value', that contains mean value of selected samples for each study;
-'Median Value', which shows the median value of selected samples for each
-study.
+users prefer the function to compute. The complete results can be obtained
+by \code{c("frequencyPercentage", "frequencyRatio", "meanValue",
+"medianValue")}. This will tell the function to compute the following:
+\code{"frequencyPercentage"}, which is the percentge of samples having the
+value greather than specific cutoff divided by the total sample size for
+every study / study subgroup;
+\code{"frequency ratio"}, which shows the number of selected samples divided
+by the total number of samples that give the frequency percentage for every
+study / study subgroup. It shows the selected and total sample sizes.;
+\code{"Mean Value"}, that contains mean value of selected samples for each
+study;
+\code{"Median Value"}, which shows the median value of selected samples for
+each study.
 The default input is \code{calculate = c("frequencyPercentage",
 "frequencyRatio", "meanValue")}.}
 
 \item{cutoff}{a number used to limit samples to those that are greather than
-specific number (cutoff). The default value for methylation data is 0.6 while
- gene expression studies use default value of 2. For methylation studies, it
- is \code{observed/expected ratio}, for the rest, it is 'z-score'. To change
- the cutoff to any desired number, change the option to
- \code{cutoff = desiredNumber}, in which desiredNumber is the number of
- interest.}
+this number (cutoff). The default value for methylation data is \code{0.6}
+while gene expression studies use default value of \code{2}. For methylation
+studies, it is \code{observed/expected ratio}, for the rest, it is
+\code{"z-score"}. To change the cutoff to any desired number, change the
+option to \code{cutoff = desiredNumber} in which desiredNumber is the number
+of interest.}
 
-\item{round}{a logical value that, if set to be TRUE, will force the function
-to round all the calculated values to two decimal places. The default value
-is TRUE.}
+\item{round}{a logical value that, if set to be \code{TRUE}, will force the
+function to round all the calculated values to two decimal places. The
+default value is \code{TRUE}.}
 
-\item{topGenes}{a logical value that, if set as TRUE, causes the function to
-create three data.frame that contain the five top genes for each cancer. To
-get all the three data.frames, "frequencyPercentage", "meanValue" and
-"medianValue" must have been included for \code{calculate}.}
+\item{topGenes}{a logical value that, if set as \code{TRUE}, causes the
+function to create three dataframes that contain the five top genes for each
+cancer. To get all the three data.frames, \code{"frequencyPercentage"},
+\code{"meanValue"} and \code{"medianValue"} must have been included for
+\code{calculate}.}
 
 \item{shortenStudyNames}{a logical vector. If the value is set as TRUE,
 function will try to remove the last part of the cancer names aiming to
@@ -86,6 +89,17 @@ heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes
  showing the most variation across multiple study / study subgroups. The
  default value is \code{none}.}
 
+\item{rankingMethod}{a character value that determines how genes will be
+ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
+unique values in one or few cancer studies while \code{"highValue"} ranks the
+ genes when they cotain high values in multiple / many cancer studies. This
+ option is useful when number of genes are too much so that user has to limit
+ the number of genes on heatmap by \code{genelimit}.}
+
+\item{heatmapFileFormat}{This option enables the user to select the desired
+image file format of the heatmaps. The default value is \code{"TIFF"}. Other
+suppoeted formats include \code{"BMP"}, \code{"JPG"}, and \code{"PNG"}.}
+
 \item{resolution}{a number. This option can be used to adjust the resolution
 of the output heatmaps as 'dot per inch'.
 The defalut value is 600.}
@@ -95,8 +109,7 @@ The defalut value is 600.}
 \item{ColCex}{a number that specifies letter size in heatmap column names.}
 
 \item{heatmapMargines}{a numeric vector that is used to set heatmap margins.
-The default value is
-\code{heatmapMargines=c(15,07)}.}
+The default value is \code{heatmapMargines=c(15,07)}.}
 
 \item{angleForYaxisNames}{a number that determines the angle with which the
 studies/study subgroups names are shown in heatmaps.
@@ -116,7 +129,7 @@ columns and vice versa.}
 \item{simplify}{a logical value that tells the function whether or not to
 change values under \code{simplifiction.cuttoff} to zero. The purpose behind
 this option is to facilitate seeing candidate genes. Therefore, it is not
-suited for publications. Default value is 'FALSE'.}
+suited for publications. Default value is \code{'FALSE'}.}
 
 \item{simplifictionCuttoff}{a logical value that, if
 \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff for
@@ -127,13 +140,15 @@ omitted from heatmap.}
 }
 \value{
 a BiocFileCache object that containes some or all of the following
-groups, based on what user has chosen: obtainedData, validationResults,
-frequencyPercentage, Top.Genes.of.Frequency.Percentage, frequencyRatio,
-meanValue, Top.Genes.of.Mean.Value, medianValue, Top.Genes.of.Median.Value.
- It also saves these results in one excel files for convenience. Based on
- preference, three heatmaps for frequency percentage, mean value and median
- can be generated. If more than one group of genes is entered, output for
- each group will be strored in a separate sub-directory.
+groups, based on what user has chosen: \code{obtainedData},
+\code{validationResults}, \code{frequencyPercentage},
+\code{Top.Genes.of.Frequency.Percentage}, \code{frequencyRatio},
+\code{meanValue}, \code{Top.Genes.of.Mean.Value}, \code{medianValue},
+\code{Top.Genes.of.Median.Value}. It also saves these results in one excel
+files for convenience. Based on preference, three heatmaps for frequency
+percentage, mean value and median can be generated. If more than one group of
+ genes is entered, output for each group will be strored in a separate
+ sub-directory.
 }
 \description{
 This function Obtains the requested data for the given genes
@@ -148,8 +163,8 @@ highest values in each cancer study.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.0.0 \cr
-Date: \tab 2017-09-26 \cr
+Version: \tab 1.1.1 \cr
+Date: \tab 2017-11-11 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

@@ -1,3 +1,16 @@
+cbaf 1.1.1 - 2017-11-11
+-------------------------
+
+New Features
+
+- New image formats TIFF, JPG and BMP in addition to the previous PNG file
+  format for storing heatmaps. They can be chosen from processOneStudy() and
+  processMultipleStudies or directly from heatmapOutput() function.
+
+
+
+
+
 cbaf 1.0.0 - 2017-09-10
 -------------------------
 

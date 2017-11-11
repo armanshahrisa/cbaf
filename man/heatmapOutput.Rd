@@ -5,10 +5,11 @@
 \title{Generate heatmaps for various studies/subgroups of a study.}
 \usage{
 heatmapOutput(submissionName, shortenStudyNames = TRUE,
-  genelimit = "none", resolution = 600, RowCex = 0.8, ColCex = 0.8,
-  heatmapMargines = c(15,07), angleForYaxisNames = 45, heatmapColor = "RdBu",
-  reverseColor = TRUE, transposedHeatmap = FALSE, simplify = FALSE,
-  simplifictionCuttoff = FALSE, genesToDrop = NULL)
+  genelimit = "none", rankingMethod = "variation", heatmapFileFormat = "TIFF"
+  , resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
+  angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
+  transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
+  genesToDrop = NULL)
 }
 \arguments{
 \item{submissionName}{a character string containing name of interest. It is
@@ -24,6 +25,17 @@ this option can be used to limit the number of genes that are shown on
 heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes
 that show the most variation across multiple study / study subgroups. The
 default value is \code{none}.}
+
+\item{rankingMethod}{a character value that determines how genes will be
+ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
+unique values in one or few cancer studies while \code{"highValue"} ranks the
+ genes when they cotain high values in multiple / many cancer studies. This
+ option is useful when number of genes are too much so that user has to limit
+ the number of genes on heatmap by \code{genelimit}.}
+
+\item{heatmapFileFormat}{This option enables the user to select the desired
+image file format of the heatmaps. The default value is \code{"TIFF"}. Other
+suppoeted formats include \code{"PNG"}, \code{"BMP"}, and \code{"JPG"}.}
 
 \item{resolution}{a number. This option can be used to adjust the resolution
 of the output heatmaps as 'dot per inch'. The defalut value is 600.}
@@ -63,10 +75,10 @@ suited for publications.}
 omitted from heatmap.}
 }
 \value{
-Based on preference, three heatmaps for "Frequency.Percentage",
-"Mean.Value" and "Median.value" can be generated. If more than one group of
-genes are entered, output for each group will be strored in a separate
-sub-directory.
+Based on preference, three heatmaps for \code{"Frequency.Percentage"}
+, \code{"Mean.Value"} and \code{"Median.value"} can be generated. If more
+than one group of genes are entered, output for each group will be strored in
+ a separate sub-directory.
 }
 \description{
 This function can prepare heatmap for 'frequency percentage',
@@ -77,8 +89,8 @@ automatedStatistics() function.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.0.0 \cr
-Date: \tab 2017-09-26 \cr
+Version: \tab 1.1.1 \cr
+Date: \tab 2017-11-11 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
