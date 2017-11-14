@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.1.1 \cr
-#' Date: \tab 2017-11-11 \cr
+#' Version: \tab 1.1.2 \cr
+#' Date: \tab 2017-11-14 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -35,11 +35,10 @@
 #'
 #'
 #' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE,
-#'   genelimit = "none", rankingMethod = "variation", heatmapFileFormat = "TIFF"
+#'   geneLimit = FALSE, rankingMethod = "variation", heatmapFileFormat = "TIFF"
 #'   , resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
-#'   angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
-#'   transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
-#'   genesToDrop = NULL)
+#'   angleColumnLabels = 45, heatmapColor = "RdBu", reverseColor = TRUE,
+#'   transposedHeatmap = FALSE, simplifyBy = FALSE, genesToDrop = FALSE)
 #'
 #'
 #'
@@ -51,18 +50,18 @@
 #' shorten them. The removed segment usually contains the name of scientific
 #' group that has conducted the experiment.
 #'
-#' @param genelimit if large number of genes exist in at least one gene group,
+#' @param geneLimit if large number of genes exist in at least one gene group,
 #' this option can be used to limit the number of genes that are shown on
-#' heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes
+#' heatmap. For instance, \code{geneLimit=50} will limit the heatmap to 50 genes
 #' that show the most variation across multiple study / study subgroups. The
-#' default value is \code{none}.
+#' default value is \code{FALSE}.
 #'
 #' @param rankingMethod a character value that determines how genes will be
 #' ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
 #' unique values in one or few cancer studies while \code{"highValue"} ranks the
 #'  genes when they cotain high values in multiple / many cancer studies. This
 #'  option is useful when number of genes are too much so that user has to limit
-#'  the number of genes on heatmap by \code{genelimit}.
+#'  the number of genes on heatmap by \code{geneLimit}.
 #'
 #' @param heatmapFileFormat This option enables the user to select the desired
 #' image file format of the heatmaps. The default value is \code{"TIFF"}. Other
@@ -78,14 +77,14 @@
 #' @param heatmapMargines a numeric vector that is used to set heatmap margins.
 #' The default value is \code{heatmapMargines=c(15,07)}.
 #'
-#' @param angleForYaxisNames a number that determines the angle with which the
+#' @param angleColumnLabels a number that determines the angle with which the
 #' studies/study subgroups names are shown in heatmaps. The default value is 45
 #' degree.
 #'
 #' @param heatmapColor a character string that defines heatmap color. The
-#' default value is "RdBu". "redgreen" is also a popular color in genomic
-#' studies. To see the rest of colors, please type \code{library(RColorBrewer)}
-#' and then \code{display.brewer.all()}.
+#' default value is \code{'RdBu'}. \code{'RdGr'} is also a popular color in
+#' genomic studies. To see the rest of colors, please type
+#' \code{library(RColorBrewer)} and then \code{display.brewer.all()}.
 #'
 #' @param reverseColor a logical value that reverses the color gradiant for
 #' heatmap(s).
@@ -93,17 +92,13 @@
 #' @param transposedHeatmap a logical value that transposes heatmap rows to
 #' columns and vice versa.
 #'
-#' @param simplify a logical value that tells the function whether or not to
-#' change values under \code{simplifictionCuttoff} to zero. The purpose behind
-#' this option is to facilitate seeing candidate genes. Therefore, it is not
-#' suited for publications.
-#'
-#' @param simplifictionCuttoff a logical value that, if
-#' \code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff for
-#' \code{simplify.visulization}. It has the same unit as \code{cutoff}.
+#' @param simplifyBy a number that tells the function to change the values
+#' smaller than that to zero. The purpose behind this option is to facilitate
+#' recognizing candidate genes. Therefore, it is not suited for publications. It
+#' has the same unit as \code{cutoff}.
 #'
 #' @param genesToDrop a character vector. Gene names within this vector will be
-#' omitted from heatmap.
+#' omitted from heatmap.The default value is \code{FALSE}.
 #'
 #'
 #'
@@ -120,7 +115,7 @@
 #'  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 #'
 #' obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-#' "RNA-seq", desiredCaseList = c(3,4))
+#' "RNA-Seq", desiredCaseList = c(3,4))
 #'
 #' automatedStatistics("test", obtainedDataType = "single study", calculate =
 #' c("frequencyPercentage", "frequencyRatio"))
@@ -132,7 +127,7 @@
 #'
 #' @author Arman Shahrisa, \email{shahrisa.arman@hotmail.com} [maintainer,
 #' copyright holder]
-#' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}s
+#' @author Maryam Tahmasebi Birgani, \email{tahmasebi-ma@ajums.ac.ir}
 #'
 #' @export
 
@@ -150,7 +145,7 @@ heatmapOutput <- function(
 
   shortenStudyNames = TRUE,
 
-  genelimit = "none",
+  geneLimit = FALSE,
 
   rankingMethod = "variation",
 
@@ -164,7 +159,7 @@ heatmapOutput <- function(
 
   heatmapMargines = c(15,07),
 
-  angleForYaxisNames = 45,
+  angleColumnLabels = 45,
 
   heatmapColor = "RdBu",
 
@@ -172,11 +167,9 @@ heatmapOutput <- function(
 
   transposedHeatmap = FALSE,
 
-  simplify = FALSE,
+  simplifyBy = FALSE,
 
-  simplifictionCuttoff = FALSE,
-
-  genesToDrop = NULL
+  genesToDrop = FALSE
 
   ){
 
@@ -185,9 +178,47 @@ heatmapOutput <- function(
 
   # Check submissionName
 
-  if(!is.character(submissionName)){
+  if(exists("submissionName")){
+
+    if(!is.character(submissionName)){
+
+      stop("'submissionName' must be entered as a character string for naming the process")
+
+    }
+
+  } else{
 
     stop("'submissionName' must be entered as a character string for naming the process")
+
+  }
+
+
+
+  # Check shortenStudyNames
+
+  if(!is.logical(shortenStudyNames)){
+
+    stop("'shortenStudyNames' can only accept logical values: TRUE or FALSE .")
+
+  }
+
+
+
+  # Check simplifyBy
+
+  if(!geneLimit == FALSE & !is.numeric(geneLimit)){
+
+    stop("'geneLimit' specifies the maximum number of genes on the heatmap(s). If you don't want any restrictions please type FALSE.")
+
+  }
+
+
+
+  # Check rankingMethod
+
+  if(!rankingMethod %in% c("variation", "highValue")){
+
+    stop("'rankingMethod' is one of the two supported method: 'variation' or 'highValue'")
 
   }
 
@@ -200,6 +231,126 @@ heatmapOutput <- function(
     stop("'heatmapFileFormat' must be one of the supported image formats: 'TIFF', 'PNG', 'JPG', or 'BMP'")
 
   }
+
+
+
+  # Check resolution
+
+  if(!is.numeric(resolution)){
+
+    stop("'resolution' must be a number!")
+
+  }
+
+
+
+  # Check RowCex
+
+  if(!is.numeric(RowCex) | ! RowCex >= 0 & RowCex <= 1){
+
+    stop("'RowCex' must be a number between 0 and 1.")
+
+  }
+
+
+
+  # Check ColCex
+
+  if(!is.numeric(ColCex) | ! ColCex >= 0 & ColCex <= 1){
+
+    stop("'ColCex' must be a number between 0 and 1.")
+
+  }
+
+
+
+  # Check heatmapMargines
+
+  if(!is.numeric(heatmapMargines) | ! length(heatmapMargines) == 2){
+
+    stop("'heatmapMargines' must be a numerical vector containing two numbers")
+
+  }
+
+
+
+  # Check angleColumnLabels
+
+  if(!is.numeric(angleColumnLabels) &
+
+     ! angleColumnLabels >= 0 & angleColumnLabels <= 360){
+
+    stop("'angleColumnLabels' must be a number corresponding to an angle from 0 to 360.")
+
+  }
+
+
+
+  # Check heatmapColor
+
+  if(!heatmapColor %in% c("RdGr", "YlOrRd", "YlOrBl", "YlGnBu", "YlGn", "Reds",
+
+                          "RdPu", "Purples", "PuRd", "PuBuGn", "PuBU", "OrRd",
+
+                          "Oranges", "Greys", "Greens", "GnBu", "BuPu", "BuGn",
+
+                          "Blues", "Set3", "Set2", "Set1", "Pastel2", "Pastel1",
+
+                          "Paired", "Dark2", "Accent", "Spectral", "RdYlGn",
+
+                          "RdYlBu", "RdGy", "RdBu", "PuOr", "PRGn", "PiYG",
+
+                          "BrBG")){
+
+    stop("The entered 'heatmapColor' is not supported.")
+
+  }
+
+
+
+  # Check reverseColor
+
+  if(!is.logical(reverseColor)){
+
+    stop("'reverseColor' can only accept logical values: TRUE or FALSE .")
+
+  }
+
+
+
+  # Check transposedHeatmap
+
+  if(!is.logical(transposedHeatmap)){
+
+    stop("'transposedHeatmap' can only accept logical values: TRUE or FALSE .")
+
+  }
+
+
+
+  # Check transposedHeatmap
+
+  # The FALSE argument is not removable, unfortunately.
+
+  if(!simplifyBy == FALSE & !is.numeric(simplifyBy)){
+
+    stop("'simplify' must be set as FALSE or a be a numeric value.")
+
+  }
+
+
+
+  # Check genesToDrop
+
+  # The FALSE argument is not removable, unfortunately.
+
+  if(!genesToDrop == FALSE & !is.character(genesToDrop)){
+
+    stop("'genesToDrop' must be a character vector containing desired gene names that will be omitted from the heatmap(s).")
+
+  }
+
+
 
 
 
@@ -277,7 +428,7 @@ heatmapOutput <- function(
 
   newParameters$shortenStudyNames <- shortenStudyNames
 
-  newParameters$genelimit <- genelimit
+  newParameters$geneLimit <- geneLimit
 
   newParameters$resolution <- resolution
 
@@ -287,7 +438,7 @@ heatmapOutput <- function(
 
   newParameters$heatmapMargines <- heatmapMargines
 
-  newParameters$angleForYaxisNames <- angleForYaxisNames
+  newParameters$angleColumnLabels <- angleColumnLabels
 
   newParameters$heatmapColor <- heatmapColor
 
@@ -295,9 +446,7 @@ heatmapOutput <- function(
 
   newParameters$transposedHeatmap <- transposedHeatmap
 
-  newParameters$simplify <- simplify
-
-  newParameters$simplifictionCuttoff <- simplifictionCuttoff
+  newParameters$simplifyBy <- simplifyBy
 
   newParameters$genesToDrop <- genesToDrop
 
@@ -381,7 +530,7 @@ heatmapOutput <- function(
 
   message("***", " Preparing the requested heatmaps for ", submissionName, " ***")
 
-  if(simplify & is.numeric(simplifictionCuttoff) & !is.numeric(genelimit)){
+  if(is.numeric(simplifyBy)){
 
     warning("--- Only significant results will be used to draw heatmaps ---")
 
@@ -462,11 +611,11 @@ heatmapOutput <- function(
 
       # Remove desired genes
 
-      if(!is.null(genesToDrop)){
+      if(!is.logical(genesToDrop)){
 
         if(!is.character(genesToDrop)){
 
-          stop("Please enter the desired genes to drop as a character vector.")
+          stop("Please enter the desired genes as a character vector to omit them from the heatmap.")
 
         } else{
 
@@ -588,62 +737,42 @@ heatmapOutput <- function(
 
 
 
-            # !!! Simplifying heatmap for easy assessment !!!
-
-            if(simplify &
-
-               is.numeric(simplifictionCuttoff) &
-
-               !is.numeric(genelimit)){
-
-              heatmap.data[heatmap.data < simplifictionCuttoff] <- 0
-
-            } else if(simplify &
-
-                      !is.numeric(simplifictionCuttoff)){
-
-              stop("Please set your desired cutoff for simplification in 'simplifictionCuttoff'")
-
-            } else if(simplify &
-
-                      is.numeric(simplifictionCuttoff) &
-
-                      is.numeric(genelimit)){
-
-              warning("There is no need to limit gene number because simplification option possibly limits the gene number even below the specified number")
-
-            }
-
-
-
-
             # Limiting the number of genes in heatmap to get better resolution
 
-            if(genelimit=="none" | genelimit > ncol(heatmap.data)){
+            if(geneLimit==FALSE | geneLimit > ncol(heatmap.data)){
 
               heatmap.data <- heatmap.data
 
-            } else if(is.numeric(genelimit) & genelimit <= ncol(heatmap.data) &
+            } else if(is.numeric(geneLimit) & geneLimit <= ncol(heatmap.data) &
 
                       rankingMethod == "variation"){
 
               ordering <- order(abs(rowVars(heatmap.data)), decreasing=TRUE)
 
-              heatmap.data <- heatmap.data[ordering[seq_len(genelimit)],]
+              heatmap.data <- heatmap.data[ordering[seq_len(geneLimit)],]
 
-            } else if(is.numeric(genelimit) & genelimit <= ncol(heatmap.data) &
+            } else if(is.numeric(geneLimit) & geneLimit <= ncol(heatmap.data) &
 
                       rankingMethod == "highValue"){
 
               ordering <- order(abs(rowSums(heatmap.data)), decreasing=TRUE)
 
-              heatmap.data <- heatmap.data[ordering[seq_len(genelimit)],]
+              heatmap.data <- heatmap.data[ordering[seq_len(geneLimit)],]
 
             } else{
 
               stop("Please type gene number limit or if whole genes are desired please type none")
+
             }
 
+
+
+
+            if(is.numeric(simplifyBy)){
+
+              heatmap.data[heatmap.data < simplifyBy] <- 0
+
+            }
 
 
 
@@ -652,7 +781,7 @@ heatmapOutput <- function(
 
             if(reverseColor){
 
-              if(heatmapColor == "redgreen"){
+              if(heatmapColor == "RdGr"){
 
                 hmcol <- rev(redgreen(75))
 
@@ -665,7 +794,7 @@ heatmapOutput <- function(
 
             } else if (!reverseColor){
 
-              if(heatmapColor == "redgreen"){
+              if(heatmapColor == "RdGr"){
 
                 hmcol <- redgreen(75)
 
@@ -780,7 +909,7 @@ heatmapOutput <- function(
 
                 margins = heatmapMargines,
 
-                srtCol = angleForYaxisNames
+                srtCol = angleColumnLabels
 
                 )
 
@@ -806,7 +935,7 @@ heatmapOutput <- function(
 
                 margins = heatmapMargines,
 
-                srtCol = angleForYaxisNames)
+                srtCol = angleColumnLabels)
 
             }
 

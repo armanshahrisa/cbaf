@@ -8,12 +8,11 @@
 processOneStudy(genesList, submissionName, studyName, desiredTechnique
   , desiredCaseList = FALSE, validateGenes = TRUE, calculate =
   c("frequencyPercentage", "frequencyRatio", "meanValue"), cutoff=NULL,
-  round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, genelimit = "none",
+  round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, geneLimit = FALSE,
   rankingMethod = "variation", heatmapFileFormat = "TIFF", resolution = 600,
   RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
-  angleForYaxisNames = 45, heatmapColor = "RdBu", reverseColor = TRUE,
-  transposedHeatmap = FALSE, simplify = FALSE, simplifictionCuttoff = FALSE,
-  genesToDrop = NULL)
+  angleColumnLabels = 45, heatmapColor = "RdBu", reverseColor = TRUE,
+  transposedHeatmap = FALSE, simplifyBy = FALSE, genesToDrop = FALSE)
 }
 \arguments{
 \item{genesList}{a list that contains at least one gene group}
@@ -26,7 +25,7 @@ standard cancer study name that can be found on cbioportal.org, such as
 \code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}.}
 
 \item{desiredTechnique}{a character string that is one of the following
-techniques: \code{"RNA-seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
+techniques: \code{"RNA-Seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
 , \code{"microarray.microRNA"} or \code{"methylation"}.}
 
 \item{desiredCaseList}{a numeric vector that contains the index of desired
@@ -81,9 +80,9 @@ cancer. To get all the three dataframes, \code{"frequencyPercentage"},
 aiming to shorten them. The removed segment usually contains the name of
 scientific group that has conducted the experiment.}
 
-\item{genelimit}{if large number of genes exist in at least one gene group,
+\item{geneLimit}{if large number of genes exist in at least one gene group,
 this option can be used to limit the number of genes that are shown on
-heatmap. For instance, \code{genelimit=50} will limit the heatmap to 50 genes
+heatmap. For instance, \code{geneLimit=50} will limit the heatmap to 50 genes
  showing the most variation across multiple study / study subgroups. The
  default value is \code{none}.}
 
@@ -92,7 +91,7 @@ ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
 unique values in one or few cancer studies while \code{"highValue"} ranks the
  genes when they cotain high values in multiple / many cancer studies. This
  option is useful when number of genes are too much so that user has to limit
- the number of genes on heatmap by \code{genelimit}.}
+ the number of genes on heatmap by \code{geneLimit}.}
 
 \item{heatmapFileFormat}{This option enables the user to select the desired
 image file format of the heatmaps. The default value is \code{"TIFF"}. Other
@@ -108,14 +107,14 @@ of the output heatmaps as 'dot per inch'. The defalut value is 600.}
 \item{heatmapMargines}{a numeric vector that is used to set heatmap margins.
 The default value is \code{heatmapMargines=c(15,07)}.}
 
-\item{angleForYaxisNames}{a number that determines the angle with which the
+\item{angleColumnLabels}{a number that determines the angle with which the
 studies/study subgroups names are shown in heatmaps. The default value is
 \code{"45"} degree.}
 
 \item{heatmapColor}{a character string that defines heatmap color. The
-default value is "RdBu". "redgreen" is also a popular color in genomic
-studies. To see the rest of colors, please type \code{library(RColorBrewer)}
-and then \code{display.brewer.all()}.}
+default value is \code{'RdBu'}. \code{'RdGr'} is also a popular color in
+genomic studies. To see the rest of colors, please type
+\code{library(RColorBrewer)} and then \code{display.brewer.all()}.}
 
 \item{reverseColor}{a logical value that reverses the color gradiant for
 heatmap(s).}
@@ -123,17 +122,13 @@ heatmap(s).}
 \item{transposedHeatmap}{a logical value that transposes heatmap rows to
 columns and vice versa.}
 
-\item{simplify}{a logical value that tells the function whether or not to
-change values under \code{simplifiction.cuttoff} to zero. The purpose behind
-this option is to facilitate seeing candidate genes. Therefore, it is not
-suited for publications. Default value is \code{"FALSE"}.}
-
-\item{simplifictionCuttoff}{a logical value that, if
-\code{simplify.visulization = TRUE}, needs to be set as a desired cuttoff for
- \code{simplify.visulization}. It has the same unit as \code{cutoff}.}
+\item{simplifyBy}{a number that tells the function to change the values
+smaller than that to zero. The purpose behind this option is to facilitate
+recognizing candidate genes. Therefore, it is not suited for publications. It
+has the same unit as \code{cutoff}.}
 
 \item{genesToDrop}{a character vector. Gene names within this vector will be
-omitted from heatmap.}
+omitted from heatmap.The default value is \code{FALSE}.}
 }
 \value{
 a BiocFileCache object that containes some or all of the following
@@ -160,8 +155,8 @@ ratio, mean value and median value of samples greather than specific value in
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.1.1 \cr
-Date: \tab 2017-11-11 \cr
+Version: \tab 1.1.2 \cr
+Date: \tab 2017-11-14 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
@@ -171,7 +166,7 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
 processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-"RNA-seq", desiredCaseList = c(2,3,4,5), calculate = c("frequencyPercentage",
+"RNA-Seq", desiredCaseList = c(2,3,4,5), calculate = c("frequencyPercentage",
 "frequencyRatio"), heatmapMargines = c(16, 10), RowCex = 1, ColCex = 1)
 
 }

@@ -12,8 +12,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.1.1 \cr
-#' Date: \tab 2017-11-11 \cr
+#' Version: \tab 1.1.2 \cr
+#' Date: \tab 2017-11-14 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -100,7 +100,7 @@
 #'  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 #'
 #' obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-#' "RNA-seq", desiredCaseList = c(3,4))
+#' "RNA-Seq", desiredCaseList = c(3,4))
 #'
 #' automatedStatistics("test", obtainedDataType = "single study", calculate =
 #' c("frequencyPercentage", "frequencyRatio"))
@@ -131,12 +131,22 @@ automatedStatistics<- function(
 
   cutoff = NULL,
 
-  round=TRUE
+  round = TRUE
 
   ){
 
   ##############################################################################
   ########## Prerequisites
+
+  # Check submissionName
+
+  if(!is.character(submissionName)){
+
+    stop("'submissionName' must be entered as a character string for naming the process")
+
+  }
+
+
 
   # Obtain the unprocessed data list
 
@@ -164,18 +174,6 @@ automatedStatistics<- function(
 
 
 
-  # Check submissionName
-
-  if(!is.character(submissionName)){
-
-    stop("'submissionName' must be entered as a character string for naming the process")
-
-  }
-
-
-
-
-
   # Check calculate
 
   if(is.character(calculate)){
@@ -194,7 +192,43 @@ automatedStatistics<- function(
 
     }
 
+  }else{
+
+    stop("'calculate' must be a character string.")
+
   }
+
+
+
+  # Check topGenes
+
+  if(!is.logical(topGenes)){
+
+    stop("'topGenes' can only accept logical values: TRUE or FALSE .")
+
+  }
+
+
+
+  # Check cutoff
+
+  if(!is.null(cutoff) & !is.numeric(cutoff)){
+
+    stop("'cutoff' must be set as NULL or a be a numeric value.")
+
+  }
+
+
+
+  # Check round
+
+  if(!is.logical(round)){
+
+    stop("'round' can only accept logical values: TRUE or FALSE .")
+
+  }
+
+
 
 
 

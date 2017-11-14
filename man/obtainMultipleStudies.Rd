@@ -22,7 +22,7 @@ column of matrix comprises the standard cancer names while the second column
 must contain the desired cancer names.}
 
 \item{desiredTechnique}{a character string that is one of the following
-techniques: \code{"RNA-seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
+techniques: \code{"RNA-Seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
 , \code{"microarray.microRNA"} or \code{"methylation"}.}
 
 \item{cancerCode}{a logical value that tells the function to use cbioportal
@@ -55,8 +55,8 @@ included in cancer studies and, if not, looks for the alternative gene names.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.1.1 \cr
-Date: \tab 2017-11-11 \cr
+Version: \tab 1.1.2 \cr
+Date: \tab 2017-11-14 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
@@ -71,7 +71,7 @@ studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)",
 "Brain Lower Grade Glioma (TCGA, Provisional)",
 "Breast Invasive Carcinoma (TCGA, Provisional)")
 
-obtainMultipleStudies(genes, "test2", studies, "RNA-seq")
+obtainMultipleStudies(genes, "test2", studies, "RNA-Seq")
 
 }
 \author{

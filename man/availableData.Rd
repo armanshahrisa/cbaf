@@ -11,20 +11,20 @@ availableData(excelFileName)
 and, if requested, excel file.}
 }
 \value{
-A matrix that contains all cancer studies versus available data types
-. It is available as an excel file with the given name.
+An excel file that contains all the cancer studies versus available
+data types
 }
 \description{
 This function checks all the cancer studies that are registered
-in 'cbioportal.org' to examine whether or not they contain RNA-seq,
-microRNA-seq, microarray(mRNA), microarray(miRNA) and methylation data.
+in 'cbioportal.org' to examine whether or not they contain RNA-Seq,
+microRNA-Seq, microarray(mRNA), microarray(miRNA) and methylation data.
 }
 \details{
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.1.1 \cr
-Date: \tab 2017-11-11 \cr
+Version: \tab 1.1.2 \cr
+Date: \tab 2017-11-14 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

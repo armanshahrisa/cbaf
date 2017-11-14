@@ -24,8 +24,8 @@ obtainOneStudy()/obtainMultipleStudies() and automatedStatistics() functions.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.1.1 \cr
-Date: \tab 2017-11-11 \cr
+Version: \tab 1.1.2 \cr
+Date: \tab 2017-11-14 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
@@ -35,7 +35,7 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
 obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-"RNA-seq", desiredCaseList = c(3,4))
+"RNA-Seq", desiredCaseList = c(3,4))
 
 automatedStatistics("test", obtainedDataType = "single study", calculate =
 c("frequencyPercentage", "frequencyRatio"))

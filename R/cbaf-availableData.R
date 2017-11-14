@@ -1,15 +1,15 @@
 #' @title Check which Data types are available for each cancer study.
 #'
 #' @description This function checks all the cancer studies that are registered
-#' in 'cbioportal.org' to examine whether or not they contain RNA-seq,
-#' microRNA-seq, microarray(mRNA), microarray(miRNA) and methylation data.
+#' in 'cbioportal.org' to examine whether or not they contain RNA-Seq,
+#' microRNA-Seq, microarray(mRNA), microarray(miRNA) and methylation data.
 #'
 #' @details
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.1.1 \cr
-#' Date: \tab 2017-11-11 \cr
+#' Version: \tab 1.1.2 \cr
+#' Date: \tab 2017-11-14 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -29,8 +29,8 @@
 #' and, if requested, excel file.
 #'
 #'
-#' @return A matrix that contains all cancer studies versus available data types
-#' . It is available as an excel file with the given name.
+#' @return An excel file that contains all the cancer studies versus available
+#' data types
 #'
 #'
 #'
@@ -103,7 +103,7 @@ availableData <- function(excelFileName){
 
     # Terms associated with different techniques
 
-    RNA_seq.terms <- c(
+    RNA_Seq.terms <- c(
 
       "Tumor Samples with mRNA data (RNA Seq V2)",
 
@@ -114,7 +114,7 @@ availableData <- function(excelFileName){
       "Tumors with mRNA data (RNA Seq)"
     )
 
-    microRNA_seq.terms <- "Tumors with microRNA data (microRNA-Seq)"
+    microRNA_Seq.terms <- "Tumors with microRNA data (microRNA-Seq)"
 
     microarray.for.mRNA.term <- c(
 
@@ -186,16 +186,16 @@ availableData <- function(excelFileName){
         description <- available.options[, "case_list_name"]
 
 
-        c(RNA.seq = as.character(
+        c(RNA.Seq = as.character(
 
-          any(RNA_seq.terms %in% description)
+          any(RNA_Seq.terms %in% description)
 
           ),
 
 
-          microRNA.seq = as.character(
+          microRNA.Seq = as.character(
 
-            any(microRNA_seq.terms %in% description)
+            any(microRNA_Seq.terms %in% description)
 
             ),
 
@@ -224,9 +224,9 @@ availableData <- function(excelFileName){
       } else{
 
 
-        c(RNA.seq = "FALSE",
+        c(RNA.Seq = "FALSE",
 
-          microRNA.seq = "FALSE",
+          microRNA.Seq = "FALSE",
 
           microarray_of_mRNA = "FALSE",
 
@@ -265,9 +265,9 @@ availableData <- function(excelFileName){
 
     colnames(combined.list) <-
 
-      c("cancer_study_id", "cancer_study_name", "RNA.seq", "microRNA.seq",
+      c("cancer_study_id", "cancer_study_name", "RNA.Seq", "microRNA.Seq",
 
-        "microarray_of_mRNA" , "microarray_of_microRNA", "methylation",
+        "microarray_of_mRNAs" , "microarray_of_microRNAs", "methylation",
 
         "description")
 

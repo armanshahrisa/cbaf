@@ -1,11 +1,20 @@
-cbaf 1.1.1 - 2017-11-11
+cbaf 1.1.2 - 2017-11-14
 -------------------------
 
 New Features
 
 - New image formats TIFF, JPG and BMP in addition to the previous PNG file
-  format for storing heatmaps. They can be chosen from processOneStudy() and
+  format for heatmapOutput(). They can be chosen from processOneStudy() and
   processMultipleStudies or directly from heatmapOutput() function.
+
+- heatmapOutput() now uses two methods for ranking the genes prior to generating
+  heatmap(s). One of them is suited for finding genes that have unique high
+  values in one or few cancer studies whereas the other method aids in
+  detemining genes that possess high values in multiple / many cancers.
+
+- If function argumnets are entered wrongly, more meaningful errors will appear.
+
+- All the functions are improved.
 
 
 

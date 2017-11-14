@@ -18,7 +18,7 @@ standard cancer study name that can be found on cbioportal.org, such as
 \code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}.}
 
 \item{desiredTechnique}{a character string that is one of the following
-techniques: \code{"RNA-seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
+techniques: \code{"RNA-Seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
 , \code{"microarray.microRNA"} or \code{"methylation"}.}
 
 \item{desiredCaseList}{a numeric vector that contains the index of desired
@@ -53,8 +53,8 @@ alternative gene names.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.1.1 \cr
-Date: \tab 2017-11-11 \cr
+Version: \tab 1.1.2 \cr
+Date: \tab 2017-11-14 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
@@ -64,7 +64,7 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A",
  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
 obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-"RNA-seq", desiredCaseList = c(2,3,4,5))
+"RNA-Seq", desiredCaseList = c(2,3,4,5))
 
 
 

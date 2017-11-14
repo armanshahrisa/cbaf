@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.1.1 \cr
-#' Date: \tab 2017-11-11 \cr
+#' Version: \tab 1.1.2 \cr
+#' Date: \tab 2017-11-14 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -39,7 +39,7 @@
 #'  \code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}.
 #'
 #' @param desiredTechnique a character string that is one of the following
-#' techniques: \code{"RNA-seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
+#' techniques: \code{"RNA-Seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
 #' , \code{"microarray.microRNA"} or \code{"methylation"}.
 #'
 #' @param desiredCaseList a numeric vector that contains the index of desired
@@ -73,7 +73,7 @@
 #'  "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 #'
 #' obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
-#' "RNA-seq", desiredCaseList = c(2,3,4,5))
+#' "RNA-Seq", desiredCaseList = c(2,3,4,5))
 #'
 #'
 #'
@@ -144,9 +144,9 @@ obtainOneStudy <- function(
 
   if(is.character(desiredTechnique)){
 
-    supported.techniques <- c("RNA-seq",
+    supported.techniques <- c("RNA-Seq",
 
-                              "microRNA-seq",
+                              "microRNA-Seq",
 
                               "Microarray.mRNA",
 
@@ -158,7 +158,61 @@ obtainOneStudy <- function(
 
        length(desiredTechnique)!= 1){
 
-      stop("'desiredTechnique' must contain one of the following techniques: 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA' or 'methylation'")
+      stop("'desiredTechnique' must contain one of the following techniques: 'RNA-Seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA' or 'methylation'")
+
+    }else if(desiredTechnique %in% supported.techniques |
+
+             length(desiredTechnique)== 1){
+
+      if(desiredTechnique == "RNA-Seq"){
+
+        L2.characteristics <-
+
+          c("mRNA Expression z-Scores (RNA Seq V2 RSEM)",
+
+            "mRNA Expression z-Scores (RNA Seq RPKM)")
+
+      } else if(desiredTechnique == "microRNA-Seq"){
+
+        L2.characteristics <-
+
+          c("microRNA expression Z-scores")
+
+      } else if(desiredTechnique == "microarray.mRNA"){
+
+        L2.characteristics <-
+
+          c("mRNA Expression z-Scores (microarray)",
+
+            "mRNA Expression z-Scores (U133 microarray only)",
+
+            "mRNA expression z-scores (Illumina)",
+
+            "mRNA expression Z-scores (all genes)",
+
+            "mRNA Expression Z-Scores vs Normals",
+
+            "mRNA Expression z-Scores (combined microarray)")
+
+      } else if(desiredTechnique == "microarray.microRNA"){
+
+        L2.characteristics <-
+
+          c("mRNA Expression Z-Scores vs Normals",
+
+            "mRNA Expression z-Scores (combined microarray)")
+
+      } else if(desiredTechnique == "methylation"){
+
+        L2.characteristics <-
+
+          c("Methylation (HM450)",
+
+            "Methylation (HM27)",
+
+            "Methylation")
+
+      }
 
     }
 
@@ -170,50 +224,29 @@ obtainOneStudy <- function(
 
 
 
+  # checking only the first member of desiredCaseList in case it is vector of
 
-  # Choice of high-throughput data type
+  # length > 1
 
-  if(desiredTechnique == "RNA-seq"){
+  if(desiredCaseList[1] == TRUE |
 
-    L2.characteristics <- c("mRNA Expression z-Scores (RNA Seq V2 RSEM)",
+     !is.logical(desiredCaseList) & !is.numeric(desiredCaseList)){
 
-                            "mRNA Expression z-Scores (RNA Seq RPKM)")
-
-  } else if(desiredTechnique == "microRNA-seq"){
-
-    L2.characteristics <- c("microRNA expression Z-scores")
-
-  } else if(desiredTechnique == "microarray.mRNA"){
-
-    L2.characteristics <- c("mRNA Expression z-Scores (microarray)",
-
-                            "mRNA Expression z-Scores (U133 microarray only)",
-
-                            "mRNA expression z-scores (Illumina)",
-
-                            "mRNA expression Z-scores (all genes)",
-
-                            "mRNA Expression Z-Scores vs Normals",
-
-                            "mRNA Expression z-Scores (combined microarray)")
-
-  } else if(desiredTechnique == "microarray.microRNA"){
-
-    L2.characteristics <- c("mRNA Expression Z-Scores vs Normals",
-
-                            "mRNA Expression z-Scores (combined microarray)")
-
-  } else if(desiredTechnique == "methylation"){
-
-    L2.characteristics <- c("Methylation (HM450)", "Methylation (HM27)",
-
-                            "Methylation")
-
-  } else{
-
-    stop("desiredTechnique field can not be left empety. It should be chosen as 'RNA-seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA'or 'methylation'")
+    stop("'desiredCaseList' must be set as FALSE or a be a numeric vector.")
 
   }
+
+
+
+  # Check validateGenes
+
+  if(!is.logical(validateGenes)){
+
+    stop("'validateGenes' can only accept logical values: TRUE or FALSE .")
+
+  }
+
+
 
 
 
@@ -366,7 +399,7 @@ obtainOneStudy <- function(
 
     # Chosing the desired case lists
 
-    if(!desiredCaseList && is.logical(desiredCaseList)){
+    if(is.logical(desiredCaseList)){
 
       Choices <- caseList[,2]
 
