@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.1.2 \cr
-#' Date: \tab 2017-11-14 \cr
+#' Version: \tab 1.1.3 \cr
+#' Date: \tab 2017-11-23 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -35,10 +35,11 @@
 #'
 #'
 #' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE,
-#'   geneLimit = FALSE, rankingMethod = "variation", heatmapFileFormat = "TIFF"
-#'   , resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
-#'   angleColumnLabels = 45, heatmapColor = "RdBu", reverseColor = TRUE,
-#'   transposedHeatmap = FALSE, simplifyBy = FALSE, genesToDrop = FALSE)
+#'   geneLimit = FALSE, rankingMethod = "variation", heatmapFileFormat = "TIFF",
+#'   resolution = 600, RowCex = "auto", ColCex = "auto",
+#'   heatmapMargines = "auto", rowLabelsAngle = 0, columnLabelsAngle = 45,
+#'   heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
+#'   simplifyBy = FALSE, genesToDrop = FALSE)
 #'
 #'
 #'
@@ -70,14 +71,23 @@
 #' @param resolution a number. This option can be used to adjust the resolution
 #' of the output heatmaps as 'dot per inch'. The defalut value is 600.
 #'
-#' @param RowCex a number that specifies letter size in heatmap row names.
+#' @param RowCex a number that specifies letter size in heatmap row names,
+#' which ranges from 0 to 2. If \code{RowCex = "auto"}, the function will
+#' automatically determine the best RowCex.
 #'
-#' @param ColCex a number that specifies letter size in heatmap column names.
+#' @param ColCex a number that specifies letter size in heatmap column names,
+#' which ranges from 0 to 2. If \code{ColCex = "auto"}, the function will
+#' automatically determine the best ColCex.
 #'
 #' @param heatmapMargines a numeric vector that is used to set heatmap margins.
-#' The default value is \code{heatmapMargines=c(15,07)}.
+#'  If \code{heatmapMargines = "auto"}, the function will automatically
+#'  determine the best possible margines. Otherwise, enter the desired margine as
+#'  e.g. c(10,10.)
 #'
-#' @param angleColumnLabels a number that determines the angle with which the
+#' @param rowLabelsAngle a number that determines the angle with which the
+#' gene names are shown in heatmaps. The default value is 0 degree.
+#'
+#' @param columnLabelsAngle a number that determines the angle with which the
 #' studies/study subgroups names are shown in heatmaps. The default value is 45
 #' degree.
 #'
@@ -120,8 +130,7 @@
 #' automatedStatistics("test", obtainedDataType = "single study", calculate =
 #' c("frequencyPercentage", "frequencyRatio"))
 #'
-#' heatmapOutput(submissionName = "test", heatmapMargines = c(16, 10),
-#' RowCex = 1, ColCex = 1)
+#' heatmapOutput(submissionName = "test")
 #'
 #'
 #'
@@ -153,13 +162,15 @@ heatmapOutput <- function(
 
   resolution = 600,
 
-  RowCex = 0.8,
+  RowCex = "auto",
 
-  ColCex = 0.8,
+  ColCex = "auto",
 
-  heatmapMargines = c(15,07),
+  heatmapMargines = "auto",
 
-  angleColumnLabels = 45,
+  rowLabelsAngle = 0,
+
+  columnLabelsAngle = 45,
 
   heatmapColor = "RdBu",
 
@@ -246,9 +257,11 @@ heatmapOutput <- function(
 
   # Check RowCex
 
-  if(!is.numeric(RowCex) | ! RowCex >= 0 & RowCex <= 1){
+  if(!RowCex == "auto" & !is.numeric(RowCex) |
 
-    stop("'RowCex' must be a number between 0 and 1.")
+     is.numeric(RowCex) & ! (RowCex >= 0 & RowCex <= 2)){
+
+    stop("'RowCex' must be a number between 0 and 2.")
 
   }
 
@@ -256,9 +269,11 @@ heatmapOutput <- function(
 
   # Check ColCex
 
-  if(!is.numeric(ColCex) | ! ColCex >= 0 & ColCex <= 1){
+  if(!ColCex == "auto" & !is.numeric(ColCex) |
 
-    stop("'ColCex' must be a number between 0 and 1.")
+     is.numeric(ColCex) & ! (ColCex >= 0 & ColCex <= 2)){
+
+    stop("'ColCex' must be a number between 0 and 2.")
 
   }
 
@@ -266,7 +281,9 @@ heatmapOutput <- function(
 
   # Check heatmapMargines
 
-  if(!is.numeric(heatmapMargines) | ! length(heatmapMargines) == 2){
+  if(!heatmapMargines == "auto" & !is.numeric(heatmapMargines) |
+
+     is.numeric(heatmapMargines) & ! length(heatmapMargines) == 2){
 
     stop("'heatmapMargines' must be a numerical vector containing two numbers")
 
@@ -274,13 +291,29 @@ heatmapOutput <- function(
 
 
 
-  # Check angleColumnLabels
+  # Check rowLabelsAngle
 
-  if(!is.numeric(angleColumnLabels) &
+  if(! rowLabelsAngle == "auto" & ! is.numeric(rowLabelsAngle) |
 
-     ! angleColumnLabels >= 0 & angleColumnLabels <= 360){
+     is.numeric(rowLabelsAngle) &
 
-    stop("'angleColumnLabels' must be a number corresponding to an angle from 0 to 360.")
+     ! (rowLabelsAngle >= 0 & rowLabelsAngle <= 360)){
+
+    stop("'rowLabelsAngle' must be entered as 'auto' or a number corresponding to an angle ranging from 0 to 360.")
+
+  }
+
+
+
+  # Check columnLabelsAngle
+
+  if(! columnLabelsAngle == "auto" & ! is.numeric(columnLabelsAngle) |
+
+     is.numeric(columnLabelsAngle) &
+
+     ! (columnLabelsAngle >= 0 & columnLabelsAngle <= 360)){
+
+    stop("'columnLabelsAngle'  must be entered as 'auto' or a number corresponding to an angle ranging from 0 to 360.")
 
   }
 
@@ -430,6 +463,8 @@ heatmapOutput <- function(
 
   newParameters$geneLimit <- geneLimit
 
+  newParameters$heatmapFileFormat <- heatmapFileFormat
+
   newParameters$resolution <- resolution
 
   newParameters$RowCex <- RowCex
@@ -438,7 +473,9 @@ heatmapOutput <- function(
 
   newParameters$heatmapMargines <- heatmapMargines
 
-  newParameters$angleColumnLabels <- angleColumnLabels
+  newParameters$rowLabelsAngle <- rowLabelsAngle
+
+  newParameters$columnLabelsAngle <- columnLabelsAngle
 
   newParameters$heatmapColor <- heatmapColor
 
@@ -809,6 +846,99 @@ heatmapOutput <- function(
 
 
 
+
+            ######  automatic parameters determination   ######
+
+            if(ColCex == "auto"){
+
+              if(ncol(heatmap.data) <= 18){
+
+                d.ColCex <- 1.8 - ncol(heatmap.data) * 0.0333333333
+
+              }else{
+
+                d.ColCex <- 1 - ((ncol(heatmap.data) - 18)) * 0.0166666666
+
+              }
+
+            }else{
+
+              d.ColCex <- ColCex
+
+            }
+
+
+
+
+            if(RowCex == "auto"){
+
+              if(nrow(heatmap.data) <= 18){
+
+                d.RowCex <- 1.8 - nrow(heatmap.data) * 0.0333333333
+
+              }else{
+
+                d.RowCex <- 1 - ((nrow(heatmap.data) - 18)) * 0.0166666666
+
+              }
+
+            }else{
+
+              d.RowCex <- RowCex
+
+            }
+
+
+            if(heatmapMargines == "auto"){
+
+              # determining the best margin for column names
+
+              longest.study <- max(nchar(colnames(heatmap.data)))
+
+              longest.study.effect <-
+
+                longest.study*abs(sin(columnLabelsAngle*0.0174532925))
+
+
+              colMargin <- longest.study.effect * d.ColCex * 0.4278074866
+
+
+
+              # determining the best margin for row names
+
+              longest.gene <- max(nchar(rownames(heatmap.data)))
+
+              longest.gene.effect <-
+
+                longest.gene*abs(sin(rowLabelsAngle*0.0174532925))
+
+
+              rowMargin <- longest.gene.effect * d.RowCex * 0.4278074866
+
+
+
+              # determining which margine influence the final vector
+
+              largestMargine <- max(colMargin, rowMargin)
+
+              d.heatmapMargines <- c(largestMargine, largestMargine)
+
+
+
+            }else{
+
+              d.heatmapMargines <- heatmapMargines
+
+            }
+
+
+
+            ###################################################
+
+
+
+
+
             # Drawing heatmap
 
             if(heatmapFileFormat == "TIFF"){
@@ -818,7 +948,7 @@ heatmapOutput <- function(
 
                 filename=paste(getwd(), output.file.name, sep="/"),
 
-                width=9.5,
+                width=11,
 
                 height= 11,
 
@@ -836,7 +966,7 @@ heatmapOutput <- function(
 
                 filename=paste(getwd(), output.file.name, sep="/"),
 
-                width=9.5,
+                width=11,
 
                 height= 11,
 
@@ -854,7 +984,7 @@ heatmapOutput <- function(
 
                 filename=paste(getwd(), output.file.name, sep="/"),
 
-                width=9.5,
+                width=11,
 
                 height= 11,
 
@@ -872,7 +1002,7 @@ heatmapOutput <- function(
 
                 filename=paste(getwd(), output.file.name, sep="/"),
 
-                width=9.5,
+                width=11,
 
                 height= 11,
 
@@ -887,57 +1017,57 @@ heatmapOutput <- function(
 
 
 
+
+
+            # detemining the oriantation of heatmap
+
             if(!transposedHeatmap){
 
-              heatmap.2(
+                heatmap.input.matrix <- heatmap.data
 
-                heatmap.data,
+                labCol <- colnames(heatmap.data)
 
-                labCol=colnames(heatmap.data),
-
-                na.color= "light gray",
-
-                trace="none",
-
-                symbreaks = TRUE,
-
-                col= hmcol,
-
-                cexRow = RowCex,
-
-                cexCol= ColCex,
-
-                margins = heatmapMargines,
-
-                srtCol = angleColumnLabels
-
-                )
 
             } else if(transposedHeatmap){
 
-              heatmap.2(
+                heatmap.input.matrix <- t(heatmap.data)
 
-                t(heatmap.data),
+                labCol <- rownames(heatmap.data)
 
-                labCol=colnames(heatmap.data),
-
-                na.color="light gray",
-
-                trace="none",
-
-                symbreaks = TRUE,
-
-                col=hmcol,
-
-                cexRow = RowCex,
-
-                cexCol= ColCex,
-
-                margins = heatmapMargines,
-
-                srtCol = angleColumnLabels)
 
             }
+
+
+
+            # Draw heatmap
+
+            heatmap.2(
+
+              heatmap.input.matrix,
+
+              labCol=labCol,
+
+              na.color= "light gray",
+
+              trace="none",
+
+              symbreaks = TRUE,
+
+              col= hmcol,
+
+              cexRow = d.RowCex,
+
+              cexCol= d.ColCex,
+
+              margins = d.heatmapMargines,
+
+              srtRow = rowLabelsAngle,
+
+              srtCol = columnLabelsAngle
+
+            )
+
+
 
             dev.off()
 

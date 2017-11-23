@@ -1,7 +1,10 @@
-cbaf 1.1.2 - 2017-11-14
+cbaf 1.1.3 - 2017-11-23
 -------------------------
 
 New Features
+
+- heatmapOutput() can now determine the heatmap margines and column and row
+  name sizes automatically.
 
 - New image formats TIFF, JPG and BMP in addition to the previous PNG file
   format for heatmapOutput(). They can be chosen from processOneStudy() and
@@ -14,7 +17,7 @@ New Features
 
 - If function argumnets are entered wrongly, more meaningful errors will appear.
 
-- All the functions are improved.
+- All functions are improved.
 
 
 

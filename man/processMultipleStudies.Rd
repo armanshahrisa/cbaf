@@ -9,9 +9,10 @@ processMultipleStudies(genesList, submissionName, studiesNames,
   c("frequencyPercentage", "frequencyRatio", "meanValue"), cutoff=NULL,
   round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, geneLimit = FALSE,
   rankingMethod = "variation", heatmapFileFormat = "TIFF", resolution = 600,
-  RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
-  angleColumnLabels = 45, heatmapColor = "RdBu", reverseColor = TRUE,
-  transposedHeatmap = FALSE, simplifyBy = FALSE, genesToDrop = FALSE)
+  RowCex = "auto", ColCex = "auto", heatmapMargines = "auto",
+  rowLabelsAngle = 0, columnLabelsAngle = 45, heatmapColor = "RdBu",
+  reverseColor = TRUE, transposedHeatmap = FALSE, simplifyBy = FALSE,
+  genesToDrop = FALSE)
 }
 \arguments{
 \item{genesList}{a list that contains at least one gene group}
@@ -100,19 +101,27 @@ image file format of the heatmaps. The default value is \code{"TIFF"}. Other
 suppoeted formats include \code{"BMP"}, \code{"JPG"}, and \code{"PNG"}.}
 
 \item{resolution}{a number. This option can be used to adjust the resolution
-of the output heatmaps as 'dot per inch'.
-The defalut value is 600.}
+of the output heatmaps as 'dot per inch'. The defalut value is 600.}
 
-\item{RowCex}{a number that specifies letter size in heatmap row names.}
+\item{RowCex}{a number that specifies letter size in heatmap row names,
+which ranges from 0 to 2. If \code{RowCex = "auto"}, the function will
+automatically determine the best RowCex.}
 
-\item{ColCex}{a number that specifies letter size in heatmap column names.}
+\item{ColCex}{a number that specifies letter size in heatmap column names,
+which ranges from 0 to 2. If \code{ColCex = "auto"}, the function will
+automatically determine the best ColCex.}
 
 \item{heatmapMargines}{a numeric vector that is used to set heatmap margins.
-The default value is \code{heatmapMargines=c(15,07)}.}
+If \code{heatmapMargines = "auto"}, the function will automatically
+determine the best possible margines. Otherwise, enter the desired margine as
+e.g. c(10,10.)}
 
-\item{angleColumnLabels}{a number that determines the angle with which the
-studies/study subgroups names are shown in heatmaps.
-The default value is 45 degree.}
+\item{rowLabelsAngle}{a number that determines the angle with which the
+gene names are shown in heatmaps. The default value is 0 degree.}
+
+\item{columnLabelsAngle}{a number that determines the angle with which the
+studies/study subgroups names are shown in heatmaps. The default value is 45
+degree.}
 
 \item{heatmapColor}{a character string that defines heatmap color. The
 default value is \code{'RdBu'}. \code{'RdGr'} is also a popular color in
@@ -158,8 +167,8 @@ highest values in each cancer study.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.1.2 \cr
-Date: \tab 2017-11-14 \cr
+Version: \tab 1.1.3 \cr
+Date: \tab 2017-11-23 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

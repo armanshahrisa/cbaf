@@ -1,5 +1,5 @@
 ---
-title: "cbaf: Automated Functions for cBioPortal"
+title: "cbaf: Multiple Automated Functions for cbioportal.org"
 author: Arman Shahrisa
 date: "`r Sys.Date()`"
 output: BiocStyle::html_document
@@ -219,13 +219,15 @@ unique values in one or few cancer studies while `highValue` ranks the genes whe
 
 - __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
 
-- __RowCex__ a number that specifies letter size in heatmap row names.
+- __RowCex__ a number that specifies letter size in heatmap row names, which ranges from 0 to 2. If `RowCex = "auto"`, the function will automatically determine the best RowCex.
 
-- __ColCex__ a number that specifies letter size in heatmap column names.
+- __ColCex__ a number that specifies letter size in heatmap column names, which ranges from 0 to 2. If `ColCex = "auto"`, the function will automatically determine the best ColCex.
 
-- __heatmapMargines__ a numeric vector that is used to set heatmap margins. The default value is `heatmapMargines=c(15,07)`.
+- __heatmapMargines__ a numeric vector that is used to set heatmap margins. If `heatmapMargines = "auto"`, the function will automatically determine the best possible margines. Otherwise, enter the desired margine as e.g. `c(10,10)`.
 
-- __angleColumnLabels__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
+- __rowLabelsAngle__ a number that determines the angle with which the gene names are shown in heatmaps. The default value is 0 degree.
+
+- __columnLabelsAngle__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
 
 - __heatmapColor__ a character string that defines heatmap color. The default value is "RdBu". "RdGr" is also a popular color in genomic studies. To see the rest of colors, please type `library(RColorBrewer)` and then `display.brewer.all()`.
 
@@ -240,7 +242,7 @@ unique values in one or few cancer studies while `highValue` ranks the genes whe
 In the following example, _submissionName_ is `test`.
 
 ```{r, eval = FALSE}
-heatmapOutput("test", shortenStudyNames = TRUE, heatmapMargines = c(13,5), heatmapColor = "RdGr", genesToDrop = c("PVT1", "SNHG6"), RowCex = 1, ColCex = 1, reverseColor = FALSE)
+heatmapOutput("test", shortenStudyNames = TRUE, heatmapMargines = c(13,5), heatmapColor = "RdGr", genesToDrop = c("PVT1", "SNHG6"), reverseColor = FALSE)
 ```
 
 If the requested heatmaps already exist, it doesn't rewrite the heatmaps. The number of skipped heatmaps is then printed.
@@ -338,13 +340,15 @@ unique values in one or few cancer studies while `highValue` ranks the genes whe
 
 - __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
 
-- __RowCex__ a number that specifies letter size in heatmap row names.
+- __RowCex__ a number that specifies letter size in heatmap row names, which ranges from 0 to 2. If `RowCex = "auto"`, the function will automatically determine the best RowCex.
 
-- __ColCex__ a number that specifies letter size in heatmap column names.
+- __ColCex__ a number that specifies letter size in heatmap column names, which ranges from 0 to 2. If `ColCex = "auto"`, the function will automatically determine the best ColCex.
 
-- __heatmapMargines__ a numeric vector that is used to set heatmap margins. The default value is `heatmapMargines=c(15,07)`.
+- __heatmapMargines__ a numeric vector that is used to set heatmap margins. If `heatmapMargines = "auto"`, the function will automatically determine the best possible margines. Otherwise, enter the desired margine as e.g. `c(10,10)`.
 
-- __angleColumnLabels__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
+- __rowLabelsAngle__ a number that determines the angle with which the gene names are shown in heatmaps. The default value is 0 degree.
+
+- __columnLabelsAngle__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
 
 - __heatmapColor__ a character string that defines heatmap color. The default value is "RdBu". "RdGr" is also a popular color in genomic studies. To see the rest of colors, please type `library(RColorBrewer)` and then `display.brewer.all()`.
 
@@ -361,7 +365,7 @@ To get more information about the function options, please refer to the child fu
 ```{r}
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2", "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
-processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-Seq", desiredCaseList = c(2,3,4,5), calculate = c("frequencyPercentage",  "frequencyRatio"), RowCex = 1, ColCex = 1)
+processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-Seq", desiredCaseList = c(2,3,4,5), calculate = c("frequencyPercentage",  "frequencyRatio"))
 ```
 
 The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which its name  is the combination of _submissionName_ and “output for multiple studies”, for example “test output for multiple studies”.
@@ -414,13 +418,15 @@ unique values in one or few cancer studies while `highValue` ranks the genes whe
 
 - __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
 
-- __RowCex__ a number that specifies letter size in heatmap row names.
+- __RowCex__ a number that specifies letter size in heatmap row names, which ranges from 0 to 2. If `RowCex = "auto"`, the function will automatically determine the best RowCex.
 
-- __ColCex__ a number that specifies letter size in heatmap column names.
+- __ColCex__ a number that specifies letter size in heatmap column names, which ranges from 0 to 2. If `ColCex = "auto"`, the function will automatically determine the best ColCex.
 
-- __heatmapMargines__ a numeric vector that is used to set heatmap margins. The default value is `heatmapMargines=c(15,07)`.
+- __heatmapMargines__ a numeric vector that is used to set heatmap margins. If `heatmapMargines = "auto"`, the function will automatically determine the best possible margines. Otherwise, enter the desired margine as e.g. `c(10,10)`.
 
-- __angleColumnLabels__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
+- __rowLabelsAngle__ a number that determines the angle with which the gene names are shown in heatmaps. The default value is 0 degree.
+
+- __columnLabelsAngle__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
 
 - __heatmapColor__ a character string that defines heatmap color. The default value is "RdBu". "RdGr" is also a popular color in genomic studies. To see the rest of colors, please type `library(RColorBrewer)` and then `display.brewer.all()`.
 
@@ -439,8 +445,8 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "K
 
 studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)") 
 
-processMultipleStudies(genes, "test2", studies, "RNA-Seq", calculate = c("frequencyPercentage", "frequencyRatio"), heatmapMargines = c(15,10))
+processMultipleStudies(genes, "test2", studies, "RNA-Seq", calculate = c("frequencyPercentage", "frequencyRatio"))
 ```
 
 
-The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which it's name that is the combination of _submissionName_ and "output for multiple studies", for example "test output for multiple studies". 
+The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which it's name is the combination of _submissionName_ and "output for multiple studies", for example "test output for multiple studies". 

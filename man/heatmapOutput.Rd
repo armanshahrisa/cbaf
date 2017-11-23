@@ -5,10 +5,11 @@
 \title{Generate heatmaps for various studies/subgroups of a study.}
 \usage{
 heatmapOutput(submissionName, shortenStudyNames = TRUE,
-  geneLimit = FALSE, rankingMethod = "variation", heatmapFileFormat = "TIFF"
-  , resolution = 600, RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
-  angleColumnLabels = 45, heatmapColor = "RdBu", reverseColor = TRUE,
-  transposedHeatmap = FALSE, simplifyBy = FALSE, genesToDrop = FALSE)
+  geneLimit = FALSE, rankingMethod = "variation", heatmapFileFormat = "TIFF",
+  resolution = 600, RowCex = "auto", ColCex = "auto",
+  heatmapMargines = "auto", rowLabelsAngle = 0, columnLabelsAngle = 45,
+  heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
+  simplifyBy = FALSE, genesToDrop = FALSE)
 }
 \arguments{
 \item{submissionName}{a character string containing name of interest. It is
@@ -39,14 +40,23 @@ suppoeted formats include \code{"PNG"}, \code{"BMP"}, and \code{"JPG"}.}
 \item{resolution}{a number. This option can be used to adjust the resolution
 of the output heatmaps as 'dot per inch'. The defalut value is 600.}
 
-\item{RowCex}{a number that specifies letter size in heatmap row names.}
+\item{RowCex}{a number that specifies letter size in heatmap row names,
+which ranges from 0 to 2. If \code{RowCex = "auto"}, the function will
+automatically determine the best RowCex.}
 
-\item{ColCex}{a number that specifies letter size in heatmap column names.}
+\item{ColCex}{a number that specifies letter size in heatmap column names,
+which ranges from 0 to 2. If \code{ColCex = "auto"}, the function will
+automatically determine the best ColCex.}
 
 \item{heatmapMargines}{a numeric vector that is used to set heatmap margins.
-The default value is \code{heatmapMargines=c(15,07)}.}
+If \code{heatmapMargines = "auto"}, the function will automatically
+determine the best possible margines. Otherwise, enter the desired margine as
+e.g. c(10,10.)}
 
-\item{angleColumnLabels}{a number that determines the angle with which the
+\item{rowLabelsAngle}{a number that determines the angle with which the
+gene names are shown in heatmaps. The default value is 0 degree.}
+
+\item{columnLabelsAngle}{a number that determines the angle with which the
 studies/study subgroups names are shown in heatmaps. The default value is 45
 degree.}
 
@@ -84,8 +94,8 @@ automatedStatistics() function.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.1.2 \cr
-Date: \tab 2017-11-14 \cr
+Version: \tab 1.1.3 \cr
+Date: \tab 2017-11-23 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
@@ -100,8 +110,7 @@ obtainOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)",
 automatedStatistics("test", obtainedDataType = "single study", calculate =
 c("frequencyPercentage", "frequencyRatio"))
 
-heatmapOutput(submissionName = "test", heatmapMargines = c(16, 10),
-RowCex = 1, ColCex = 1)
+heatmapOutput(submissionName = "test")
 
 
 

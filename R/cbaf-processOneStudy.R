@@ -13,8 +13,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.1.2 \cr
-#' Date: \tab 2017-11-14 \cr
+#' Version: \tab 1.1.3 \cr
+#' Date: \tab 2017-11-23 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -27,9 +27,10 @@
 #'   c("frequencyPercentage", "frequencyRatio", "meanValue"), cutoff=NULL,
 #'   round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, geneLimit = FALSE,
 #'   rankingMethod = "variation", heatmapFileFormat = "TIFF", resolution = 600,
-#'   RowCex = 0.8, ColCex = 0.8, heatmapMargines = c(15,07),
-#'   angleColumnLabels = 45, heatmapColor = "RdBu", reverseColor = TRUE,
-#'   transposedHeatmap = FALSE, simplifyBy = FALSE, genesToDrop = FALSE)
+#'   RowCex = "auto", ColCex = "auto", heatmapMargines = "auto",
+#'   rowLabelsAngle = 0, columnLabelsAngle = 45, heatmapColor = "RdBu",
+#'   reverseColor = TRUE, transposedHeatmap = FALSE, simplifyBy = FALSE,
+#'   genesToDrop = FALSE)
 #'
 #'
 #'
@@ -118,16 +119,25 @@
 #' @param resolution a number. This option can be used to adjust the resolution
 #' of the output heatmaps as 'dot per inch'. The defalut value is 600.
 #'
-#' @param RowCex a number that specifies letter size in heatmap row names.
+#' @param RowCex a number that specifies letter size in heatmap row names,
+#' which ranges from 0 to 2. If \code{RowCex = "auto"}, the function will
+#' automatically determine the best RowCex.
 #'
-#' @param ColCex a number that specifies letter size in heatmap column names.
+#' @param ColCex a number that specifies letter size in heatmap column names,
+#' which ranges from 0 to 2. If \code{ColCex = "auto"}, the function will
+#' automatically determine the best ColCex.
 #'
 #' @param heatmapMargines a numeric vector that is used to set heatmap margins.
-#' The default value is \code{heatmapMargines=c(15,07)}.
+#'  If \code{heatmapMargines = "auto"}, the function will automatically
+#'  determine the best possible margines. Otherwise, enter the desired margine as
+#'  e.g. c(10,10.)
 #'
-#' @param angleColumnLabels a number that determines the angle with which the
-#' studies/study subgroups names are shown in heatmaps. The default value is
-#' \code{"45"} degree.
+#' @param rowLabelsAngle a number that determines the angle with which the
+#' gene names are shown in heatmaps. The default value is 0 degree.
+#'
+#' @param columnLabelsAngle a number that determines the angle with which the
+#' studies/study subgroups names are shown in heatmaps. The default value is 45
+#' degree.
 #'
 #' @param heatmapColor a character string that defines heatmap color. The
 #' default value is \code{'RdBu'}. \code{'RdGr'} is also a popular color in
@@ -216,13 +226,15 @@ processOneStudy <- function(
 
   resolution = 600,
 
-  RowCex = 0.8,
+  RowCex = "auto",
 
-  ColCex = 0.8,
+  ColCex = "auto",
 
-  heatmapMargines = c(15,07),
+  heatmapMargines = "auto",
 
-  angleColumnLabels = 45,
+  rowLabelsAngle = 0,
+
+  columnLabelsAngle = 45,
 
   heatmapColor = "RdBu",
 
@@ -320,7 +332,9 @@ processOneStudy <- function(
 
     heatmapMargines = heatmapMargines,
 
-    angleColumnLabels = angleColumnLabels,
+    rowLabelsAngle = rowLabelsAngle,
+
+    columnLabelsAngle = columnLabelsAngle,
 
     heatmapColor = heatmapColor,
 
