@@ -8,7 +8,7 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.1.3 \cr
+#' Version: \tab 1.1.4 \cr
 #' Date: \tab 2017-11-23 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
@@ -26,6 +26,8 @@
 #' @importFrom grDevices colorRampPalette dev.off tiff png bmp jpeg
 #'
 #' @importFrom utils head setTxtProgressBar txtProgressBar
+#'
+# @importFrom magicK image_read image_crop image_write
 #'
 #'
 #'
@@ -910,7 +912,7 @@ heatmapOutput <- function(
 
               longest.gene.effect <-
 
-                longest.gene*abs(sin(rowLabelsAngle*0.0174532925))
+                longest.gene*abs(cos(rowLabelsAngle*0.0174532925))
 
 
               rowMargin <- longest.gene.effect * d.RowCex * 0.4278074866
@@ -954,7 +956,9 @@ heatmapOutput <- function(
 
                 units = "in",
 
-                res=resolution
+                res = resolution,
+
+                compression = "lzw"
 
               )
 
@@ -1070,6 +1074,37 @@ heatmapOutput <- function(
 
 
             dev.off()
+
+
+
+            # Crop margines of the stored image
+
+            # cropped.image <- image_read(output.file.name)
+
+            # cropped.image <- image_crop(cropped.image, "1000x1500+500")
+
+            # image_write(cropped.image,
+
+            #             path = output.file.name,
+
+            #             format = if(heatmapFileFormat == "TIFF"){
+
+            #               "tiff"
+
+            #             }else if(heatmapFileFormat == "PNG"){
+
+            #               "png"
+
+            #             }else if(heatmapFileFormat == "JPG"){
+
+            #               "jpg"
+
+            #             }else if(heatmapFileFormat == "BMP"){
+
+            #               "bmp"
+
+            #            })
+
 
           }
 
