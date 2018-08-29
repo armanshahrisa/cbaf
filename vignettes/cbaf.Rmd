@@ -46,8 +46,9 @@ sudo apt-get install libcurl4-openssl-dev libssl-dev
 The package can be installed through the `biocLite` script.
 
 ```{r, eval = FALSE}
-source("http://www.bioconductor.org/biocLite.R")
-biocLite("cbaf", dependencies = TRUE)
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("cbaf", dependencies = TRUE)
 ```
 
 After that, the pachage can be loaded into _R_ workspace by
