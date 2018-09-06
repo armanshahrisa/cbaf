@@ -43,7 +43,7 @@ sudo apt-get install libcurl4-openssl-dev libssl-dev
 
 ## Installation and Loading
 
-The package can be installed through the `biocLite` script.
+The package can be installed via `BiocManager::install`:
 
 ```{r, eval = FALSE}
 if (!requireNamespace("BiocManager", quietly=TRUE))
