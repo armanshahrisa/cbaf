@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.1.4 \cr
-#' Date: \tab 2017-11-23 \cr
+#' Version: \tab 1.4.0 \cr
+#' Date: \tab 2018-10-30 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -582,18 +582,64 @@ obtainOneStudy <- function(
 
         genesNames <- genesList[[group]]
 
+        numberOfGenes <- length(genesNames)
 
 
-        # Obtaining Expression x-scores fore the requested genes
+
+        # Obtaining Expression x-scores for the requested genes
+
+        # Check number of genes first
+
+        if(numberOfGenes <= 25){
+
+          ProfileData <- getProfileData(
+
+            mycgds, genesNames[order(genesNames)], mygeneticprofile, mycaselist
+
+          )
+
+        }else{
+
+          # split genes in groups of 250 names
+
+          operational_gene_number <- split(
+
+            genesNames[order(genesNames)], ceiling(seq_along(numberOfGenes)/250)
+
+            )
+
+
+          # Create empty list for gene_matrices
+
+          separated_results <- vector(
+
+            "list", length = length(operational_gene_number)
+
+            )
+
+          for(operational in seq_along(operational_gene_number)){
+
+            separated_results[operational] <- getProfileData(
+
+              operational_gene_number[operational], mygeneticprofile, mycaselist
+
+            )
+
+          }
+
+
+          # Merging data
+
+          ProfileData <- do.call(separated_results, "cbind")
+
+          ProfileData <- ProfileData[,order(colnames(ProfileData))]
+
+        }
+
+
+
 
         # Assaign data to specific list member
-
-        ProfileData <- getProfileData(
-
-          mycgds,genesNames[order(genesNames)], mygeneticprofile, mycaselist
-
-        )
-
 
         rawList[[group]][[i]] <- data.matrix(ProfileData)
 
