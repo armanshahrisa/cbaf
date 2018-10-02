@@ -639,6 +639,8 @@ obtainMultipleStudies <- function(
 
         genesNames <- genesList[[group]]
 
+        numberOfGenes <- length(genesNames)
+
 
 
         # Obtaining Expression x-scores fore the requested genes
@@ -659,7 +661,7 @@ obtainMultipleStudies <- function(
 
           operational_gene_number <- split(
 
-            genesNames[order(genesNames)], ceiling(seq_along(numberOfGenes)/250)
+            genesNames[order(genesNames)], ceiling(seq_len(numberOfGenes)/250)
 
           )
 
@@ -674,9 +676,15 @@ obtainMultipleStudies <- function(
 
           for(operational in seq_along(operational_gene_number)){
 
-            separated_results[operational] <- getProfileData(
+            separated_results[[operational]] <- getProfileData(
 
-              operational_gene_number[operational], mygeneticprofile, mycaselist
+              mycgds,
+
+              operational_gene_number[[operational]],
+
+              mygeneticprofile,
+
+              mycaselist
 
             )
 
@@ -685,7 +693,7 @@ obtainMultipleStudies <- function(
 
           # Merging data
 
-          ProfileData <- do.call(separated_results, "cbind")
+          ProfileData <- do.call("cbind", separated_results)
 
           ProfileData <- ProfileData[,order(colnames(ProfileData))]
 
