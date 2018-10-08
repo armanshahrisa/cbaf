@@ -12,7 +12,7 @@ processMultipleStudies(genesList, submissionName, studiesNames,
   RowCex = "auto", ColCex = "auto", heatmapMargines = "auto",
   rowLabelsAngle = 0, columnLabelsAngle = 45, heatmapColor = "RdBu",
   reverseColor = TRUE, transposedHeatmap = FALSE, simplifyBy = FALSE,
-  genesToDrop = FALSE)
+  genesToDrop = FALSE, transposeResults = FALSE)
 }
 \arguments{
 \item{genesList}{a list that contains at least one gene group}
@@ -141,6 +141,9 @@ has the same unit as \code{cutoff}.}
 
 \item{genesToDrop}{a character vector. Gene names within this vector will be
 omitted from heatmap.The default value is \code{FALSE}.}
+
+\item{transposeResults}{a logical value that enables the function to replace
+the columns and rows of data.}
 }
 \value{
 a BiocFileCache object that containes some or all of the following

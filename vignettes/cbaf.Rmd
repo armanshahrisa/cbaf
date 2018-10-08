@@ -243,7 +243,7 @@ unique values in one or few cancer studies while `highValue` ranks the genes whe
 In the following example, _submissionName_ is `test`.
 
 ```{r, eval = FALSE}
-heatmapOutput("test", shortenStudyNames = TRUE, heatmapMargines = c(13,5), heatmapColor = "RdGr", genesToDrop = c("PVT1", "SNHG6"), reverseColor = FALSE)
+heatmapOutput("test", shortenStudyNames = TRUE, heatmapMargines = c(13,5), heatmapColor = "RdGr", genesToDrop = c("PVT1", "SNHG6"), reverseColor = FALSE, heatmapFileFormat = "JPG")
 ```
 
 If the requested heatmaps already exist, it doesn't rewrite the heatmaps. The number of skipped heatmaps is then printed.
@@ -260,6 +260,10 @@ This function exports the output of `automatedStatistics()` and the _gene valida
 It requires one argument:
 
 - __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same as submissionName for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
+
+There is another optional argument:
+
+- __transposeResults__, a logical value to replace the columns and rows of the output. 
 
 
 In the following example, _submissionName_ is `test`.
@@ -361,12 +365,14 @@ unique values in one or few cancer studies while `highValue` ranks the genes whe
 
 - __genesToDrop__ a character vector. Gene names within this vector will be omitted from heatmap. The default value is `FALSE`.
 
+- __transposeResults__, a logical value to replace the columns and rows of the output. 
+
 To get more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `obtainMultipleStudies()` function. The following is an example showing how this function can be used:
 
 ```{r}
 genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2", "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
 
-processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-Seq", desiredCaseList = c(2,3,4,5), calculate = c("frequencyPercentage",  "frequencyRatio"))
+processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-Seq", desiredCaseList = c(2,3,4,5), calculate = c("frequencyPercentage",  "frequencyRatio"), heatmapFileFormat = "TIFF")
 ```
 
 The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which its name  is the combination of _submissionName_ and “output for multiple studies”, for example “test output for multiple studies”.
@@ -439,6 +445,9 @@ unique values in one or few cancer studies while `highValue` ranks the genes whe
 
 - __genesToDrop__ a character vector. Gene names within this vector will be omitted from heatmap. The default value is `FALSE`.
 
+
+- __transposeResults__, a logical value to replace the columns and rows of the output.
+
 To get more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `obtainMultipleStudies()` function. The following is an example showing how this function can be used:
 
 ```{r}
@@ -446,7 +455,7 @@ genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "K
 
 studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)") 
 
-processMultipleStudies(genes, "test2", studies, "RNA-Seq", calculate = c("frequencyPercentage", "frequencyRatio"))
+processMultipleStudies(genes, "test2", studies, "RNA-Seq", calculate = c("frequencyPercentage", "frequencyRatio"), heatmapFileFormat = "TIFF")
 ```
 
 

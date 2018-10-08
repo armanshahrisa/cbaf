@@ -7,6 +7,8 @@ New Features
   groups of genes each possess more than 250 genes (Virtually unlimited gene
   number).
 
+- A new argument for xlsxOutput() function to exchange the columns and rows.
+
 
 
 

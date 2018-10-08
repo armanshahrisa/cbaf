@@ -4,11 +4,14 @@
 \alias{xlsxOutput}
 \title{Generate excel output for various studies/subgroups of a study.}
 \usage{
-xlsxOutput(submissionName)
+xlsxOutput(submissionName, transposeResults = FALSE)
 }
 \arguments{
 \item{submissionName}{a character string containing name of interest. It is
 used for naming the process.}
+
+\item{transposeResults}{a logical value that enables the function to replace
+the columns and rows of data.}
 }
 \value{
 It generates one excel file for each gene group. This excel file

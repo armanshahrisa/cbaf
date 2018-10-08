@@ -28,12 +28,15 @@
 #'
 #'
 #'
-#' @usage xlsxOutput(submissionName)
+#' @usage xlsxOutput(submissionName, transposeResults = FALSE)
 #'
 #'
 #'
 #' @param submissionName a character string containing name of interest. It is
 #' used for naming the process.
+#'
+#' @param transposeResults a logical value that enables the function to replace
+#' the columns and rows of data.
 #'
 #'
 #'
@@ -72,7 +75,7 @@
 ################################################################################
 ################################################################################
 
-xlsxOutput <- function(submissionName){
+xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   ##############################################################################
   ########## Prerequisites
@@ -90,6 +93,14 @@ xlsxOutput <- function(submissionName){
   } else{
 
     stop("'submissionName' must be entered as a character string for naming the process")
+
+  }
+
+  # Check transposeResults
+
+  if(!is.logical(transposeResults)){
+
+    stop("'transposeResults' must be entered as a logical value: TRUE or FALSE")
 
   }
 
@@ -172,6 +183,8 @@ xlsxOutput <- function(submissionName){
   newParameters <-list()
 
   newParameters$submissionName <- submissionName
+
+  newParameters$transposeResults <- transposeResults
 
 
 
@@ -438,23 +451,49 @@ xlsxOutput <- function(submissionName){
 
         # Saving the expression profile
 
-        write.xlsx(
+        if(!transposeResults){
 
-          statistics.data,
+          write.xlsx(
 
-          file = name.of.excel.file,
+            statistics.data,
 
-          sheetName = gsub(
+            file = name.of.excel.file,
 
-            x = name.statistics.data,
+            sheetName = gsub(
 
-            pattern = "\\.",
+              x = name.statistics.data,
 
-            replacement = " "
+              pattern = "\\.",
+
+              replacement = " "
 
             ),
 
-          append = TRUE)
+            append = TRUE)
+
+        } else if(transposeResults){
+
+          write.xlsx(
+
+            t(statistics.data),
+
+            file = name.of.excel.file,
+
+            sheetName = gsub(
+
+              x = name.statistics.data,
+
+              pattern = "\\.",
+
+              replacement = " "
+
+            ),
+
+            append = TRUE)
+
+        }
+
+
 
       }
 
