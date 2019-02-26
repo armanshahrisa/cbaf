@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.4.0 \cr
-#' Date: \tab 2018-10-30 \cr
+#' Version: \tab 1.5.1 \cr
+#' Date: \tab 2019-02-26 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -647,7 +647,7 @@ obtainMultipleStudies <- function(
 
         # Check number of genes first
 
-        if(numberOfGenes <= 25){
+        if(numberOfGenes <= 250){
 
           ProfileData <- getProfileData(
 

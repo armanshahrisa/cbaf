@@ -1,5 +1,5 @@
 ---
-title: "cbaf: Multiple Automated Functions for cbioportal.org"
+title: "cbaf: Automated functions for comparing various data from cbioportal.org"
 author: Arman Shahrisa
 date: "`r Sys.Date()`"
 output: BiocStyle::html_document

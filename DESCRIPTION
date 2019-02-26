@@ -1,7 +1,7 @@
 Package: cbaf
 biocViews: Technology
-Title: Multiple automated functions for cbioportal.org
-Version: 1.5.0
+Title: Automated functions for comparing various data from cbioportal.org
+Version: 1.5.1
 Authors@R: c(person("Arman", "Shahrisa", role = c("aut", "cre", "cph"),
                      email = "shahrisa.arman@hotmail.com"),
             person("Maryam", "Tahmasebi Birgani", role = "aut",
@@ -16,7 +16,7 @@ LazyData: true
 Imports: BiocFileCache, RColorBrewer, cgdsr, genefilter, gplots, grDevices, 
         stats, utils, xlsx 
 NeedsCompilation: no
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: knitr, rmarkdown, BiocStyle
 VignetteBuilder: knitr
 Collate: 
