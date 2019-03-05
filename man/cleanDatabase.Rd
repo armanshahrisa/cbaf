@@ -21,8 +21,8 @@ directory. This helps users to obtain the fresh data from cbioportal.org.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.5.1 \cr
-Date: \tab 2019-02-26 \cr
+Version: \tab 1.5.2 \cr
+Date: \tab 2019-03-05 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

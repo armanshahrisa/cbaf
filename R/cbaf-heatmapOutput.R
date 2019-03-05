@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.5.1 \cr
-#' Date: \tab 2019-02-26 \cr
+#' Version: \tab 1.5.2 \cr
+#' Date: \tab 2019-03-05 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -283,11 +283,29 @@ heatmapOutput <- function(
 
   # Check heatmapMargines
 
-  if(!heatmapMargines == "auto" & all(!is.numeric(heatmapMargines)) |
+  if(is.character(heatmapMargines)){
 
-     all(is.numeric(heatmapMargines)) & ! length(heatmapMargines) == 2){
+    if(length(heatmapMargines) == 1){
 
-    stop("'heatmapMargines' must be a numerical vector containing two numbers")
+      if(!heatmapMargines == "auto"){
+
+        stop("'heatmapMargines' must be a numerical vector containing two numbers, otherwise it must be set as 'auto'")
+
+      }
+
+    }else{
+
+      stop("'heatmapMargines' must be a numerical vector containing two numbers, otherwise it must be set as 'auto'")
+
+    }
+
+  }else if(is.numeric(heatmapMargines)){
+
+    if(! length(heatmapMargines) == 2){
+
+      stop("'heatmapMargines' must be a numerical vector containing two numbers, otherwise it must be set as 'auto'")
+
+    }
 
   }
 
