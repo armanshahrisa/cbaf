@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.5.2 \cr
-#' Date: \tab 2019-03-05 \cr
+#' Version: \tab 1.5.3 \cr
+#' Date: \tab 2019-03-09 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -909,7 +909,11 @@ heatmapOutput <- function(
             }
 
 
-            if(heatmapMargines == "auto"){
+            # Check whether heatmapMargines is "auto" and only the first element
+
+            # as it might be a vector of length 2
+
+            if(heatmapMargines[1] == "auto"){
 
               # determining the best margin for column names
 
