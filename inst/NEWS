@@ -1,3 +1,15 @@
+cbaf 1.6.0 - 2019-04-28
+-------------------------
+
+New Features
+
+- heatmapOutput now uses a more accurate algorithm for determining the margins.
+
+
+
+
+
+
 cbaf 1.4.0 - 2018-10-30
 -------------------------
 

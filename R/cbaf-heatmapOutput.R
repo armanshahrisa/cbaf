@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.5.3 \cr
-#' Date: \tab 2019-03-09 \cr
+#' Version: \tab 1.6.0 \cr
+#' Date: \tab 2019-04-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -291,6 +291,10 @@ heatmapOutput <- function(
 
         stop("'heatmapMargines' must be a numerical vector containing two numbers, otherwise it must be set as 'auto'")
 
+      } else{
+
+        heatMapMode <- "algorithm"
+
       }
 
     }else{
@@ -304,6 +308,10 @@ heatmapOutput <- function(
     if(! length(heatmapMargines) == 2){
 
       stop("'heatmapMargines' must be a numerical vector containing two numbers, otherwise it must be set as 'auto'")
+
+    } else{
+
+      heatMapMode <- "manual"
 
     }
 
@@ -909,23 +917,82 @@ heatmapOutput <- function(
             }
 
 
-            # Check whether heatmapMargines is "auto" and only the first element
+            # Check whether heatmapMargines is "auto"
 
-            # as it might be a vector of length 2
+            if(heatMapMode == "algorithm"){
 
-            if(heatmapMargines[1] == "auto"){
+              unitSize <- 1.00
+
+
+              lengthDeterminant <- function(vector){
+
+                relativeLengthVector <- vector("numeric", length = length(vector))
+
+
+                for(vNames in seq_along(vector)){
+
+                  currentName <- vector[vNames]
+
+                  vectorLetters <- unlist(strsplit(currentName, ""))
+
+                  startingSize <- 0
+
+
+                  for(vLetters in seq_along(vectorLetters)){
+
+                    currentLetter <- vectorLetters[vLetters]
+
+                    if(currentLetter %in% c("a", "b", "c", "d", "e", "g", "h",
+                                            "k", "n", "o", "p", "q", "s", "u",
+                                            "v", "x", "y", "z", "2", "3", "4",
+                                            "5", "6", "8", "9", "0", " ")){
+
+                      startingSize <- startingSize + 1
+
+                    } else if(currentLetter %in% c("f", "r", "j", "t", "7")){
+
+                      startingSize <- startingSize + 0.7
+
+                    } else if(currentLetter %in% c("i", "l", "I")){
+
+                      startingSize <- startingSize + 0.25
+
+                    } else if(currentLetter %in% c("m", "w", "1")){
+
+                      startingSize <- startingSize + 1.4
+
+                    } else if(currentLetter %in% c("A", "B", "C", "D", "E", "F",
+                                                   "H", "J", "K", "L", "N", "O",
+                                                   "P", "Q", "R", "S", "T", "U",
+                                                   "V", "X", "Y", "Z")){
+
+                      startingSize <- startingSize + 1.4
+
+                    } else if(currentLetter %in% c("G", "M")){
+
+                      startingSize <- startingSize + 1.6
+
+                    } else if(currentLetter %in% c("W")){
+
+                      startingSize <- startingSize + 1.8
+
+                    }
+
+                  }
+
+                  relativeLengthVector[vNames] <- startingSize
+
+                }
+
+                max(relativeLengthVector)
+
+              }
+
 
               # determining the best margin for column names
 
-              # letter type
-
-              number_of_uppercase_letters <- unlist(gregexpr("\\L", colnames(heatmap.data)))
-
-
-
-
-
-              longest.study <- max(nchar(colnames(heatmap.data)))
+              longest.study <-
+                lengthDeterminant(colnames(heatmap.data))*unitSize
 
               longest.study.effect <-
 
@@ -938,7 +1005,7 @@ heatmapOutput <- function(
 
               # determining the best margin for row names
 
-              longest.gene <- max(nchar(rownames(heatmap.data)))
+              longest.gene <- lengthDeterminant(rownames(heatmap.data))*unitSize
 
               longest.gene.effect <-
 
@@ -957,7 +1024,7 @@ heatmapOutput <- function(
 
 
 
-            }else{
+            }else if(heatMapMode == "manual"){
 
               d.heatmapMargines <- heatmapMargines
 
