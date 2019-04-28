@@ -921,7 +921,7 @@ heatmapOutput <- function(
 
             if(heatMapMode == "algorithm"){
 
-              unitSize <- 1.00
+              unitSize <- 1.19
 
 
               lengthDeterminant <- function(vector){
@@ -947,34 +947,35 @@ heatmapOutput <- function(
                                             "v", "x", "y", "z", "2", "3", "4",
                                             "5", "6", "8", "9", "0", " ")){
 
-                      startingSize <- startingSize + 1
+                      startingSize <- startingSize + 0.855
 
-                    } else if(currentLetter %in% c("f", "r", "j", "t", "7")){
+                    } else if(currentLetter %in% c("f", "r", "j", "t", "7", "1")
+                              ){
 
-                      startingSize <- startingSize + 0.7
+                      startingSize <- startingSize + 0.73
 
                     } else if(currentLetter %in% c("i", "l", "I")){
 
                       startingSize <- startingSize + 0.25
 
-                    } else if(currentLetter %in% c("m", "w", "1")){
+                    } else if(currentLetter %in% c("m", "w")){
 
-                      startingSize <- startingSize + 1.4
+                      startingSize <- startingSize + 1.20
 
-                    } else if(currentLetter %in% c("A", "B", "C", "D", "E", "F",
-                                                   "H", "J", "K", "L", "N", "O",
-                                                   "P", "Q", "R", "S", "T", "U",
-                                                   "V", "X", "Y", "Z")){
+                    } else if(currentLetter %in% c("B", "C", "D", "E", "F", "H",
+                                                   "J", "K", "L", "N", "O", "P",
+                                                   "Q", "R", "S", "T", "U", "V",
+                                                   "X", "Y", "Z")){
 
-                      startingSize <- startingSize + 1.4
+                      startingSize <- startingSize + 0.98
 
-                    } else if(currentLetter %in% c("G", "M")){
+                    } else if(currentLetter %in% c("A", "G", "M")){
 
-                      startingSize <- startingSize + 1.6
+                      startingSize <- startingSize + 1.10
 
                     } else if(currentLetter %in% c("W")){
 
-                      startingSize <- startingSize + 1.8
+                      startingSize <- startingSize + 1.25
 
                     }
 
@@ -991,8 +992,9 @@ heatmapOutput <- function(
 
               # determining the best margin for column names
 
+              # y = ax + b
               longest.study <-
-                lengthDeterminant(colnames(heatmap.data))*unitSize
+                lengthDeterminant(colnames(heatmap.data))*unitSize + 3.0
 
               longest.study.effect <-
 
@@ -1005,7 +1007,9 @@ heatmapOutput <- function(
 
               # determining the best margin for row names
 
+              # y = ax + b
               longest.gene <- lengthDeterminant(rownames(heatmap.data))*unitSize
+              + 3.0
 
               longest.gene.effect <-
 

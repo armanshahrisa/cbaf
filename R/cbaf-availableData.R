@@ -109,12 +109,16 @@ availableData <- function(excelFileName){
 
       "Tumors with mRNA data (RNA Seq V2)",
 
+      "Samples with mRNA data (RNA Seq V2)",
+
       "Tumor Samples with mRNA data (RNA Seq)",
 
       "Tumors with mRNA data (RNA Seq)"
     )
 
-    microRNA_Seq.terms <- "Tumors with microRNA data (microRNA-Seq)"
+    microRNA_Seq.terms <- c("Tumors with microRNA data (microRNA-Seq)",
+
+                            "Tumor Samples with microRNA data (microRNA-Seq)")
 
     microarray.for.mRNA.term <- c(
 
@@ -122,9 +126,15 @@ availableData <- function(excelFileName){
 
       "Tumors with mRNA data (Agilent microarray)",
 
+      "Samples with mRNA data (Agilent microarray)",
+
       "Tumor Samples with mRNA data (U133 microarray only)",
 
-      "Tumors with mRNA data"
+      "Samples with mRNA data (U133 microarray)",
+
+      "Tumors with mRNA data",
+
+      "Tumors with mRNA"
 
     )
 
@@ -136,11 +146,17 @@ availableData <- function(excelFileName){
 
       "Tumors with methylation data (HM450)",
 
+      "Samples with methylation data (HM450)",
+
       "Tumor Samples with methylation data (HM27)",
 
       "Tumors with methylation data (HM27)",
 
-      "Tumors with methylation data"
+      "Samples with methylation data (HM27)",
+
+      "Tumors with methylation data",
+
+      "Samples with methylation data"
 
     )
 

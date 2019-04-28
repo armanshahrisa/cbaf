@@ -177,6 +177,8 @@ obtainMultipleStudies <- function(
 
             "Tumors with mRNA data (RNA Seq V2)",
 
+            "Samples with mRNA data (RNA Seq V2)",
+
             "Tumor Samples with mRNA data (RNA Seq)",
 
             "Tumors with mRNA data (RNA Seq)")
@@ -185,17 +187,27 @@ obtainMultipleStudies <- function(
 
           c("mRNA Expression z-Scores (RNA Seq V2 RSEM)",
 
-            "mRNA Expression z-Scores (RNA Seq RPKM)")
+            "mRNA expression z-Scores (RNA Seq V2 RSEM)",
+
+            "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
+
+            "mRNA Expression z-Scores (RNA Seq RPKM)",
+
+            "mRNA expression z-Scores")
 
       } else if(desiredTechnique == "microRNA-Seq"){
 
         L1.characteristics <-
 
-          c("Tumors with microRNA data (microRNA-Seq)")
+          c("Tumors with microRNA data (microRNA-Seq)",
+
+            "Tumor Samples with microRNA data (microRNA-Seq)")
 
         L2.characteristics <-
 
-          c("microRNA expression Z-scores")
+          c("microRNA expression Z-scores",
+
+            "mRNA Expression Z-Scores vs Normals")
 
       } else if(desiredTechnique == "microarray.mRNA"){
 
@@ -205,7 +217,11 @@ obtainMultipleStudies <- function(
 
             "Tumors with mRNA data (Agilent microarray)",
 
+            "Samples with mRNA data (Agilent microarray)",
+
             "Tumor Samples with mRNA data (U133 microarray only)",
+
+            "Samples with mRNA data (U133 microarray)",
 
             "Tumors with mRNA data",
 
@@ -215,6 +231,8 @@ obtainMultipleStudies <- function(
 
           c("mRNA Expression z-Scores (microarray)",
 
+            "mRNA expression (microarray) z-scores",
+
             "mRNA Expression z-Scores (U133 microarray only)",
 
             "mRNA expression z-scores (Illumina)",
@@ -223,7 +241,9 @@ obtainMultipleStudies <- function(
 
             "mRNA Expression Z-Scores vs Normals",
 
-            "mRNA Expression z-Scores (combined microarray)")
+            "mRNA Expression z-Scores (combined microarray)",
+
+            "mRNA Z-scores vs normal fat")
 
       } else if(desiredTechnique == "microarray.microRNA"){
 
@@ -245,17 +265,25 @@ obtainMultipleStudies <- function(
 
             "Tumors with methylation data (HM450)",
 
+            "Samples with methylation data (HM450)",
+
             "Tumor Samples with methylation data (HM27)",
 
             "Tumors with methylation data (HM27)",
 
-            "Tumors with methylation data")
+            "Samples with methylation data (HM27)",
+
+            "Tumors with methylation data",
+
+            "Samples with methylation data")
 
         L2.characteristics <-
 
           c("Methylation (HM450)",
 
             "Methylation (HM27)",
+
+            "Methylation (hm27)",
 
             "Methylation")
 
@@ -581,7 +609,7 @@ obtainMultipleStudies <- function(
 
         } else if(length(f.condition) == 0){
 
-          stop(studiesNames[c], "lacks", desiredTechnique, "data!", sep=" ")
+          stop(studiesNames[c], "lacks ", desiredTechnique, " data!", sep=" ")
 
         }
 

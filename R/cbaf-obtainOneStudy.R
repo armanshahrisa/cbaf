@@ -170,19 +170,29 @@ obtainOneStudy <- function(
 
           c("mRNA Expression z-Scores (RNA Seq V2 RSEM)",
 
-            "mRNA Expression z-Scores (RNA Seq RPKM)")
+            "mRNA expression z-Scores (RNA Seq V2 RSEM)",
+
+            "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
+
+            "mRNA Expression z-Scores (RNA Seq RPKM)",
+
+            "mRNA expression z-Scores")
 
       } else if(desiredTechnique == "microRNA-Seq"){
 
         L2.characteristics <-
 
-          c("microRNA expression Z-scores")
+          c("microRNA expression Z-scores",
+
+            "mRNA Expression Z-Scores vs Normals")
 
       } else if(desiredTechnique == "microarray.mRNA"){
 
         L2.characteristics <-
 
           c("mRNA Expression z-Scores (microarray)",
+
+            "mRNA expression (microarray) z-scores",
 
             "mRNA Expression z-Scores (U133 microarray only)",
 
@@ -192,7 +202,9 @@ obtainOneStudy <- function(
 
             "mRNA Expression Z-Scores vs Normals",
 
-            "mRNA Expression z-Scores (combined microarray)")
+            "mRNA Expression z-Scores (combined microarray)",
+
+            "mRNA Z-scores vs normal fat")
 
       } else if(desiredTechnique == "microarray.microRNA"){
 
@@ -209,6 +221,8 @@ obtainOneStudy <- function(
           c("Methylation (HM450)",
 
             "Methylation (HM27)",
+
+            "Methylation (hm27)",
 
             "Methylation")
 
@@ -457,7 +471,7 @@ obtainOneStudy <- function(
 
       } else if(length(s.condition) == 0){
 
-        stop(studyName, "lacks", desiredTechnique, "data!", sep=" ")
+        stop(studyName, "lacks ", desiredTechnique, " data!", sep=" ")
 
       }
 

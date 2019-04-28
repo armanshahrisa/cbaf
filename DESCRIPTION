@@ -1,7 +1,7 @@
 Package: cbaf
 biocViews: Technology
 Title: Automated functions for comparing various data from cbioportal.org
-Version: 1.5.4
+Version: 1.5.5
 Authors@R: c(person("Arman", "Shahrisa", role = c("aut", "cre", "cph"),
                      email = "shahrisa.arman@hotmail.com"),
             person("Maryam", "Tahmasebi Birgani", role = "aut",
@@ -30,3 +30,4 @@ Collate:
     'cbaf-processOneStudy.R'
     'cbaf-xlsxOutput.R'
     'zzz.R'
+biocViews: GeneExpression, RNASeq, microRNASeq, Microarray
