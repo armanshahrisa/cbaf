@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.6.0 \cr
-#' Date: \tab 2019-04-28 \cr
+#' Version: \tab 1.7.1 \cr
+#' Date: \tab 2019-05-17 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -315,6 +315,8 @@ obtainOneStudy <- function(
 
       unlink(database, recursive = TRUE)
 
+      message("The previous downloaded data are more than five days old; They are going to be downloaded again.")
+
     }
 
   }
@@ -398,13 +400,52 @@ obtainOneStudy <- function(
 
     mycgds = CGDS("http://www.cbioportal.org/")
 
-    # First step of procedure
+    # Getting cancer name before for loop
 
-    mycancerstudy =
+    supportedCancers <- getCancerStudies(mycgds)
 
-      getCancerStudies(mycgds)[which(getCancerStudies(mycgds)[,2]==studyName),1]
+    # Find cancer abbreviated name
+
+    CancerStudy.idx <- which(supportedCancers[,2]==studyName)
+
+    mycancerstudy = supportedCancers[CancerStudy.idx, 1]
+
+    # The first characteristics of data in the cancer
 
     caseList <- getCaseLists(mycgds,mycancerstudy)
+
+    # Check if data are corrupted
+
+    if(! length(caseList) > 1){
+
+      stop("The data for ", studyName, " is currupted / being modified on server currently.")
+
+    }
+
+    # Finding the second characteristics of data in the cancer
+
+      AvailableDataFormats <- getGeneticProfiles(mycgds, mycancerstudy)
+
+      existing.L2.charac <- AvailableDataFormats[,2] %in% L2.characteristics
+
+      s.condition <- (AvailableDataFormats[,2])[existing.L2.charac]
+
+
+      if(length(s.condition) >= 1){
+
+        s.condition <- s.condition[1]
+
+        s.condition.idx <- which(AvailableDataFormats[,2] == s.condition)
+
+        mygeneticprofile <- AvailableDataFormats[s.condition.idx ,1]
+
+      } else{
+
+        stop(studyName, " lacks the ", desiredTechnique, " data!")
+
+      }
+
+
 
 
 
@@ -448,53 +489,6 @@ obtainOneStudy <- function(
     inputCases.names <- caseList[inputCases ,2]
 
 
-
-
-
-    # Finding the second characteristic of data in the cancer
-
-    existing.L2.charac <-
-
-      getGeneticProfiles(mycgds,mycancerstudy)[,2] %in% L2.characteristics
-
-
-    s.condition <-
-
-      (getGeneticProfiles(mycgds,mycancerstudy)[,2])[existing.L2.charac]
-
-
-    s.condition <-
-
-      if(length(s.condition) >= 1){
-
-        s.condition[1]
-
-      } else if(length(s.condition) == 0){
-
-        stop(studyName, "lacks ", desiredTechnique, " data!", sep=" ")
-
-      }
-
-
-    s.condition.idx <-
-
-      which(getGeneticProfiles(mycgds,mycancerstudy)[,2] == s.condition)
-
-
-    mygeneticprofile =
-
-      getGeneticProfiles(mycgds,mycancerstudy)[s.condition.idx ,1]
-
-
-    # Shorten studyName - Temporarily inactive
-
-    #  if(shortenStudyName){
-
-    #  studyName <- gsub(" ", ".", sapply(strsplit(as.character(studyName),
-
-    #                    split=" (", fixed=TRUE), function(x) (x[1])))
-
-    #  }
 
 
 
@@ -578,11 +572,11 @@ obtainOneStudy <- function(
 
 
 
-      # Setting the first characteristics of data according to the case list
+      # Finding the first characteristics of data in the cancer
 
-      ind <- getCaseLists(mycgds,mycancerstudy)[inputCases[i] ,2]
+      ind <- caseList[inputCases[i] ,2]
 
-      mycaselist = getCaseLists(mycgds,mycancerstudy)[inputCases[i] ,1]
+      mycaselist = caseList[inputCases[i] ,1]
 
 
 

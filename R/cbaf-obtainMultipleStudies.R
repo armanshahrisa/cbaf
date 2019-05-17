@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.6.0 \cr
-#' Date: \tab 2019-04-28 \cr
+#' Version: \tab 1.7.1 \cr
+#' Date: \tab 2019-05-17 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -181,7 +181,9 @@ obtainMultipleStudies <- function(
 
             "Tumor Samples with mRNA data (RNA Seq)",
 
-            "Tumors with mRNA data (RNA Seq)")
+            "Tumors with mRNA data (RNA Seq)",
+
+            "Samples with mRNA data (RNA Seq)")
 
         L2.characteristics <-
 
@@ -366,6 +368,8 @@ obtainMultipleStudies <- function(
 
       unlink(database, recursive = TRUE)
 
+      message("The previous downloaded data are more than five days old; They are going to be downloaded again.")
+
     }
 
   }
@@ -545,6 +549,18 @@ obtainMultipleStudies <- function(
 
     validationMList <- vector("list", length(genesList)*length(studiesNames))
 
+    # List of cancers with corrupted data
+
+    cancersWithCorruptedData <- NULL
+
+    # List of cancers lacking approprate data
+
+    cancersLackingData <- NULL
+
+    # Getting cancer names before for loop
+
+    supportedCancers <- getCancerStudies(mycgds)
+
 
 
 
@@ -581,81 +597,118 @@ obtainMultipleStudies <- function(
 
 
 
+      # Find cancer abbreviated name
+
       CancerStudies.idx <-
+        which(supportedCancers[,2] == as.character(studiesNames[c]))
 
-        which(getCancerStudies(mycgds)[,2] == as.character(studiesNames[c]))
-
-
-      mycancerstudy = getCancerStudies(mycgds)[CancerStudies.idx,1]
+      mycancerstudy = supportedCancers[CancerStudies.idx, 1]
 
 
 
       # Finding the first characteristics of data in the cancer
 
-      existing.L1.charac <-
+      AvailableDataTypes <- getCaseLists(mycgds, mycancerstudy)
 
-        getCaseLists(mycgds,mycancerstudy)[,2] %in% L1.characteristics
+      if(length(AvailableDataTypes) > 1){
 
+        existing.L1.charac <- AvailableDataTypes[,2] %in% L1.characteristics
 
-      f.condition <-
-
-        (getCaseLists(mycgds,mycancerstudy)[,2])[existing.L1.charac]
-
-      f.condition <-
+        f.condition <- (AvailableDataTypes[,2])[existing.L1.charac]
 
         if(length(f.condition) >= 1){
 
-          f.condition[1]
+          f.condition <- f.condition[1]
+
+          f.condition.idx <- which(AvailableDataTypes[,2] == f.condition)
+
+          mycaselist = AvailableDataTypes[f.condition.idx ,1]
+
+
+          CancerPossessData <- TRUE
 
         } else if(length(f.condition) == 0){
 
-          stop(studiesNames[c], "lacks ", desiredTechnique, " data!", sep=" ")
+          CancerPossessData <- FALSE
 
         }
 
+        CancerPossessCorruptedData <- FALSE
 
-      f.condition.idx <-
+      } else{
 
-        which(getCaseLists(mycgds,mycancerstudy)[,2] == f.condition)
+        CancerPossessCorruptedData <- TRUE
+
+        # Updating cancers list
+
+        if(is.null(cancersWithCorruptedData)){
+
+          cancersWithCorruptedData <- studiesNames[c]
+
+        }else{
+
+          cancersWithCorruptedData <-
+            c(cancersWithCorruptedData, studiesNames[c])
+
+        }
+
+      }
 
 
-      mycaselist = getCaseLists(mycgds,mycancerstudy)[f.condition.idx ,1]
 
 
 
       # Finding the second characteristics of data in the cancer
 
-      existing.L2.charac <-
+      if(!CancerPossessCorruptedData){
 
-        getGeneticProfiles(mycgds,mycancerstudy)[,2] %in% L2.characteristics
+        if(CancerPossessData){
+
+          AvailableDataFormats <- getGeneticProfiles(mycgds, mycancerstudy)
+
+          existing.L2.charac <- AvailableDataFormats[,2] %in% L2.characteristics
+
+          s.condition <- (AvailableDataFormats[,2])[existing.L2.charac]
 
 
-      s.condition <-
+          if(length(s.condition) >= 1){
 
-        (getGeneticProfiles(mycgds,mycancerstudy)[,2])[existing.L2.charac]
+            s.condition <- s.condition[1]
+
+            s.condition.idx <- which(AvailableDataFormats[,2] == s.condition)
+
+            mygeneticprofile <- AvailableDataFormats[s.condition.idx ,1]
 
 
-      s.condition <-
+            CancerPossessData <- TRUE
 
-        if(length(s.condition) >= 1){
+          } else if (length(s.condition) == 0){
 
-          s.condition[1]
+            CancerPossessData <- FALSE
 
-        } else if (length(s.condition) == 0){
-
-          stop(studiesNames[c], "doesn't have an appropriate 'level 2' condition for", desiredTechnique, "data!", sep=" ")
+          }
 
         }
 
-
-      s.condition.idx <-
-
-        which(getGeneticProfiles(mycgds,mycancerstudy)[,2] == s.condition)
+      }
 
 
-      mygeneticprofile =
+      # Updating cancers list
 
-        getGeneticProfiles(mycgds,mycancerstudy)[s.condition.idx ,1]
+      if(!CancerPossessData){
+
+        if(is.null(cancersLackingData)){
+
+          cancersLackingData <- studiesNames[c]
+
+        }else{
+
+          cancersLackingData <-
+            c(cancersLackingData, studiesNames[c])
+
+        }
+
+      }
 
 
 
@@ -677,11 +730,25 @@ obtainMultipleStudies <- function(
 
         if(numberOfGenes <= 250){
 
-          ProfileData <- getProfileData(
+          if(!CancerPossessCorruptedData){
 
-            mycgds, genesNames[order(genesNames)], mygeneticprofile, mycaselist
+            if(CancerPossessData){
 
-          )
+              ProfileData <- getProfileData(
+
+                mycgds,
+
+                genesNames[order(genesNames)],
+
+                mygeneticprofile,
+
+                mycaselist
+
+              )
+
+            }
+
+          }
 
         }else{
 
@@ -729,208 +796,220 @@ obtainMultipleStudies <- function(
 
 
 
-        # Assaign data to specific list member
+        if(!CancerPossessCorruptedData){
 
-        rawList[[group]][[c]] <- data.matrix(ProfileData)
+          if(CancerPossessData){
 
-        names(rawList[[group]])[c] <- groupName
+            # Assaign data to specific list member
 
-        # For convenience
+            rawList[[group]][[c]] <- data.matrix(ProfileData)
 
-        this.segment <- rawList[[group]][[c]]
+            names(rawList[[group]])[c] <- groupName
 
+            # For convenience
 
-
-        # Find whether alternative gene names are used
-
-        # Alter c.genes to be compatible with gene names in cBioPortal output
-
-        alteredGeneNames <- sort(gsub("-", ".", genesNames))
-
-        # Obtain name of genes that are absent in requested cancer
-
-        absentGenes <-
-
-          alteredGeneNames[!alteredGeneNames %in% colnames(this.segment)]
-
-        # For loop for determining changed genes
-
-        if(length(absentGenes) != 0){
-
-          alternativeGeneNames <-
-
-            vector("character", length = length(absentGenes))
-
-          # For loop
-
-          for(ab in seq_along(absentGenes)){
-
-            absent.gene.profile.data <- getProfileData(
-
-              mycgds, absentGenes[ab], mygeneticprofile, mycaselist
-
-            )
+            this.segment <- rawList[[group]][[c]]
 
 
-            absentGeneProfileData <- colnames(
 
-              data.matrix(absent.gene.profile.data)
+            # Find whether alternative gene names are used
 
-            )
+            # Alter c.genes to be compatible with gene names in cBioPortal
+            # output
+
+            alteredGeneNames <- sort(gsub("-", ".", genesNames))
+
+            # Obtain name of genes that are absent in requested cancer
+
+            absentGenes <-
+
+              alteredGeneNames[!alteredGeneNames %in% colnames(this.segment)]
+
+            # For loop for determining changed genes
+
+            if(length(absentGenes) != 0){
+
+              alternativeGeneNames <-
+
+                vector("character", length = length(absentGenes))
+
+              # For loop
+
+              for(ab in seq_along(absentGenes)){
+
+                absent.gene.profile.data <- getProfileData(
+
+                  mycgds, absentGenes[ab], mygeneticprofile, mycaselist
+
+                )
 
 
-            # Check wheter gene has an alternative name or missed from the
+                absentGeneProfileData <- colnames(
 
-            # database
+                  data.matrix(absent.gene.profile.data)
 
-            if(length(absentGeneProfileData) == 1){
+                )
 
-              alternativeGeneNames[ab] <- absentGeneProfileData
 
-            } else if(length(absentGeneProfileData) == 0){
+                # Check wheter gene has an alternative name or missed from the
 
-              alternativeGeneNames[ab] <- "-"
+                # database
+
+                if(length(absentGeneProfileData) == 1){
+
+                  alternativeGeneNames[ab] <- absentGeneProfileData
+
+                } else if(length(absentGeneProfileData) == 0){
+
+                  alternativeGeneNames[ab] <- "-"
+
+                }
+
+              }
+
+              # Naming Alternative.gene.names
+
+              names(alternativeGeneNames) <- absentGenes
+
+              # Seperating genes with alternative names from those that lack
+
+              genesLackData <- alternativeGeneNames[alternativeGeneNames == "-"]
+
+              genesWithData <- alternativeGeneNames[alternativeGeneNames != "-"]
+
+
+
+              # modifying gene names containing an alternative name
+
+              for(re in seq_along(genesWithData)){
+
+                colnames.idx <-
+
+                  colnames(rawList[[group]][[c]]) %in% genesWithData[re]
+
+
+                colnames(rawList[[group]][[c]])[colnames.idx] <-
+
+                  paste0(genesWithData[re], " (", names(genesWithData[re]), ")")
+
+              }
+
+
+            }else{
+
+              genesLackData <- NULL
+
+              genesWithData <- NULL
 
             }
 
-          }
-
-          # Naming Alternative.gene.names
-
-          names(alternativeGeneNames) <- absentGenes
-
-          # Seperating genes with alternative names from those that are absent
-
-          genesLackData <- alternativeGeneNames[alternativeGeneNames == "-"]
-
-          genesWithData <- alternativeGeneNames[alternativeGeneNames != "-"]
-
-
-
-          # modifying gene names containing an alternative name
-
-          for(re in seq_along(genesWithData)){
-
-            colnames.idx <-
-
-              colnames(rawList[[group]][[c]]) %in% genesWithData[re]
-
-
-            colnames(rawList[[group]][[c]])[colnames.idx] <-
-
-              paste0(genesWithData[re], " (", names(genesWithData[re]), ")")
-
-          }
-
-
-        }else{
-
-          genesLackData <- NULL
-
-          genesWithData <- NULL
-
-        }
 
 
 
 
+            # validateGenes
 
-        # validateGenes
+            if(validateGenes){
 
-        if(validateGenes){
+              # Empty validation matrix
 
-          # Empty validation matrix
+              validationMatrix <- matrix(, ncol = ncol(this.segment), nrow = 1)
 
-          validationMatrix <- matrix(, ncol = ncol(this.segment), nrow = 1)
+              # Naming empty matrix
 
-          # Naming empty matrix
+              if(length(genesLackData) != 0){
 
-          if(length(genesLackData) != 0){
+                dimnames(validationMatrix) <- list(
 
-            dimnames(validationMatrix) <- list(
+                  groupNames[c],
 
-                groupNames[c],
+                  c(colnames(this.segment), names(genesLackData))
 
-                c(colnames(this.segment), names(genesLackData))
+                )
 
-              )
+              } else{
 
-          } else{
+                dimnames(validationMatrix) <-
 
-            dimnames(validationMatrix) <-
+                  list(groupNames[c], colnames(this.segment))
 
-              list(groupNames[c], colnames(this.segment))
-
-          }
-
+              }
 
 
-          # modifying gene names containing an alternative name
 
-          if(length(genesWithData) != 0){
+              # modifying gene names containing an alternative name
 
-            for(re in seq_along(genesWithData)){
+              if(length(genesWithData) != 0){
+
+                for(re in seq_along(genesWithData)){
+
+                  colnames.idx <-
+
+                    colnames(validationMatrix) %in% genesWithData[re]
+
+
+                  colnames(validationMatrix)[colnames.idx] <-
+
+                    paste0(genesWithData[re],
+                           " (",
+                           names(genesWithData[re]), ")")
+
+                }
+
+              }
+
+
+
+
+
+              # Puting value for genes lacking data
 
               colnames.idx <-
+                colnames(validationMatrix) %in% names(genesLackData)
 
-                colnames(validationMatrix) %in% genesWithData[re]
-
-
-              colnames(validationMatrix)[colnames.idx] <-
-
-                paste0(genesWithData[re], " (", names(genesWithData[re]), ")")
-
-            }
-
-          }
+              validationMatrix[,colnames.idx] <- "-"
 
 
 
+              for(eval in seq_len(ncol(this.segment))){
 
+                loop.section <- (this.segment)[,eval]
 
-          # Puting value for genes lacking data
+                ## Validating Genes
 
-          colnames.idx <- colnames(validationMatrix) %in% names(genesLackData)
+                # Correct those that are not found
 
-          validationMatrix[,colnames.idx] <- "-"
+                if(length((loop.section)[!is.nan(loop.section)]) > 0 &
 
+                   all(!is.finite(loop.section)) &
 
+                   is.nan(mean(as.vector(loop.section)[abs(loop.section)],
 
-          for(eval in seq_len(ncol(this.segment))){
+                               na.rm=TRUE))){
 
-            loop.section <- (this.segment)[,eval]
+                  validationMatrix[1, eval] <- "-"
 
-            ## Validating Genes
+                } else {
 
-            # Correct those that are not found
+                  validationMatrix[1, eval] <- "Found"
 
-            if(length((loop.section)[!is.nan(loop.section)]) > 0 &
+                }
 
-               all(!is.finite(loop.section)) &
+              }
 
-               is.nan(mean(as.vector(loop.section)[abs(loop.section)],
+              # Storing the results in validationMList
 
-                           na.rm=TRUE))){
+              validationMatrix <-
 
-              validationMatrix[1, eval] <- "-"
+                validationMatrix[,sort(colnames(validationMatrix)), drop=FALSE]
 
-            } else {
+              idx <- ((group-1)*length(studiesNames))+c
 
-              validationMatrix[1, eval] <- "Found"
+              validationMList[[idx]] <- validationMatrix
 
             }
 
           }
-
-          # Storing the results in validationMList
-
-          validationMatrix <-
-
-            validationMatrix[,sort(colnames(validationMatrix)), drop=FALSE]
-
-          idx <- ((group-1)*length(studiesNames))+c
-
-          validationMList[[idx]] <- validationMatrix
 
         }
 
@@ -949,6 +1028,64 @@ obtainMultipleStudies <- function(
 
 
 
+
+    # Print studies with Corrupted or absent data
+
+    if(!is.null(cancersWithCorruptedData)){
+
+      if(length(cancersWithCorruptedData) == 1){
+
+        message("The data for the following cancer study are corrupted / being modified on server:")
+
+      } else{
+
+        message("The data for the following cancer studies are corrupted / being modified on server:")
+
+      }
+
+      print(cancersWithCorruptedData)
+
+      }
+
+
+
+    if(!is.null(cancersLackingData)){
+
+      if(length(cancersLackingData) == 1){
+
+        message("The following cancer study lacks the ", desiredTechnique, " Data:")
+
+      } else{
+
+        message("The following cancer studies lack the ", desiredTechnique, " Data:")
+
+      }
+
+      print(cancersLackingData)
+
+    }
+
+
+
+
+
+    # Check if any cancer has data
+
+    StudiesWithResults_idx <-
+      !(studiesNames %in% c(cancersWithCorruptedData, cancersLackingData))
+
+    StudiesWithResults <- studiesNames[StudiesWithResults_idx]
+
+    if( length(StudiesWithResults) < 1 ){
+
+      stop("No cancer study exists with ", desiredTechnique, " and/or uncorrupted data!")
+
+    }
+
+
+
+
+
     ## bfc object
 
     # create bfc object
@@ -962,6 +1099,22 @@ obtainMultipleStudies <- function(
       )
 
     }
+
+
+
+    # Remove NA objects from List objects
+
+    for(MainList in seq_along(rawList)){
+
+      rawList[[MainList]] <-
+        Filter(function(a) any(!is.na(a)), rawList[[MainList]])
+
+    }
+
+
+    validationMList <- Filter(function(a) any(!is.na(a)), validationMList)
+
+
 
 
 
@@ -995,6 +1148,8 @@ obtainMultipleStudies <- function(
 
 
 
+
+
     # Fill the Validation Result
 
     for(mix in seq_along(genesList)){
@@ -1003,7 +1158,7 @@ obtainMultipleStudies <- function(
 
         "rbind",
 
-        validationMList[((mix-1)*length(studiesNames))+seq_along(studiesNames)]
+        validationMList[((mix-1)*length(StudiesWithResults))+seq_along(StudiesWithResults)]
 
       )
 
@@ -1049,6 +1204,11 @@ obtainMultipleStudies <- function(
 
     oldParamObtainMultipleStudies <- newParameters
 
+    CorrectCnacer_idx <-
+      !(studiesNames %in% c(cancersWithCorruptedData, cancersLackingData))
+
+    newParameters$studyName <- studiesNames[CorrectCnacer_idx]
+
 
     # Store the parameters for this run
 
@@ -1081,3 +1241,4 @@ obtainMultipleStudies <- function(
   }
 
 }
+

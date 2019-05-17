@@ -1,3 +1,20 @@
+cbaf 1.8.0 - 2019-10-28
+-------------------------
+
+New Features
+
+- Optimization has led obtainOneStudy() and obtainMultipleStudies() functions to
+  work faster.
+
+- If an entered cancer has corrupted data or lacks the requested data type,
+  obtainMultipleStudies() doesn't return error. That study is automatically
+  omitted from results and its name is printed on console.
+
+
+
+
+
+
 cbaf 1.6.0 - 2019-04-28
 -------------------------
 

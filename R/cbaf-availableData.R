@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.6.0 \cr
-#' Date: \tab 2019-04-28 \cr
+#' Version: \tab 1.7.1 \cr
+#' Date: \tab 2019-05-17 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -113,7 +113,9 @@ availableData <- function(excelFileName){
 
       "Tumor Samples with mRNA data (RNA Seq)",
 
-      "Tumors with mRNA data (RNA Seq)"
+      "Tumors with mRNA data (RNA Seq)",
+
+      "Samples with mRNA data (RNA Seq)"
     )
 
     microRNA_Seq.terms <- c("Tumors with microRNA data (microRNA-Seq)",
@@ -195,16 +197,17 @@ availableData <- function(excelFileName){
       setTxtProgressBar(pb, i)
 
 
+      if(length(available.options) > 1){
 
-      if(any(colnames(available.options) == "case_list_name")){
-
-
-        description <- available.options[, "case_list_name"]
+        if(any(colnames(available.options) == "case_list_name")){
 
 
-        c(RNA.Seq = as.character(
+          description <- available.options[, "case_list_name"]
 
-          any(RNA_Seq.terms %in% description)
+
+          c(RNA.Seq = as.character(
+
+            any(RNA_Seq.terms %in% description)
 
           ),
 
@@ -213,21 +216,21 @@ availableData <- function(excelFileName){
 
             any(microRNA_Seq.terms %in% description)
 
-            ),
+          ),
 
 
           microarray_of_mRNA = as.character(
 
             any(microarray.for.mRNA.term %in% description)
 
-            ),
+          ),
 
 
           microarray_of_miRNA = as.character(
 
             any(microarray.for.miRNA.term %in% description)
 
-            ),
+          ),
 
 
           methylation = as.character(
@@ -237,8 +240,23 @@ availableData <- function(excelFileName){
           )
 
 
-      } else{
+        } else{
 
+
+          c(RNA.Seq = "FALSE",
+
+            microRNA.Seq = "FALSE",
+
+            microarray_of_mRNA = "FALSE",
+
+            microarray_of_miRNA = "FALSE",
+
+            methylation = "FALSE")
+
+
+        }
+
+      }else{
 
         c(RNA.Seq = "FALSE",
 
@@ -249,7 +267,6 @@ availableData <- function(excelFileName){
           microarray_of_miRNA = "FALSE",
 
           methylation = "FALSE")
-
 
       }
 
@@ -268,6 +285,28 @@ availableData <- function(excelFileName){
     list.of.available.data[list.of.available.data=="TRUE"] <- "available"
 
     list.of.available.data[list.of.available.data=="FALSE"] <- "-"
+
+
+
+    # Overrule studies lacking z-score
+
+    # RNA-Seq
+
+    RNA_Seq_index <- which(colnames(list.of.available.data)
+                           %in% c("paad_qcmg_uq_2016",
+                                  "aml_target_2018_pub",
+                                  "prad_mskcc_cheny1_organoids_2014",
+                                  "utuc_cornell_baylor_mdacc_2019"))
+
+    list.of.available.data[1, RNA_Seq_index] <- "-"
+
+
+    # Microarray
+
+    Microarray_index <- which(colnames(list.of.available.data)
+                           %in% c("prad_broad_2013"))
+
+    list.of.available.data[3, Microarray_index] <- "-"
 
 
 
