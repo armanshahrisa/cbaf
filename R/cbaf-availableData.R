@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.7.1 \cr
-#' Date: \tab 2019-05-17 \cr
+#' Version: \tab 1.7.2 \cr
+#' Date: \tab 2019-05-18 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -97,13 +97,13 @@ availableData <- function(excelFileName){
 
     mycgds = CGDS("http://www.cbioportal.org/")
 
-    list.of.studies <- getCancerStudies(mycgds)
+    list_of_studies <- getCancerStudies(mycgds)
 
 
 
     # Terms associated with different techniques
 
-    RNA_Seq.terms <- c(
+    RNA.Seq_terms_L1 <- c(
 
       "Tumor Samples with mRNA data (RNA Seq V2)",
 
@@ -118,11 +118,32 @@ availableData <- function(excelFileName){
       "Samples with mRNA data (RNA Seq)"
     )
 
-    microRNA_Seq.terms <- c("Tumors with microRNA data (microRNA-Seq)",
+    RNA.Seq_terms_L2 <- c(
 
-                            "Tumor Samples with microRNA data (microRNA-Seq)")
+      "mRNA Expression z-Scores (RNA Seq V2 RSEM)",
 
-    microarray.for.mRNA.term <- c(
+      "mRNA expression z-Scores (RNA Seq V2 RSEM)",
+
+      "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
+
+      "mRNA Expression z-Scores (RNA Seq RPKM)",
+
+      "mRNA expression z-Scores"
+    )
+
+    microRNA.Seq_terms_L1 <- c("Tumors with microRNA data (microRNA-Seq)",
+
+                               "Tumor Samples with microRNA data (microRNA-Seq)"
+
+                               )
+
+    microRNA.Seq_terms_L2 <- c("microRNA expression Z-scores",
+
+                               "mRNA Expression Z-Scores vs Normals"
+
+                               )
+
+    microarray_for_mRNA_terms_L1 <- c(
 
       "Tumor Samples with mRNA data (Agilent microarray)",
 
@@ -140,9 +161,35 @@ availableData <- function(excelFileName){
 
     )
 
-    microarray.for.miRNA.term <- "Tumors with microRNA"
+    microarray_for_mRNA_terms_L2 <- c(
 
-    methylation.term <- c(
+      "mRNA Expression z-Scores (microarray)",
+
+      "mRNA expression (microarray) z-scores",
+
+      "mRNA Expression z-Scores (U133 microarray only)",
+
+      "mRNA expression z-scores (Illumina)",
+
+      "mRNA expression Z-scores (all genes)",
+
+      "mRNA Expression Z-Scores vs Normals",
+
+      "mRNA Expression z-Scores (combined microarray)",
+
+      "mRNA Z-scores vs normal fat"
+
+    )
+
+    microarray_for_miRNA_terms_L1 <- "Tumors with microRNA"
+
+    microarray_for_miRNA_terms_L2 <-
+
+      c("mRNA Expression Z-Scores vs Normals",
+
+        "mRNA Expression z-Scores (combined microarray)")
+
+    methylation_terms_L1 <- c(
 
       "Tumor Samples with methylation data (HM450)",
 
@@ -162,6 +209,18 @@ availableData <- function(excelFileName){
 
     )
 
+    methylation_terms_L2 <- c(
+
+      "Methylation (HM450)",
+
+      "Methylation (HM27)",
+
+      "Methylation (hm27)",
+
+      "Methylation"
+
+    )
+
 
 
     message("Cheching the available data for every cancer study")
@@ -169,7 +228,7 @@ availableData <- function(excelFileName){
 
     # create progress bar
 
-    pb <- txtProgressBar(min = 0, max = nrow(list.of.studies), style = 3)
+    pb <- txtProgressBar(min = 0, max = nrow(list_of_studies)*2, style = 3)
 
     i <- 0
 
@@ -178,15 +237,15 @@ availableData <- function(excelFileName){
     ############################################################################
     ## core segment
 
-    # looking for supported technique data
+    # looking for supported techniques at level 1
 
-    list.of.available.data <- sapply(
+    list_of_available_data_L1 <- sapply(
 
-      list.of.studies[, "cancer_study_id"], function(cs, cgds) {
+      list_of_studies[, "cancer_study_id"], function(cs, cgds) {
 
       # Obtain available techniques
 
-      available.options <- getCaseLists(cgds, cs)
+      available_options_1 <- getCaseLists(cgds, cs)
 
 
 
@@ -197,45 +256,45 @@ availableData <- function(excelFileName){
       setTxtProgressBar(pb, i)
 
 
-      if(length(available.options) > 1){
+      if(length(available_options_1) > 1){
 
-        if(any(colnames(available.options) == "case_list_name")){
+        if(any(colnames(available_options_1) == "case_list_name")){
 
 
-          description <- available.options[, "case_list_name"]
+          description <- available_options_1[, "case_list_name"]
 
 
           c(RNA.Seq = as.character(
 
-            any(RNA_Seq.terms %in% description)
+            any(RNA.Seq_terms_L1 %in% description)
 
           ),
 
 
           microRNA.Seq = as.character(
 
-            any(microRNA_Seq.terms %in% description)
+            any(microRNA.Seq_terms_L1 %in% description)
 
           ),
 
 
           microarray_of_mRNA = as.character(
 
-            any(microarray.for.mRNA.term %in% description)
+            any(microarray_for_mRNA_terms_L1 %in% description)
 
           ),
 
 
           microarray_of_miRNA = as.character(
 
-            any(microarray.for.miRNA.term %in% description)
+            any(microarray_for_miRNA_terms_L1 %in% description)
 
           ),
 
 
           methylation = as.character(
 
-            any(methylation.term %in% description))
+            any(methylation_terms_L1 %in% description))
 
           )
 
@@ -274,51 +333,155 @@ availableData <- function(excelFileName){
     }, mycgds)
 
 
+    # looking for supported techniques at level 2
+
+    list_of_available_data_L2 <- sapply(
+
+      list_of_studies[, "cancer_study_id"], function(cs, cgds) {
+
+        # Obtain available techniques
+
+        available_options_2 <- getGeneticProfiles(cgds, cs)
+
+
+
+        # Update progressbar
+
+        i <<- i + 1
+
+        setTxtProgressBar(pb, i)
+
+
+        if(length(available_options_2) > 1){
+
+          if(any(colnames(available_options_2) == "genetic_profile_name")){
+
+
+            description <- available_options_2[, "genetic_profile_name"]
+
+
+            c(RNA.Seq = as.character(
+
+              any(RNA.Seq_terms_L2 %in% description)
+
+            ),
+
+
+            microRNA.Seq = as.character(
+
+              any(microRNA.Seq_terms_L2 %in% description)
+
+            ),
+
+
+            microarray_of_mRNA = as.character(
+
+              any(microarray_for_mRNA_terms_L2 %in% description)
+
+            ),
+
+
+            microarray_of_miRNA = as.character(
+
+              any(microarray_for_miRNA_terms_L2 %in% description)
+
+            ),
+
+
+            methylation = as.character(
+
+              any(methylation_terms_L2 %in% description))
+
+            )
+
+
+          } else{
+
+
+            c(RNA.Seq = "FALSE",
+
+              microRNA.Seq = "FALSE",
+
+              microarray_of_mRNA = "FALSE",
+
+              microarray_of_miRNA = "FALSE",
+
+              methylation = "FALSE")
+
+
+          }
+
+        }else{
+
+          c(RNA.Seq = "FALSE",
+
+            microRNA.Seq = "FALSE",
+
+            microarray_of_mRNA = "FALSE",
+
+            microarray_of_miRNA = "FALSE",
+
+            methylation = "FALSE")
+
+        }
+
+
+      }, mycgds)
+
+
     # close progressbar
 
     close(pb)
 
 
 
+    # Find double positives
+
+    for(col_number in seq_len(ncol(list_of_available_data_L1))){
+
+      for(row_number in seq_len(nrow(list_of_available_data_L1))){
+
+        current_L1 <- list_of_available_data_L1[row_number, col_number]
+
+        if(current_L1 == "TRUE"){
+
+          current_L2 <- list_of_available_data_L2[row_number, col_number]
+
+          if(current_L2 == "FALSE"){
+
+            current_L1 <- FALSE
+
+            list_of_available_data_L1[row_number, col_number] <- current_L1
+          }
+
+        }
+
+      }
+
+    }
+
+
+
+
     # Replacing True and False with available and ""
 
-    list.of.available.data[list.of.available.data=="TRUE"] <- "available"
+    list_of_available_data_L1[list_of_available_data_L1=="TRUE"] <- "available"
 
-    list.of.available.data[list.of.available.data=="FALSE"] <- "-"
-
-
-
-    # Overrule studies lacking z-score
-
-    # RNA-Seq
-
-    RNA_Seq_index <- which(colnames(list.of.available.data)
-                           %in% c("paad_qcmg_uq_2016",
-                                  "aml_target_2018_pub",
-                                  "prad_mskcc_cheny1_organoids_2014",
-                                  "utuc_cornell_baylor_mdacc_2019"))
-
-    list.of.available.data[1, RNA_Seq_index] <- "-"
+    list_of_available_data_L1[list_of_available_data_L1=="FALSE"] <- "-"
 
 
-    # Microarray
-
-    Microarray_index <- which(colnames(list.of.available.data)
-                           %in% c("prad_broad_2013"))
-
-    list.of.available.data[3, Microarray_index] <- "-"
 
 
 
     # joining list.of.available.data to list.of.studies
 
-    combined.list <- cbind(list.of.studies[,"cancer_study_id"],
+    combined_list <- cbind(list_of_studies[,"cancer_study_id"],
 
-                           list.of.studies[,"name"], t(list.of.available.data),
+                           list_of_studies[,"name"], t(list_of_available_data_L1),
 
-                           list.of.studies[,"description"])
+                           list_of_studies[,"description"])
 
-    colnames(combined.list) <-
+    colnames(combined_list) <-
 
       c("cancer_study_id", "cancer_study_name", "RNA.Seq", "microRNA.Seq",
 
@@ -326,7 +489,7 @@ availableData <- function(excelFileName){
 
         "description")
 
-    rownames(combined.list) <- seq_len(nrow(combined.list))
+    rownames(combined_list) <- seq_len(nrow(combined_list))
 
 
 
@@ -335,21 +498,21 @@ availableData <- function(excelFileName){
 
     # Converting matrix to data.frame, and the store as an excel file
 
-    combined.list.dataframe <- data.frame(combined.list)
+    combined_list_dataframe <- data.frame(combined_list)
 
-    colnames(combined.list.dataframe) <-
+    colnames(combined_list_dataframe) <-
 
-      gsub("_", " ", colnames(combined.list.dataframe))
+      gsub("_", " ", colnames(combined_list_dataframe))
 
-    colnames(combined.list.dataframe) <-
+    colnames(combined_list_dataframe) <-
 
-      gsub("\\.", "-", colnames(combined.list.dataframe))
+      gsub("\\.", "-", colnames(combined_list_dataframe))
 
-    rownames(combined.list.dataframe) <- seq_len(nrow(combined.list))
+    rownames(combined_list_dataframe) <- seq_len(nrow(combined_list))
 
     write.xlsx(
 
-      combined.list.dataframe, file=paste(excelFileName, ".xlsx", sep = "")
+      combined_list_dataframe, file=paste(excelFileName, ".xlsx", sep = "")
 
       )
 

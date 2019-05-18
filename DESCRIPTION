@@ -1,7 +1,7 @@
 Package: cbaf
 biocViews: Software, AssayDomain, DNAMethylation, GeneExpression, Transcription, ResearchField, BiomedicalInformatics, ComparativeGenomics, Epigenetics, Genetics, Transcriptomics
 Title: Automated functions for comparing various data from cbioportal.org
-Version: 1.7.1
+Version: 1.7.2
 Authors@R: c(person("Arman", "Shahrisa", role = c("aut", "cre", "cph"),
                      email = "shahrisa.arman@hotmail.com"),
             person("Maryam", "Tahmasebi Birgani", role = "aut",
@@ -14,7 +14,7 @@ License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 Imports: BiocFileCache, RColorBrewer, cgdsr, genefilter, gplots, grDevices, 
-        stats, utils, xlsx 
+        stats, utils, xlsx
 NeedsCompilation: no
 RoxygenNote: 6.1.1
 Suggests: knitr, rmarkdown, BiocStyle

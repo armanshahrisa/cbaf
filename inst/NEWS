@@ -10,6 +10,10 @@ New Features
   obtainMultipleStudies() doesn't return error. That study is automatically
   omitted from results and its name is printed on console.
 
+- AvailableData() function now works more accurately but unfortunately, it is
+  generally slower: Due to inconsistancy in the terms that cgdsr uses,
+  AvailableData() has to check the availability of the data at two different
+  levels.
 
 
 
