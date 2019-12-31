@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.7.2 \cr
-#' Date: \tab 2019-05-18 \cr
+#' Version: \tab 1.8.1 \cr
+#' Date: \tab 2020-01-01 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -174,9 +174,15 @@ obtainOneStudy <- function(
 
             "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
 
+            "mRNA Expression z-Scores (RNA Seq FPKM)",
+
             "mRNA Expression z-Scores (RNA Seq RPKM)",
 
-            "mRNA expression z-Scores")
+            "mRNA expression z-scores (RNA-Seq)",
+
+            "mRNA expression z-Scores",
+
+            "mRNA Expression z-Scores")
 
       } else if(desiredTechnique == "microRNA-Seq"){
 
