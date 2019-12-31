@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.7.2 \cr
-#' Date: \tab 2019-05-18 \cr
+#' Version: \tab 1.9.1 \cr
+#' Date: \tab 2020-01-01 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -64,7 +64,7 @@ availableData <- function(excelFileName){
 
   if(file.exists(paste(excelFileName, ".xlsx", sep = ""))){
 
-    choiceYesNo <- readline(prompt = "An excel file with the given name already exists in the working directory. Proceed anyway and overwrite the file? (yes/no):      ")
+    choiceYesNo <- readline(prompt = "An excel file with the given name already exists. Rewrite? (yes/no):      ")
 
     if(choiceYesNo == "yes"){
 
@@ -126,16 +126,24 @@ availableData <- function(excelFileName){
 
       "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
 
+      "mRNA Expression z-Scores (RNA Seq FPKM)",
+
       "mRNA Expression z-Scores (RNA Seq RPKM)",
 
-      "mRNA expression z-Scores"
+      "mRNA expression z-scores (RNA-Seq)",
+
+      "mRNA expression z-Scores",
+
+      "mRNA Expression z-Scores"
     )
 
-    microRNA.Seq_terms_L1 <- c("Tumors with microRNA data (microRNA-Seq)",
+    microRNA.Seq_terms_L1 <-
 
-                               "Tumor Samples with microRNA data (microRNA-Seq)"
+      c("Tumor Samples with microRNA data (microRNA-Seq)",
 
-                               )
+        "Tumors with microRNA data (microRNA-Seq)",
+
+        "Samples with microRNA data (microRNA-Seq)")
 
     microRNA.Seq_terms_L2 <- c("microRNA expression Z-scores",
 
@@ -154,6 +162,8 @@ availableData <- function(excelFileName){
       "Tumor Samples with mRNA data (U133 microarray only)",
 
       "Samples with mRNA data (U133 microarray)",
+
+      "Samples with mRNA data (U133 microarray only)",
 
       "Tumors with mRNA data",
 
@@ -485,7 +495,7 @@ availableData <- function(excelFileName){
 
       c("cancer_study_id", "cancer_study_name", "RNA.Seq", "microRNA.Seq",
 
-        "microarray_of_mRNAs" , "microarray_of_microRNAs", "methylation",
+        "microarray_for_mRNAs" , "microarray_for_microRNAs", "methylation",
 
         "description")
 

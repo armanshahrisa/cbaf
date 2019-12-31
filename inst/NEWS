@@ -1,3 +1,14 @@
+cbaf 1.9.1 - 2020-01-01
+-------------------------
+
+New Features
+
+- Terms are updated. Package can recongize even more cancers!
+
+
+
+
+
 cbaf 1.8.0 - 2019-10-28
 -------------------------
 
@@ -26,7 +37,7 @@ New Features
 
 - heatmapOutput now uses a more accurate algorithm for determining the margins.
 
-- Terms updates. Package can recongize more cancers!
+- Terms are updated. Package can recongize more cancers!
 
 
 

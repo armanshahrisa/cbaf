@@ -1,5 +1,5 @@
 ---
-title: "cbaf: Automated functions for comparing various data from cbioportal.org"
+title: "cbaf: an automated, easy-to-use R package for comparing omic data across multiple cancers / a cancer's subgroups"
 author: Arman Shahrisa
 date: "`r Sys.Date()`"
 output: BiocStyle::html_document

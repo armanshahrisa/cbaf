@@ -1,15 +1,16 @@
 Package: cbaf
 biocViews: Software, AssayDomain, DNAMethylation, GeneExpression, Transcription, ResearchField, BiomedicalInformatics, ComparativeGenomics, Epigenetics, Genetics, Transcriptomics
-Title: Automated functions for comparing various data from cbioportal.org
-Version: 1.9.0
+Title: Automated functions for comparing various omic data from cbioportal.org
+Version: 1.9.1
 Authors@R: c(person("Arman", "Shahrisa", role = c("aut", "cre", "cph"),
                      email = "shahrisa.arman@hotmail.com"),
             person("Maryam", "Tahmasebi Birgani", role = "aut",
                      email = "tahmasebi-ma@ajums.ac.ir"))
 Description: This package contains functions that allow analysing and comparing 
-             various gene groups from different cancers/cancer subgroups easily.
-             So far, it is compatible with RNA-seq, microRNA-seq, microarray and
+             omic data across various cancers/cancer subgroups easily. So far, 
+             it is compatible with RNA-seq, microRNA-seq, microarray and 
              methylation datasets that are stored on cbioportal.org.
+Depends: R (>= 3.5.0)
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
