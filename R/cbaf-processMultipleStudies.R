@@ -13,7 +13,7 @@
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
 #' Version: \tab 1.8.1 \cr
-#' Date: \tab 2020-01-01 \cr
+#' Date: \tab 2020-01-02 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
