@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.9.1 \cr
-#' Date: \tab 2020-01-01 \cr
+#' Version: \tab 1.9.2 \cr
+#' Date: \tab 2020-02-04 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -101,138 +101,6 @@ availableData <- function(excelFileName){
 
 
 
-    # Terms associated with different techniques
-
-    RNA.Seq_terms_L1 <- c(
-
-      "Tumor Samples with mRNA data (RNA Seq V2)",
-
-      "Tumors with mRNA data (RNA Seq V2)",
-
-      "Samples with mRNA data (RNA Seq V2)",
-
-      "Tumor Samples with mRNA data (RNA Seq)",
-
-      "Tumors with mRNA data (RNA Seq)",
-
-      "Samples with mRNA data (RNA Seq)"
-    )
-
-    RNA.Seq_terms_L2 <- c(
-
-      "mRNA Expression z-Scores (RNA Seq V2 RSEM)",
-
-      "mRNA expression z-Scores (RNA Seq V2 RSEM)",
-
-      "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
-
-      "mRNA Expression z-Scores (RNA Seq FPKM)",
-
-      "mRNA Expression z-Scores (RNA Seq RPKM)",
-
-      "mRNA expression z-scores (RNA-Seq)",
-
-      "mRNA expression z-Scores",
-
-      "mRNA Expression z-Scores"
-    )
-
-    microRNA.Seq_terms_L1 <-
-
-      c("Tumor Samples with microRNA data (microRNA-Seq)",
-
-        "Tumors with microRNA data (microRNA-Seq)",
-
-        "Samples with microRNA data (microRNA-Seq)")
-
-    microRNA.Seq_terms_L2 <- c("microRNA expression Z-scores",
-
-                               "mRNA Expression Z-Scores vs Normals"
-
-                               )
-
-    microarray_for_mRNA_terms_L1 <- c(
-
-      "Tumor Samples with mRNA data (Agilent microarray)",
-
-      "Tumors with mRNA data (Agilent microarray)",
-
-      "Samples with mRNA data (Agilent microarray)",
-
-      "Tumor Samples with mRNA data (U133 microarray only)",
-
-      "Samples with mRNA data (U133 microarray)",
-
-      "Samples with mRNA data (U133 microarray only)",
-
-      "Tumors with mRNA data",
-
-      "Tumors with mRNA"
-
-    )
-
-    microarray_for_mRNA_terms_L2 <- c(
-
-      "mRNA Expression z-Scores (microarray)",
-
-      "mRNA expression (microarray) z-scores",
-
-      "mRNA Expression z-Scores (U133 microarray only)",
-
-      "mRNA expression z-scores (Illumina)",
-
-      "mRNA expression Z-scores (all genes)",
-
-      "mRNA Expression Z-Scores vs Normals",
-
-      "mRNA Expression z-Scores (combined microarray)",
-
-      "mRNA Z-scores vs normal fat"
-
-    )
-
-    microarray_for_miRNA_terms_L1 <- "Tumors with microRNA"
-
-    microarray_for_miRNA_terms_L2 <-
-
-      c("mRNA Expression Z-Scores vs Normals",
-
-        "mRNA Expression z-Scores (combined microarray)")
-
-    methylation_terms_L1 <- c(
-
-      "Tumor Samples with methylation data (HM450)",
-
-      "Tumors with methylation data (HM450)",
-
-      "Samples with methylation data (HM450)",
-
-      "Tumor Samples with methylation data (HM27)",
-
-      "Tumors with methylation data (HM27)",
-
-      "Samples with methylation data (HM27)",
-
-      "Tumors with methylation data",
-
-      "Samples with methylation data"
-
-    )
-
-    methylation_terms_L2 <- c(
-
-      "Methylation (HM450)",
-
-      "Methylation (HM27)",
-
-      "Methylation (hm27)",
-
-      "Methylation"
-
-    )
-
-
-
     message("Cheching the available data for every cancer study")
 
 
@@ -276,35 +144,35 @@ availableData <- function(excelFileName){
 
           c(RNA.Seq = as.character(
 
-            any(RNA.Seq_terms_L1 %in% description)
+            any(RNA.Seq_L1.terms %in% description)
 
           ),
 
 
           microRNA.Seq = as.character(
 
-            any(microRNA.Seq_terms_L1 %in% description)
+            any(microRNA.Seq_L1.terms %in% description)
 
           ),
 
 
-          microarray_of_mRNA = as.character(
+          microarray_with_mRNA_data = as.character(
 
-            any(microarray_for_mRNA_terms_L1 %in% description)
+            any(microarray.with.mRNA_L1.terms %in% description)
 
           ),
 
 
-          microarray_of_miRNA = as.character(
+          microarray_with_microRNA_data = as.character(
 
-            any(microarray_for_miRNA_terms_L1 %in% description)
+            any(microarray.with.microRNA_L1.terms %in% description)
 
           ),
 
 
           methylation = as.character(
 
-            any(methylation_terms_L1 %in% description))
+            any(methylation_L1.terms %in% description))
 
           )
 
@@ -316,9 +184,9 @@ availableData <- function(excelFileName){
 
             microRNA.Seq = "FALSE",
 
-            microarray_of_mRNA = "FALSE",
+            microarray_with_mRNA_data = "FALSE",
 
-            microarray_of_miRNA = "FALSE",
+            microarray_with_microRNA_data = "FALSE",
 
             methylation = "FALSE")
 
@@ -331,9 +199,9 @@ availableData <- function(excelFileName){
 
           microRNA.Seq = "FALSE",
 
-          microarray_of_mRNA = "FALSE",
+          microarray_with_mRNA_data = "FALSE",
 
-          microarray_of_miRNA = "FALSE",
+          microarray_with_microRNA_data = "FALSE",
 
           methylation = "FALSE")
 
@@ -372,35 +240,35 @@ availableData <- function(excelFileName){
 
             c(RNA.Seq = as.character(
 
-              any(RNA.Seq_terms_L2 %in% description)
+              any(RNA.Seq_L2.terms %in% description)
 
             ),
 
 
             microRNA.Seq = as.character(
 
-              any(microRNA.Seq_terms_L2 %in% description)
+              any(microRNA.Seq_L2.terms %in% description)
 
             ),
 
 
-            microarray_of_mRNA = as.character(
+            microarray_with_mRNA_data = as.character(
 
-              any(microarray_for_mRNA_terms_L2 %in% description)
+              any(microarray.with.mRNA_L2.terms %in% description)
 
             ),
 
 
-            microarray_of_miRNA = as.character(
+            microarray_with_microRNA_data = as.character(
 
-              any(microarray_for_miRNA_terms_L2 %in% description)
+              any(microarray.with.microRNA_L2.terms %in% description)
 
             ),
 
 
             methylation = as.character(
 
-              any(methylation_terms_L2 %in% description))
+              any(methylation_L2.terms %in% description))
 
             )
 
@@ -412,9 +280,9 @@ availableData <- function(excelFileName){
 
               microRNA.Seq = "FALSE",
 
-              microarray_of_mRNA = "FALSE",
+              microarray_with_mRNA_data = "FALSE",
 
-              microarray_of_miRNA = "FALSE",
+              microarray_with_microRNA_data = "FALSE",
 
               methylation = "FALSE")
 
@@ -427,9 +295,9 @@ availableData <- function(excelFileName){
 
             microRNA.Seq = "FALSE",
 
-            microarray_of_mRNA = "FALSE",
+            microarray_with_mRNA_data = "FALSE",
 
-            microarray_of_miRNA = "FALSE",
+            microarray_with_microRNA_data = "FALSE",
 
             methylation = "FALSE")
 
@@ -495,7 +363,7 @@ availableData <- function(excelFileName){
 
       c("cancer_study_id", "cancer_study_name", "RNA.Seq", "microRNA.Seq",
 
-        "microarray_for_mRNAs" , "microarray_for_microRNAs", "methylation",
+        "microarray_with_mRNA_data" , "microarray_with_microRNA_data", "methylation",
 
         "description")
 

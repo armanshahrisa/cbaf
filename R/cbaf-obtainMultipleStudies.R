@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.9.1 \cr
-#' Date: \tab 2020-01-01 \cr
+#' Version: \tab 1.9.2 \cr
+#' Date: \tab 2020-02-04 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -171,133 +171,33 @@ obtainMultipleStudies <- function(
 
       if(desiredTechnique == "RNA-Seq"){
 
-        L1.characteristics <-
+        L1.characteristics <- RNA.Seq_L1.terms
 
-          c("Tumor Samples with mRNA data (RNA Seq V2)",
-
-            "Tumors with mRNA data (RNA Seq V2)",
-
-            "Samples with mRNA data (RNA Seq V2)",
-
-            "Tumor Samples with mRNA data (RNA Seq)",
-
-            "Tumors with mRNA data (RNA Seq)",
-
-            "Samples with mRNA data (RNA Seq)")
-
-        L2.characteristics <-
-
-          c("mRNA Expression z-Scores (RNA Seq V2 RSEM)",
-
-            "mRNA expression z-Scores (RNA Seq V2 RSEM)",
-
-            "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
-
-            "mRNA Expression z-Scores (RNA Seq FPKM)",
-
-            "mRNA Expression z-Scores (RNA Seq RPKM)",
-
-            "mRNA expression z-scores (RNA-Seq)",
-
-            "mRNA expression z-Scores",
-
-            "mRNA Expression z-Scores")
+        L2.characteristics <- RNA.Seq_L2.terms
 
       } else if(desiredTechnique == "microRNA-Seq"){
 
-        L1.characteristics <-
+        L1.characteristics <- microRNA.Seq_L1.terms
 
-          c("Tumor Samples with microRNA data (microRNA-Seq)",
-
-            "Tumors with microRNA data (microRNA-Seq)",
-
-            "Samples with microRNA data (microRNA-Seq)")
-
-        L2.characteristics <-
-
-          c("microRNA expression Z-scores",
-
-            "mRNA Expression Z-Scores vs Normals")
+        L2.characteristics <- microRNA.Seq_L2.terms
 
       } else if(desiredTechnique == "microarray.mRNA"){
 
-        L1.characteristics <-
+        L1.characteristics <- microarray.with.mRNA_L1.terms
 
-          c("Tumor Samples with mRNA data (Agilent microarray)",
-
-            "Tumors with mRNA data (Agilent microarray)",
-
-            "Samples with mRNA data (Agilent microarray)",
-
-            "Tumor Samples with mRNA data (U133 microarray only)",
-
-            "Samples with mRNA data (U133 microarray)",
-
-            "Samples with mRNA data (U133 microarray only)",
-
-            "Tumors with mRNA data",
-
-            "Tumors with mRNA")
-
-        L2.characteristics <-
-
-          c("mRNA Expression z-Scores (microarray)",
-
-            "mRNA expression (microarray) z-scores",
-
-            "mRNA Expression z-Scores (U133 microarray only)",
-
-            "mRNA expression z-scores (Illumina)",
-
-            "mRNA expression Z-scores (all genes)",
-
-            "mRNA Expression Z-Scores vs Normals",
-
-            "mRNA Expression z-Scores (combined microarray)",
-
-            "mRNA Z-scores vs normal fat")
+        L2.characteristics <- microarray.with.mRNA_L2.terms
 
       } else if(desiredTechnique == "microarray.microRNA"){
 
-        L1.characteristics <-
+        L1.characteristics <- microarray.with.microRNA_L1.terms
 
-          c("Tumors with microRNA")
-
-        L2.characteristics <-
-
-          c("mRNA Expression Z-Scores vs Normals",
-
-            "mRNA Expression z-Scores (combined microarray)")
+        L2.characteristics <- microarray.with.microRNA_L2.terms
 
       } else if(desiredTechnique == "methylation"){
 
-        L1.characteristics <-
+        L1.characteristics <- methylation_L1.terms
 
-          c("Tumor Samples with methylation data (HM450)",
-
-            "Tumors with methylation data (HM450)",
-
-            "Samples with methylation data (HM450)",
-
-            "Tumor Samples with methylation data (HM27)",
-
-            "Tumors with methylation data (HM27)",
-
-            "Samples with methylation data (HM27)",
-
-            "Tumors with methylation data",
-
-            "Samples with methylation data")
-
-        L2.characteristics <-
-
-          c("Methylation (HM450)",
-
-            "Methylation (HM27)",
-
-            "Methylation (hm27)",
-
-            "Methylation")
+        L2.characteristics <- methylation_L2.terms
 
       }
 
@@ -335,6 +235,38 @@ obtainMultipleStudies <- function(
 
   ##############################################################################
   ########## Decide whether function should stops now!
+
+  # Set cgdsr, stop if submissionName is either "test" or "test2" to
+  # improve package test speed
+
+  if(!(submissionName %in% c("test", "test2"))){
+
+    mycgds = CGDS("http://www.cbioportal.org/")
+
+
+    # Getting cancer names
+
+    supportedCancers <- getCancerStudies(mycgds)
+
+  }
+
+
+  # Check if all studiesNames are included in supportedCancers
+
+  if(!(submissionName %in% c("test", "test2"))){
+
+    if(any(studiesNames %in% supportedCancers[,2])){
+
+      studiesNames <- studiesNames[studiesNames %in% supportedCancers[,2]]
+
+    }else{
+
+      stop("None of the requested cancer studies exist in the list of supported cancers. Please check desired cancer names again")
+
+    }
+
+  }
+
 
   # Store the new parameteres
 
@@ -392,7 +324,9 @@ obtainMultipleStudies <- function(
 
     bfc <- BiocFileCache(
 
-      file.path(system.file("extdata", package = "cbaf"), submissionName)
+      file.path(system.file("extdata", package = "cbaf"), submissionName),
+
+      ask = FALSE
 
     )
 
@@ -465,12 +399,6 @@ obtainMultipleStudies <- function(
     ############################################################################
     ########## Set the function ready to work
 
-    # Set cgdsr
-
-    mycgds = CGDS("http://www.cbioportal.org/")
-
-
-
     # Creating a vector for cancer names and subsequent list sebset name
 
     if(!is.matrix(studiesNames)){
@@ -478,7 +406,6 @@ obtainMultipleStudies <- function(
       studiesNames <- studiesNames[order(studiesNames)]
 
       studiesNamesMatrix <- studiesNames
-
 
 
       if(cancerCode){
@@ -566,10 +493,6 @@ obtainMultipleStudies <- function(
     # List of cancers lacking approprate data
 
     cancersLackingData <- NULL
-
-    # Getting cancer names before for loop
-
-    supportedCancers <- getCancerStudies(mycgds)
 
 
 
@@ -1104,7 +1027,9 @@ obtainMultipleStudies <- function(
 
       bfc <- BiocFileCache(
 
-        file.path(system.file("extdata", package = "cbaf"), submissionName)
+        file.path(system.file("extdata", package = "cbaf"), submissionName),
+
+        ask = FALSE
 
       )
 

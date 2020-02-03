@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.9.1 \cr
-#' Date: \tab 2020-01-01 \cr
+#' Version: \tab 1.9.2 \cr
+#' Date: \tab 2020-02-04 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -166,71 +166,23 @@ obtainOneStudy <- function(
 
       if(desiredTechnique == "RNA-Seq"){
 
-        L2.characteristics <-
-
-          c("mRNA Expression z-Scores (RNA Seq V2 RSEM)",
-
-            "mRNA expression z-Scores (RNA Seq V2 RSEM)",
-
-            "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
-
-            "mRNA Expression z-Scores (RNA Seq FPKM)",
-
-            "mRNA Expression z-Scores (RNA Seq RPKM)",
-
-            "mRNA expression z-scores (RNA-Seq)",
-
-            "mRNA expression z-Scores",
-
-            "mRNA Expression z-Scores")
+        L2.characteristics <- RNA.Seq_L2.terms
 
       } else if(desiredTechnique == "microRNA-Seq"){
 
-        L2.characteristics <-
-
-          c("microRNA expression Z-scores",
-
-            "mRNA Expression Z-Scores vs Normals")
+        L2.characteristics <- microRNA.Seq_L2.terms
 
       } else if(desiredTechnique == "microarray.mRNA"){
 
-        L2.characteristics <-
-
-          c("mRNA Expression z-Scores (microarray)",
-
-            "mRNA expression (microarray) z-scores",
-
-            "mRNA Expression z-Scores (U133 microarray only)",
-
-            "mRNA expression z-scores (Illumina)",
-
-            "mRNA expression Z-scores (all genes)",
-
-            "mRNA Expression Z-Scores vs Normals",
-
-            "mRNA Expression z-Scores (combined microarray)",
-
-            "mRNA Z-scores vs normal fat")
+        L2.characteristics <- microarray.with.mRNA_L2.terms
 
       } else if(desiredTechnique == "microarray.microRNA"){
 
-        L2.characteristics <-
-
-          c("mRNA Expression Z-Scores vs Normals",
-
-            "mRNA Expression z-Scores (combined microarray)")
+        L2.characteristics <- microarray.with.microRNA_L2.terms
 
       } else if(desiredTechnique == "methylation"){
 
-        L2.characteristics <-
-
-          c("Methylation (HM450)",
-
-            "Methylation (HM27)",
-
-            "Methylation (hm27)",
-
-            "Methylation")
+        L2.characteristics <- methylation_L2.terms
 
       }
 
@@ -335,7 +287,9 @@ obtainOneStudy <- function(
 
     bfc <- BiocFileCache(
 
-      file.path(system.file("extdata", package = "cbaf"), submissionName)
+      file.path(system.file("extdata", package = "cbaf"), submissionName),
+
+      ask = FALSE
 
     )
 
@@ -409,6 +363,20 @@ obtainOneStudy <- function(
     # Getting cancer name before for loop
 
     supportedCancers <- getCancerStudies(mycgds)
+
+
+    # Check if all studiesNames are included in supportedCancers
+
+    if(!(submissionName %in% c("test", "test2"))){
+
+      if(!(studyName %in% supportedCancers[,2])){
+
+        stop("The requested cancer study does not exist in the list of supported cancers. Please check desired cancer name again")
+
+      }
+
+    }
+
 
     # Find cancer abbreviated name
 
@@ -888,7 +856,9 @@ obtainOneStudy <- function(
 
       bfc <- BiocFileCache(
 
-        file.path(system.file("extdata", package = "cbaf"), submissionName)
+        file.path(system.file("extdata", package = "cbaf"), submissionName),
+
+        ask = FALSE
 
       )
 

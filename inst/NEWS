@@ -1,9 +1,13 @@
-cbaf 1.9.1 - 2020-01-01
+cbaf 1.9.2 - 2020-02-04
 -------------------------
 
 New Features
 
-- Terms are updated. Package can recongize even more cancers!
+- A unified method for increasing the consistency of cancer terms used by
+  various functions. This enables easier maintanance and faster inclusion of new
+  terms whenever available.
+- Terms are updated. Package can recongize even more cancer studies!
+- An additional checkpoint to control the name of requested cancer studies.
 
 
 

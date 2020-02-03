@@ -12,8 +12,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.9.1 \cr
-#' Date: \tab 2020-01-01 \cr
+#' Version: \tab 1.9.2 \cr
+#' Date: \tab 2020-02-04 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -247,7 +247,9 @@ automatedStatistics<- function(
 
     bfc <- BiocFileCache(
 
-      file.path(system.file("extdata", package = "cbaf"), submissionName)
+      file.path(system.file("extdata", package = "cbaf"), submissionName),
+
+      ask = FALSE
 
       )
 
