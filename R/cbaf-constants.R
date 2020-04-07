@@ -19,7 +19,11 @@ RNA.Seq_L1.terms <-
 
 RNA.Seq_L2.terms <-
 
-  c("mRNA Expression z-Scores (RNA Seq V2 RSEM)",
+  c("mRNA expression z-scores relative to all samples (log RNA Seq V2 RSEM)",
+
+    "mRNA expression z-scores relative to all samples (RNA Seq RPKM)",
+
+    "mRNA Expression z-Scores (RNA Seq V2 RSEM)",
 
     "mRNA expression z-Scores (RNA Seq V2 RSEM)",
 
@@ -80,13 +84,11 @@ microarray.with.mRNA_L1.terms <-
 
 microarray.with.mRNA_L2.terms <-
 
-  c("mRNA Expression z-Scores (microarray)",
+  c("mRNA expression z-scores relative to all samples (microarray)",
+
+    "mRNA Expression z-Scores (microarray)",
 
     "mRNA expression (microarray) z-scores",
-
-    "mRNA Expression z-Scores (U133 microarray only)",
-
-    "mRNA expression z-scores (Illumina)",
 
     "mRNA expression Z-scores (all genes)",
 
@@ -94,7 +96,13 @@ microarray.with.mRNA_L2.terms <-
 
     "mRNA Expression z-Scores (combined microarray)",
 
-    "mRNA Z-scores vs normal fat")
+    "mRNA Z-scores vs normal fat",
+
+    "mRNA expression z-scores relative to all samples (U133 microarray only)",
+
+    "mRNA Expression z-Scores (U133 microarray only)",
+
+    "mRNA expression z-scores (Illumina)")
 
 
 #####################################

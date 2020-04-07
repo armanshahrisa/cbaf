@@ -53,8 +53,8 @@ alternative gene names.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.9.2 \cr
-Date: \tab 2020-02-04 \cr
+Version: \tab 1.10.0 \cr
+Date: \tab 2020-04-08 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
