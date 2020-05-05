@@ -23,8 +23,8 @@ microRNA-Seq, microarray(mRNA), microarray(miRNA) and methylation data.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.10.0 \cr
-Date: \tab 2020-04-08 \cr
+Version: \tab 1.10.1 \cr
+Date: \tab 2020-05-05 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

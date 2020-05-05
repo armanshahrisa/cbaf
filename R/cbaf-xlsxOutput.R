@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.10.0 \cr
-#' Date: \tab 2020-04-08 \cr
+#' Version: \tab 1.10.1 \cr
+#' Date: \tab 2020-05-05 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -168,7 +168,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(desiredTechnique == "methylation"){
 
-    cutoff.phrase <- "obs/exp cutoff"
+    cutoff.phrase <- "obs exp ratio cutoff"
 
   } else{
 
@@ -320,6 +320,12 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
     # Subset data that can be presented as heatmap
 
     subset.name <- names(statisticsData)[gr]
+
+    if(is.null(subset.name)){
+
+      subset.name <- " "
+
+    }
 
     subset.data <- statisticsData[[gr]]
 
