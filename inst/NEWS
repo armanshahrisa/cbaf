@@ -1,3 +1,17 @@
+cbaf 1.12.0 - 2020-04-08
+-------------------------
+
+New Features
+
+- Terms are updated. Package can recongize even more cancer studies!
+- Improvements for methylation analysis.
+- If desired genes are entered as a vector, they are converted to a
+  list without returning an error.
+
+
+
+
+
 cbaf 1.10.0 - 2020-04-08
 -------------------------
 

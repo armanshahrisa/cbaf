@@ -69,14 +69,14 @@ In addition, there are also two high-level functions, `processOneStudy()` and `p
 
 It is recommended that users only work with two low-level functions - `availableData()` and `cleanDatabase()` - directly, since they are independant of other low-level functions. For the rest, please use high-level functions instead. This allows all functions to work with a higher efficiency.
 
-## Low-level Functions
+## main Functions
 
 ### availableData()
 
-This function scans all the cancer studies to examine presence of _RNA-Seq_, _microRNA-Seq_, _microarray_ and _methylation_ data. It requires a name to label the output excel file. In the following example, the entered name is `"list.2017-11-05"`.
+This function scans all the cancer studies to examine presence of _RNA-Seq_, _microRNA-Seq_, _microarray_ and _methylation_ data. It requires a name to label the output excel file. In the following example, the entered name is `"list.2020-05-05"`.
 
 ```{r, eval = FALSE}
-availableData("list.2017-11-05")
+availableData("list.2020-05-05")
 ```    
 
 Upon finishing, the output excel file is accessible at the present (working) directory. It contains different columns: cancer_study_id, cancer_study_name, RNA.Seq, microRNA.Seq, microarray of mRNA, microarray of miRNA, methylation and description.
@@ -86,6 +86,195 @@ if there is already an excel file with the given name in the working directory, 
 
 
 
+
+### cleanDatabase()
+
+This function removes the created databases in the cbaf package directory. This helps users to obtain the fresh data from cbioportal.org.
+
+
+It contains one optional argument:
+
+- __databaseNames__, a character vector that contains name of databases that will be removed. The default value in null.
+
+In the following example, _databaseNames_ is `Whole2`.
+
+```{r, eval=FALSE}
+cleanDatabase("Whole2")
+```
+
+If the _databaseNames_ left unentered, the function will print the available databases and allow the user to choose the desired ones.
+
+
+
+
+
+### processOneStudy()
+
+This function combines four other functions for the ease of use. It is recommended that users only use this parent function to obtain and process gene data across multiple subsections of a cancer study so that child functions work with maximum efficiency. `processOneStudy()` uses the following functions:
+
+- __obtainOneStudy()__
+- __automatedStatistics()__
+- __heatmapOutput()__
+- __xlsxOutput()__
+
+It requires at least four arguments. All function arguments are the same as low-level functions:
+
+- __genesList__, a list that contains at least one gene group. There is no limit on the number of gene groups, users can set as many as gene groups they desire.
+
+- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same as submissionName for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
+
+- __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that exists on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
+
+- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-Seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
+
+Function also contains nineteen other options:
+
+- __desiredCaseList__ a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as 'none', function will show the available subgroups asking the user to enter the desired ones during the process. The default value is 'none'.
+
+- __validateGenes__ a logical value that, if set to be `TRUE`, function will check each cancer subgroup to find whether or not every gene has a record. If the subgroup doesn't have a record for the specific gene, function checks for alternative gene names that cbioportal might use instead of the given gene name.
+
+- __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue")`. To get all the statistics, use the following instead: `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
+
+- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
+
+- __round__, a logical value that forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
+
+- __topGenes__, a logical value that, if set as TRUE, causes the function to create three data.frame that contain the five top genes for each cancer. To get all the three data.frames, _frequencyPercentage_, _meanValue_ and _median_ must have been included for __calculate__.
+
+- __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
+
+- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `FALSE`.
+
+- __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
+unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `geneLimit`.
+
+- __heatmapFileFormat__ This option enables the user to select the desired image file format of the heatmaps. The default value is `"TIFF"`. Other suppoeted formats include `"BMP"`, `"JPG"`, and `"PNG"`.
+
+- __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
+
+- __RowCex__ a number that specifies letter size in heatmap row names, which ranges from 0 to 2. If `RowCex = "auto"`, the function will automatically determine the best RowCex.
+
+- __ColCex__ a number that specifies letter size in heatmap column names, which ranges from 0 to 2. If `ColCex = "auto"`, the function will automatically determine the best ColCex.
+
+- __heatmapMargines__ a numeric vector that is used to set heatmap margins. If `heatmapMargines = "auto"`, the function will automatically determine the best possible margines. Otherwise, enter the desired margine as e.g. `c(10,10)`.
+
+- __rowLabelsAngle__ a number that determines the angle with which the gene names are shown in heatmaps. The default value is 0 degree.
+
+- __columnLabelsAngle__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
+
+- __heatmapColor__ a character string that defines heatmap color. The default value is "RdBu". "RdGr" is also a popular color in genomic studies. To see the rest of colors, please type `library(RColorBrewer)` and then `display.brewer.all()`.
+
+- __reverseColor__ a logical value that reverses the color gradient for heatmap(s).
+
+- __transposedHeatmap__ a logical value that transposes heatmap rows to columns and vice versa.
+
+- __simplifyBy__ a number that tells the function to change the values smaller than that to zero. The purpose behind this option is to facilitate recognizing candidate genes. Therefore, it is not suited for publications. It has the same unit as _cutoff_.
+
+- __genesToDrop__ a character vector. Gene names within this vector will be omitted from heatmap. The default value is `FALSE`.
+
+- __transposeResults__, a logical value to replace the columns and rows of the output. 
+
+To get more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `obtainMultipleStudies()` function. The following is an example showing how this function can be used:
+
+```{r}
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2", "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
+
+processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-Seq", desiredCaseList = c(2,3,4,5), calculate = c("frequencyPercentage",  "frequencyRatio"), heatmapFileFormat = "TIFF")
+```
+
+The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which its name  is the combination of _submissionName_ and “output for multiple studies”, for example “test output for multiple studies”.
+
+
+
+
+
+### processMultipleStudies()
+
+This function combines four other functions for the ease of use. It is recommended that users only use this parent function to obtain and process gene data across multiple cancer studies for maximum efficiency. `processMultipleStudies()` uses the following functions:
+
+- __obtainMultipleStudies()__
+- __automatedStatistics()__
+- __heatmapOutput()__
+- __xlsxOutput()__
+
+It requires at least four arguments. All function arguments are the same as low-level functions:
+
+- __genesList__, a list that contains at least one gene group. There is no limit on the number of gene groups, users can set as many as gene groups they desire.
+
+- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same as submissionName for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
+
+- __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that exists on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
+
+- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-Seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
+
+Function also contains nineteen other options:
+
+- __cancerCode__, if `TRUE`, will force the function to use the standard abbreviated cancer names instead of complete cancer names. For example, `laml_tcga_pub` is the shortened name for `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
+
+- __validateGenes__ a logical value that, if set to be `TRUE`, function will check each cancer subgroup to find whether or not every gene has a record. If the subgroup doesn't have a record for the specific gene, function checks for alternative gene names that cbioportal might use instead of the given gene name.
+
+- __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue")`. To get all the statistics, use the following instead: `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
+
+- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
+
+- __round__, a logical value that forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
+
+- __topGenes__, a logical value that, if set as TRUE, causes the function to create three data.frame that contain the five top genes for each cancer. To get all the three data.frames, _frequencyPercentage_, _meanValue_ and _median_ must have been included for __calculate__.
+
+- __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
+
+- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `FALSE`.
+
+- __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
+unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `geneLimit`.
+
+- __heatmapFileFormat__ This option enables the user to select the desired image file format of the heatmaps. The default value is `"TIFF"`. Other suppoeted formats include `"BMP"`, `"JPG"`, and `"PNG"`.
+
+- __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
+
+- __RowCex__ a number that specifies letter size in heatmap row names, which ranges from 0 to 2. If `RowCex = "auto"`, the function will automatically determine the best RowCex.
+
+- __ColCex__ a number that specifies letter size in heatmap column names, which ranges from 0 to 2. If `ColCex = "auto"`, the function will automatically determine the best ColCex.
+
+- __heatmapMargines__ a numeric vector that is used to set heatmap margins. If `heatmapMargines = "auto"`, the function will automatically determine the best possible margines. Otherwise, enter the desired margine as e.g. `c(10,10)`.
+
+- __rowLabelsAngle__ a number that determines the angle with which the gene names are shown in heatmaps. The default value is 0 degree.
+
+- __columnLabelsAngle__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
+
+- __heatmapColor__ a character string that defines heatmap color. The default value is "RdBu". "RdGr" is also a popular color in genomic studies. To see the rest of colors, please type `library(RColorBrewer)` and then `display.brewer.all()`.
+
+- __reverseColor__ a logical value that reverses the color gradient for heatmap(s).
+
+- __transposedHeatmap__ a logical value that transposes heatmap rows to columns and vice versa.
+
+- __simplifyBy__ a number that tells the function to change the values smaller than that to zero. The purpose behind this option is to facilitate recognizing candidate genes. Therefore, it is not suited for publications. It has the same unit as _cutoff_.
+
+- __genesToDrop__ a character vector. Gene names within this vector will be omitted from heatmap. The default value is `FALSE`.
+
+
+- __transposeResults__, a logical value to replace the columns and rows of the output.
+
+To get more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `obtainMultipleStudies()` function. The following is an example showing how this function can be used:
+
+```{r}
+genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2", "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
+
+studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)") 
+
+processMultipleStudies(genes, "test2", studies, "RNA-Seq", calculate = c("frequencyPercentage", "frequencyRatio"), heatmapFileFormat = "TIFF")
+```
+
+
+The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which its name is the combination of _submissionName_ and "output for multiple studies", for example "test output for multiple studies".
+
+
+
+
+
+## Five dependant Functions
+
+The following functions are used by `processOneStudy()` and `processMultipleStudies()` functions. It is highly recomended to use thses two functions instead of running the following five functions independantly.
 
 ### obtainOneStudy()
 
@@ -273,190 +462,3 @@ xlsxOutput("test")
 ```
 
 If the requested excel files already exist, the function avoids rewriting them. The number of skipped excel files is then printed.
-
-
-
-
-
-### cleanDatabase()
-
-This function removes the created databases in the cbaf package directory. This helps users to obtain the fresh data from cbioportal.org.
-
-
-It contains one optional argument:
-
-- __databaseNames__, a character vector that contains name of databases that will be removed. The default value in null.
-
-In the following example, _databaseNames_ is `Whole2`.
-
-```{r, eval=FALSE}
-cleanDatabase("Whole2")
-```
-
-If the _databaseNames_ left unentered, the function will print the available databases and allow the user to choose the desired ones.
-
-
-
-
-
-## High-level Functions
-
-### processOneStudy()
-
-This function combines four of the mentioned functions for the ease of use. It is recommended that users only use this parent function to obtain and process gene data across multiple subsections of a cancer study so that child functions work with maximum efficiency. `processOneStudy()` uses the following functions:
-
-- __obtainOneStudy()__
-- __automatedStatistics()__
-- __heatmapOutput()__
-- __xlsxOutput()__
-
-It requires at least four arguments. All function arguments are the same as low-level functions:
-
-- __genesList__, a list that contains at least one gene group. There is no limit on the number of gene groups, users can set as many as gene groups they desire.
-
-- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same as submissionName for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
-
-- __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that exists on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
-
-- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-Seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
-
-Function also contains nineteen other options:
-
-- __desiredCaseList__ a numeric vector that contains the index of desired cancer subgroups, assuming the user knows index of desired subgroups. If not, desiredCaseList must be set as 'none', function will show the available subgroups asking the user to enter the desired ones during the process. The default value is 'none'.
-
-- __validateGenes__ a logical value that, if set to be `TRUE`, function will check each cancer subgroup to find whether or not every gene has a record. If the subgroup doesn't have a record for the specific gene, function checks for alternative gene names that cbioportal might use instead of the given gene name.
-
-- __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue")`. To get all the statistics, use the following instead: `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
-
-- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
-
-- __round__, a logical value that forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
-
-- __topGenes__, a logical value that, if set as TRUE, causes the function to create three data.frame that contain the five top genes for each cancer. To get all the three data.frames, _frequencyPercentage_, _meanValue_ and _median_ must have been included for __calculate__.
-
-- __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
-
-- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `FALSE`.
-
-- __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
-unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `geneLimit`.
-
-- __heatmapFileFormat__ This option enables the user to select the desired image file format of the heatmaps. The default value is `"TIFF"`. Other suppoeted formats include `"BMP"`, `"JPG"`, and `"PNG"`.
-
-- __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
-
-- __RowCex__ a number that specifies letter size in heatmap row names, which ranges from 0 to 2. If `RowCex = "auto"`, the function will automatically determine the best RowCex.
-
-- __ColCex__ a number that specifies letter size in heatmap column names, which ranges from 0 to 2. If `ColCex = "auto"`, the function will automatically determine the best ColCex.
-
-- __heatmapMargines__ a numeric vector that is used to set heatmap margins. If `heatmapMargines = "auto"`, the function will automatically determine the best possible margines. Otherwise, enter the desired margine as e.g. `c(10,10)`.
-
-- __rowLabelsAngle__ a number that determines the angle with which the gene names are shown in heatmaps. The default value is 0 degree.
-
-- __columnLabelsAngle__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
-
-- __heatmapColor__ a character string that defines heatmap color. The default value is "RdBu". "RdGr" is also a popular color in genomic studies. To see the rest of colors, please type `library(RColorBrewer)` and then `display.brewer.all()`.
-
-- __reverseColor__ a logical value that reverses the color gradient for heatmap(s).
-
-- __transposedHeatmap__ a logical value that transposes heatmap rows to columns and vice versa.
-
-- __simplifyBy__ a number that tells the function to change the values smaller than that to zero. The purpose behind this option is to facilitate recognizing candidate genes. Therefore, it is not suited for publications. It has the same unit as _cutoff_.
-
-- __genesToDrop__ a character vector. Gene names within this vector will be omitted from heatmap. The default value is `FALSE`.
-
-- __transposeResults__, a logical value to replace the columns and rows of the output. 
-
-To get more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `obtainMultipleStudies()` function. The following is an example showing how this function can be used:
-
-```{r}
-genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2", "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
-
-processOneStudy(genes, "test", "Breast Invasive Carcinoma (TCGA, Cell 2015)", "RNA-Seq", desiredCaseList = c(2,3,4,5), calculate = c("frequencyPercentage",  "frequencyRatio"), heatmapFileFormat = "TIFF")
-```
-
-The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which its name  is the combination of _submissionName_ and “output for multiple studies”, for example “test output for multiple studies”.
-
-
-
-
-
-### processMultipleStudies()
-
-This function combines four of the mentioned above functions for the ease of use. It is recommended that users only use this parent function to obtain and process gene data across multiple cancer studies for maximum efficiency. `processMultipleStudies()` uses the following functions:
-
-- __obtainMultipleStudies()__
-- __automatedStatistics()__
-- __heatmapOutput()__
-- __xlsxOutput()__
-
-It requires at least four arguments. All function arguments are the same as low-level functions:
-
-- __genesList__, a list that contains at least one gene group. There is no limit on the number of gene groups, users can set as many as gene groups they desire.
-
-- __submissionName__, a character string containing name of interest. It is used for naming the process and should be the same as submissionName for either of `obtainOneStudy()` or `obtainMultipleStudies()` functions.
-
-- __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that exists on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
-
-- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-Seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
-
-Function also contains nineteen other options:
-
-- __cancerCode__, if `TRUE`, will force the function to use the standard abbreviated cancer names instead of complete cancer names. For example, `laml_tcga_pub` is the shortened name for `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
-
-- __validateGenes__ a logical value that, if set to be `TRUE`, function will check each cancer subgroup to find whether or not every gene has a record. If the subgroup doesn't have a record for the specific gene, function checks for alternative gene names that cbioportal might use instead of the given gene name.
-
-- __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue")`. To get all the statistics, use the following instead: `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
-
-- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
-
-- __round__, a logical value that forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
-
-- __topGenes__, a logical value that, if set as TRUE, causes the function to create three data.frame that contain the five top genes for each cancer. To get all the three data.frames, _frequencyPercentage_, _meanValue_ and _median_ must have been included for __calculate__.
-
-- __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
-
-- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `FALSE`.
-
-- __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
-unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `geneLimit`.
-
-- __heatmapFileFormat__ This option enables the user to select the desired image file format of the heatmaps. The default value is `"TIFF"`. Other suppoeted formats include `"BMP"`, `"JPG"`, and `"PNG"`.
-
-- __resolution__ This option can be used to adjust the resolution of the output heatmaps as 'dot per inch'. The defalut resolution is 600.
-
-- __RowCex__ a number that specifies letter size in heatmap row names, which ranges from 0 to 2. If `RowCex = "auto"`, the function will automatically determine the best RowCex.
-
-- __ColCex__ a number that specifies letter size in heatmap column names, which ranges from 0 to 2. If `ColCex = "auto"`, the function will automatically determine the best ColCex.
-
-- __heatmapMargines__ a numeric vector that is used to set heatmap margins. If `heatmapMargines = "auto"`, the function will automatically determine the best possible margines. Otherwise, enter the desired margine as e.g. `c(10,10)`.
-
-- __rowLabelsAngle__ a number that determines the angle with which the gene names are shown in heatmaps. The default value is 0 degree.
-
-- __columnLabelsAngle__ a number that determines the angle with which the studies/study subgroups names are shown on heatmaps. The default value is 45 degree.
-
-- __heatmapColor__ a character string that defines heatmap color. The default value is "RdBu". "RdGr" is also a popular color in genomic studies. To see the rest of colors, please type `library(RColorBrewer)` and then `display.brewer.all()`.
-
-- __reverseColor__ a logical value that reverses the color gradient for heatmap(s).
-
-- __transposedHeatmap__ a logical value that transposes heatmap rows to columns and vice versa.
-
-- __simplifyBy__ a number that tells the function to change the values smaller than that to zero. The purpose behind this option is to facilitate recognizing candidate genes. Therefore, it is not suited for publications. It has the same unit as _cutoff_.
-
-- __genesToDrop__ a character vector. Gene names within this vector will be omitted from heatmap. The default value is `FALSE`.
-
-
-- __transposeResults__, a logical value to replace the columns and rows of the output.
-
-To get more information about the function options, please refer to the child function to whom they correspond, for example `genesList` lies within `obtainMultipleStudies()` function. The following is an example showing how this function can be used:
-
-```{r}
-genes <- list(K.demethylases = c("KDM1A", "KDM1B", "KDM2A", "KDM2B", "KDM3A", "KDM3B", "JMJD1C", "KDM4A"), K.methyltransferases = c("SUV39H1", "SUV39H2", "EHMT1", "EHMT2", "SETDB1", "SETDB2", "KMT2A", "KMT2A"))
-
-studies <- c("Acute Myeloid Leukemia (TCGA, Provisional)", "Adrenocortical Carcinoma (TCGA, Provisional)", "Bladder Urothelial Carcinoma (TCGA, Provisional)", "Brain Lower Grade Glioma (TCGA, Provisional)", "Breast Invasive Carcinoma (TCGA, Provisional)") 
-
-processMultipleStudies(genes, "test2", studies, "RNA-Seq", calculate = c("frequencyPercentage", "frequencyRatio"), heatmapFileFormat = "TIFF")
-```
-
-
-The output excel file and heatmaps are stored in separate folders for every gene group. Ultimately, all the folders are located inside another folder, which it's name is the combination of _submissionName_ and "output for multiple studies", for example "test output for multiple studies". 

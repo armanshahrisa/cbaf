@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.11.1 \cr
-#' Date: \tab 2020-05-05 \cr
+#' Version: \tab 1.12.0 \cr
+#' Date: \tab 2020-10-26 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -471,7 +471,7 @@ heatmapOutput <- function(
 
   if(desiredTechnique == "methylation"){
 
-    cutoff.phrase <- "obs exp ratio cutoff"
+    cutoff.phrase <- "average of relevant locations cutoff"
 
   } else{
 

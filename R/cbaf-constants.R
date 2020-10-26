@@ -14,12 +14,34 @@ RNA.Seq_L1.terms <-
 
     "Tumors with mRNA data (RNA Seq)",
 
-    "Samples with mRNA data (RNA Seq)")
+    "Samples with mRNA data (RNA Seq)",
+
+    "All samples")
 
 
 RNA.Seq_L2.terms <-
 
-  c("mRNA expression z-scores relative to all samples (log RNA Seq V2 RSEM)",
+  c("mRNA expression z-Scores relative to all samples (log RNA-Seq V2 RSEM)",
+
+    "mRNA expression z-Scores relative to all samples (log RNA-Seq V2 RESM)",
+
+    "mRNA expression z-scores relative to all samples (log RNA Seq V2 RSEM)",
+
+    "mRNA expression z-Scores relative to all samples (log RNA Seq V2 RSEM)",
+
+    "mRNA expression z-scores relative to all samples (log RNA Seq FPKM)",
+
+    "mRNA expression z-Scores relative to all samples (log RNA-Seq RPKM)",
+
+    "mRNA expression z-Scores relative to all samples (log RNA Seq RPKM)",
+
+    "mRNA expression z-scores relative to all samples (log RNA Seq RPKM)",
+
+    "mRNA expression z-Scores relative to all samples (log RNA Seq CPM)",
+
+    "mRNA expression z-Scores relative to all samples (log RNA-Seq TPM)",
+
+    "mRNA expression z-scores relative to all samples (log RNA Seq TPM)",
 
     "mRNA expression z-scores relative to all samples (RNA Seq RPKM)",
 
@@ -79,12 +101,20 @@ microarray.with.mRNA_L1.terms <-
 
     "Tumors with mRNA data",
 
-    "Tumors with mRNA")
+    "Tumors with mRNA",
+
+    "All samples")
 
 
 microarray.with.mRNA_L2.terms <-
 
-  c("mRNA expression z-scores relative to all samples (microarray)",
+  c("mRNA expression z-Scores relative to all samples (log microarray)",
+
+    "mRNA expression z-scores relative to all samples (log microarray)",
+
+    "mRNA expression z-scores relative to all samples (log U133 microarray)",
+
+    "mRNA expression z-scores relative to all samples (microarray)",
 
     "mRNA Expression z-Scores (microarray)",
 

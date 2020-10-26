@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.11.1 \cr
-#' Date: \tab 2020-05-05 \cr
+#' Version: \tab 1.12.0 \cr
+#' Date: \tab 2020-10-26 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -114,7 +114,13 @@ obtainOneStudy <- function(
 
   if(!is.list(genesList)){
 
-    stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
+    # stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
+
+    if(is.vector(genesList)){
+
+      genesList <- list(a = genesList)
+
+    }
 
   }
 
