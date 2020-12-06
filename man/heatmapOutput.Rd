@@ -94,8 +94,8 @@ automatedStatistics() function.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.12.0 \cr
-Date: \tab 2020-10-26 \cr
+Version: \tab 1.12.1 \cr
+Date: \tab 2020-12-07 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

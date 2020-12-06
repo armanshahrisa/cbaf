@@ -41,25 +41,27 @@ RNA.Seq_L2.terms <-
 
     "mRNA expression z-Scores relative to all samples (log RNA-Seq TPM)",
 
-    "mRNA expression z-scores relative to all samples (log RNA Seq TPM)",
+    "mRNA expression z-scores relative to all samples (log RNA Seq TPM)" #,
 
-    "mRNA expression z-scores relative to all samples (RNA Seq RPKM)",
+    # "mRNA expression z-scores relative to all samples (RNA Seq RPKM)",
 
-    "mRNA Expression z-Scores (RNA Seq V2 RSEM)",
+    # "mRNA Expression z-Scores (RNA Seq V2 RSEM)",
 
-    "mRNA expression z-Scores (RNA Seq V2 RSEM)",
+    # "mRNA expression z-Scores (RNA Seq V2 RSEM)",
 
-    "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
+    # "mRNA Expression Zscores, RSEM (Batch normalized from Illumina HiSeq_RNASeqV2)",
 
-    "mRNA Expression z-Scores (RNA Seq FPKM)",
+    # "mRNA Expression z-Scores (RNA Seq FPKM)",
 
-    "mRNA Expression z-Scores (RNA Seq RPKM)",
+    # "mRNA Expression z-Scores (RNA Seq RPKM)",
 
-    "mRNA expression z-scores (RNA-Seq)",
+    # "mRNA expression z-scores (RNA-Seq)",
 
-    "mRNA expression z-Scores",
+    # "mRNA expression z-Scores",
 
-    "mRNA Expression z-Scores")
+    # "mRNA Expression z-Scores"
+
+    )
 
 
 #########################
@@ -112,27 +114,29 @@ microarray.with.mRNA_L2.terms <-
 
     "mRNA expression z-scores relative to all samples (log microarray)",
 
-    "mRNA expression z-scores relative to all samples (log U133 microarray)",
+    "mRNA expression z-scores relative to all samples (log U133 microarray)" #,
 
-    "mRNA expression z-scores relative to all samples (microarray)",
+    # "mRNA expression z-scores relative to all samples (microarray)",
 
-    "mRNA Expression z-Scores (microarray)",
+    # "mRNA Expression z-Scores (microarray)",
 
-    "mRNA expression (microarray) z-scores",
+    # "mRNA expression (microarray) z-scores",
 
-    "mRNA expression Z-scores (all genes)",
+    # "mRNA expression Z-scores (all genes)",
 
-    "mRNA Expression Z-Scores vs Normals",
+    # "mRNA Expression Z-Scores vs Normals",
 
-    "mRNA Expression z-Scores (combined microarray)",
+    # "mRNA Expression z-Scores (combined microarray)",
 
-    "mRNA Z-scores vs normal fat",
+    # "mRNA Z-scores vs normal fat",
 
-    "mRNA expression z-scores relative to all samples (U133 microarray only)",
+    # "mRNA expression z-scores relative to all samples (U133 microarray only)",
 
-    "mRNA Expression z-Scores (U133 microarray only)",
+    # "mRNA Expression z-Scores (U133 microarray only)",
 
-    "mRNA expression z-scores (Illumina)")
+    # "mRNA expression z-scores (Illumina)"
+
+    )
 
 
 #####################################

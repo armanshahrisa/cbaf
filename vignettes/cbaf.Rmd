@@ -135,7 +135,7 @@ Function also contains nineteen other options:
 
 - __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue")`. To get all the statistics, use the following instead: `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
 
-- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
+- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 0.5. For methylation studies, it is _observed/expected ratio_, for the rest, it is _log z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
 
 - __round__, a logical value that forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
 
@@ -215,7 +215,7 @@ Function also contains nineteen other options:
 
 - __calculate__, a character vector that contains the desired statistical procedures. Default input is `c("frequencyPercentage", "frequencyRatio", "meanValue")`. To get all the statistics, use the following instead: `c("frequencyPercentage", "frequencyRatio", "meanValue", "medianValue")`.
 
-- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
+- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 0.5. For methylation studies, it is _observed/expected ratio_, for the rest, it is _log z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
 
 - __round__, a logical value that forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
 
@@ -373,7 +373,7 @@ Function also contains four other options:
     
 - __topGenes__, a logical value that, if set as TRUE, causes the function to create three data.frame that contain the five top genes for each cancer. To get all the three data.frames, _frequencyPercentage_, _meanValue_ and _median_ must have been included for __calculate__.
 
-- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 2. For methylation studies, it is _observed/expected ratio_, for the rest, it is _z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
+- __cutoff__, a number used to limit samples to those that are greater than this number (cutoff). The default value for methylation data is 0.6 while gene expression studies use default value of 0.5. For methylation studies, it is _observed/expected ratio_, for the rest, it is _log z-score_. To change the cutoff to any desired number, change the option to `cutoff = desiredNumber` in which desiredNumber is the number of interest.
 
 - __round__, a logical value that forces the function to round all the calculated values to two decimal places. The default value is `TRUE`.
 

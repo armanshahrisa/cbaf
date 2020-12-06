@@ -61,10 +61,10 @@ The default input is \code{calculate = c("frequencyPercentage",
 \item{cutoff}{a number used to limit samples to those that are greather than
 specific number (cutoff). The default value for methylation data is 0.6 while
  gene expression studies use default value of 2. For methylation studies, it
- is \code{average of relevant locations}, for the rest, it is \code{"z-score"}.
- To change the cutoff to any desired number, change the option to
- \code{cutoff = desiredNumber}, in which desiredNumber is the number of
- interest.}
+ is \code{average of relevant locations}, for the rest, it is
+ \code{"log z-score"}. To change the cutoff to any desired number, change the
+ option to \code{cutoff = desiredNumber}, in which desiredNumber is the
+ number of interest.}
 
 \item{round}{a logical value that, if set to be \code{TRUE}, will force the
 function to round all the calculated values to two decimal places. The
@@ -168,8 +168,8 @@ ratio, mean value and median value of samples greather than specific value in
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.12.0 \cr
-Date: \tab 2020-10-26 \cr
+Version: \tab 1.12.1 \cr
+Date: \tab 2020-12-07 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

@@ -64,7 +64,7 @@ The default input is \code{calculate = c("frequencyPercentage",
 this number (cutoff). The default value for methylation data is \code{0.6}
 while gene expression studies use default value of \code{2}. For methylation
 studies, it is \code{average of relevant locations}, for the rest, it is
-\code{"z-score"}. To change the cutoff to any desired number, change the
+\code{"log z-score"}. To change the cutoff to any desired number, change the
 option to \code{cutoff = desiredNumber} in which desiredNumber is the number
 of interest.}
 
@@ -170,8 +170,8 @@ highest values in each cancer study.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.12.0 \cr
-Date: \tab 2020-10-26 \cr
+Version: \tab 1.12.1 \cr
+Date: \tab 2020-12-07 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
