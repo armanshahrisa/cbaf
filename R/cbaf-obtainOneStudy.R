@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.1 \cr
-#' Date: \tab 2020-12-07 \cr
+#' Version: \tab 1.13.2 \cr
+#' Date: \tab 2020-12-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -114,7 +114,7 @@ obtainOneStudy <- function(
 
   if(!is.list(genesList)){
 
-    # stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
+    # stop("[cbaf: obtainOneStudy] 'genes' must be a list that contains at list one group of genes")
 
     if(is.vector(genesList)){
 
@@ -130,7 +130,7 @@ obtainOneStudy <- function(
 
   if(!is.character(submissionName)){
 
-    stop("'submissionName' must be entered as a character string for naming the process")
+    stop("[cbaf: obtainOneStudy] 'submissionName' must be a character string!")
 
   }
 
@@ -140,7 +140,7 @@ obtainOneStudy <- function(
 
   if(!is.character(studyName)){
 
-    stop("'studyName' must be entered as a character string")
+    stop("[cbaf: obtainOneStudy] 'studiesNames' must be character vector")
 
   }
 
@@ -164,7 +164,7 @@ obtainOneStudy <- function(
 
        length(desiredTechnique)!= 1){
 
-      stop("'desiredTechnique' must contain one of the following techniques: 'RNA-Seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA' or 'methylation'")
+      stop("[cbaf: obtainOneStudy] 'desiredTechnique' must be either 'RNA-Seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA' or 'methylation'")
 
     }else if(desiredTechnique %in% supported.techniques |
 
@@ -196,7 +196,7 @@ obtainOneStudy <- function(
 
   } else {
 
-    stop("'desiredTechnique' must be entered as a character string describing a technique name")
+    stop("[cbaf: obtainOneStudy] 'desiredTechnique' must be a character string!")
 
   }
 
@@ -210,7 +210,7 @@ obtainOneStudy <- function(
 
      !is.logical(desiredCaseList) & !is.numeric(desiredCaseList)){
 
-    stop("'desiredCaseList' must be set as FALSE or a be a numeric vector.")
+    stop("[cbaf: obtainOneStudy] 'desiredCaseList' must be either FALSE or a numeric vector!")
 
   }
 
@@ -220,7 +220,7 @@ obtainOneStudy <- function(
 
   if(!is.logical(validateGenes)){
 
-    stop("'validateGenes' can only accept logical values: TRUE or FALSE .")
+    stop("[cbaf: obtainOneStudy] 'validateGenes' must be either TRUE or FALSE!")
 
   }
 
@@ -277,9 +277,11 @@ obtainOneStudy <- function(
 
     if(past.time >= 5){
 
-      unlink(database, recursive = TRUE)
+      message("[cbaf: obtainOneStudy] The downloaded data are outdated!")
 
-      message("The previous downloaded data are more than five days old; They are going to be downloaded again.")
+      message("[cbaf: obtainOneStudy] Removing the downloaded data.")
+
+      unlink(database, recursive = TRUE)
 
     }
 
@@ -329,11 +331,13 @@ obtainOneStudy <- function(
 
         if(submissionName %in% c("test", "test2")){
 
-          message("--- 'test' and 'test2' databases contain sample data and therefore, are not changable. Please use a different submission name. ---")
+          message("[cbaf: obtainOneStudy] Please choose a name other than 'test' and 'test2'.")
 
         }
 
-        message("--- Function 'obtainOneStudy()' was skipped: the requested data already exist ---")
+        message("[cbaf: obtainOneStudy] The requested data already exist locally.")
+
+        message("[cbaf: obtainOneStudy] The function was haulted!")
 
       }else{
 
@@ -371,13 +375,13 @@ obtainOneStudy <- function(
     supportedCancers <- getCancerStudies(mycgds)
 
 
-    # Check if all studiesNames are included in supportedCancers
+    # Check if studyName is among the supportedCancers
 
     if(!(submissionName %in% c("test", "test2"))){
 
       if(!(studyName %in% supportedCancers[,2])){
 
-        stop("The requested cancer study does not exist in the list of supported cancers. Please check desired cancer name again")
+        stop("[cbaf: obtainOneStudy] The requested cancer is not supported!")
 
       }
 
@@ -398,7 +402,7 @@ obtainOneStudy <- function(
 
     if(! length(caseList) > 1){
 
-      stop("The data for ", studyName, " is currupted / being modified on server currently.")
+      stop("[cbaf: obtainOneStudy] This study contains corrupted data: '", studyName, "'!")
 
     }
 
@@ -432,25 +436,27 @@ obtainOneStudy <- function(
     ############################################################################
     ########## Core segment
 
-    # Chosing the desired case lists
+    # Choosing the desired case lists
 
     if(is.logical(desiredCaseList)){
 
       Choices <- caseList[,2]
 
+      message("[cbaf: obtainOneStudy] List of available cases for '", studyName, "':")
+
       print(paste(seq_along(Choices), Choices, sep = ". "))
 
       writeLines("")
 
-      message("Please enter the numeric index of desired case list(s) for ", studyName, ", seperated by comma. For instance, 1 and 2 must be enterd as: 1, 2")
+      message("[cbaf: obtainOneStudy] Please enter the numerical indices of your desired case(s). Example: 1,3,6")
 
-      inputCases <- readline(prompt = "Enter the numeric index(es): ")
+      inputCases <- readline(prompt = "Your choice(s): ")
 
       inputCases <- as.numeric(unlist(strsplit(inputCases, ",")))
 
       if(is.character(inputCases)){
 
-        stop("Desired case list(s) must contain numbers only")
+        stop("[cbaf: obtainOneStudy] Desired case(s) must contain numbers only!")
       }
 
     } else {
@@ -512,7 +518,7 @@ obtainOneStudy <- function(
 
     # Report
 
-    message("***", " Obtaining the requested data for ", submissionName, " ***")
+    message("[cbaf: obtainOneStudy] Downloading the required data")
 
     # Creating progress bar
 
@@ -984,6 +990,8 @@ obtainOneStudy <- function(
       )
 
     }
+
+    # message("[cbaf: obtainOneStudy] Finished.")
 
   }
 

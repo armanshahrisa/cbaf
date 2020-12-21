@@ -1,9 +1,10 @@
-cbaf 1.14.0 - 2020-12-07
+cbaf 1.14.0 - 2020-12-22
 -------------------------
 
 New Features
 
 - log z-scores provided by cgdsr are used instead of z-scores.
+- Functions now show shorter and more clearer messages.
 
 
 

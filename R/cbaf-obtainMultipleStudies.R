@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.1 \cr
-#' Date: \tab 2020-12-07 \cr
+#' Version: \tab 1.13.2 \cr
+#' Date: \tab 2020-12-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -119,7 +119,7 @@ obtainMultipleStudies <- function(
 
   if(!is.list(genesList)){
 
-    # stop("'genes' must be entered as a list containing at list one group of genes with descriptive group name for logistical purposes")
+    # stop("[cbaf: obtainMultipleStudies] 'genes' must be a list that contains at list one group of genes")
 
     if(is.vector(genesList)){
 
@@ -135,7 +135,7 @@ obtainMultipleStudies <- function(
 
   if(!is.character(submissionName)){
 
-    stop("'submissionName' must be entered as a character string for naming the process")
+    stop("[cbaf: obtainMultipleStudies] 'submissionName' must be a character string!")
 
   }
 
@@ -145,7 +145,7 @@ obtainMultipleStudies <- function(
 
   if(!is.character(studiesNames)){
 
-    stop("'studiesNames' must be entered a character vector containing at least one cancer name")
+    stop("[cbaf: obtainMultipleStudies] 'studiesNames' must be character vector")
 
   }
 
@@ -169,7 +169,7 @@ obtainMultipleStudies <- function(
 
        length(desiredTechnique)!= 1){
 
-      stop("'desiredTechnique' must contain one of the following techniques: 'RNA-Seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA' or 'methylation'")
+      stop("[cbaf: obtainMultipleStudies] 'desiredTechnique' must be either 'RNA-Seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA' or 'methylation'")
 
     } else if(desiredTechnique %in% supported.techniques |
 
@@ -211,7 +211,7 @@ obtainMultipleStudies <- function(
 
   } else {
 
-    stop("'desiredTechnique' must be entered as a character string describing a technique name")
+    stop("[cbaf: obtainMultipleStudies] 'desiredTechnique' must be a character string!")
 
   }
 
@@ -221,7 +221,7 @@ obtainMultipleStudies <- function(
 
   if(!is.logical(cancerCode)){
 
-    stop("'cancerCode' can only accept logical values: TRUE or FALSE .")
+    stop("[cbaf: obtainMultipleStudies] 'cancerCode' must be either TRUE or FALSE!")
 
   }
 
@@ -231,7 +231,7 @@ obtainMultipleStudies <- function(
 
   if(!is.logical(validateGenes)){
 
-    stop("'validateGenes' can only accept logical values: TRUE or FALSE .")
+    stop("[cbaf: obtainMultipleStudies] 'validateGenes' must be either TRUE or FALSE!")
 
   }
 
@@ -267,7 +267,7 @@ obtainMultipleStudies <- function(
 
     }else{
 
-      stop("None of the requested cancer studies exist in the list of supported cancers. Please check desired cancer names again")
+      stop("[cbaf: obtainMultipleStudies] None of the requested cancer studies is supported!")
 
     }
 
@@ -314,9 +314,11 @@ obtainMultipleStudies <- function(
 
     if(past.time >= 5){
 
-      unlink(database, recursive = TRUE)
+      message("[cbaf: obtainMultipleStudies] The downloaded data are outdated!")
 
-      message("The previous downloaded data are more than five days old; They are going to be downloaded again.")
+      message("[cbaf: obtainMultipleStudies] Removing the downloaded data.")
+
+      unlink(database, recursive = TRUE)
 
     }
 
@@ -372,11 +374,13 @@ obtainMultipleStudies <- function(
 
         if(submissionName %in% c("test", "test2")){
 
-          message("--- 'test' and 'test2' databases contain sample data and therefore, are not changable. Please use a different submission name. ---")
+          message("[cbaf: obtainMultipleStudies] Please choose a name other than 'test' and 'test2'.")
 
         }
 
-        message("--- Function 'obtainMultipleStudies()' was skipped: the requested data already exist ---")
+        message("[cbaf: obtainMultipleStudies] The requested data already exist locally.")
+
+        message("[cbaf: obtainMultipleStudies] The function was haulted!")
 
       }else{
 
@@ -405,7 +409,7 @@ obtainMultipleStudies <- function(
     ############################################################################
     ########## Set the function ready to work
 
-    # Creating a vector for cancer names and subsequent list sebset name
+    # Creating a vector for cancer names and subsequent list subset name
 
     if(!is.matrix(studiesNames)){
 
@@ -445,7 +449,7 @@ obtainMultipleStudies <- function(
 
     # Report
 
-    message("***", " Obtaining the requested data for ", submissionName, " ***")
+    message("[cbaf: obtainMultipleStudies] Downloading the required data")
 
 
 
@@ -974,11 +978,11 @@ obtainMultipleStudies <- function(
 
       if(length(cancersWithCorruptedData) == 1){
 
-        message("The data for the following cancer study are corrupted / being modified on server:")
+        message("[cbaf: obtainMultipleStudies] Corrupted / under modification data:")
 
       } else{
 
-        message("The data for the following cancer studies are corrupted / being modified on server:")
+        message("[cbaf: obtainMultipleStudies] Corrupted / being modification data:")
 
       }
 
@@ -992,11 +996,11 @@ obtainMultipleStudies <- function(
 
       if(length(cancersLackingData) == 1){
 
-        message("The following cancer study lacks the ", desiredTechnique, " Data:")
+        message("[cbaf: obtainMultipleStudies] Following study lacks ", desiredTechnique, " Data:")
 
       } else{
 
-        message("The following cancer studies lack the ", desiredTechnique, " Data:")
+        message("[cbaf: obtainMultipleStudies] Following study contains corrupted Data:")
 
       }
 
@@ -1017,7 +1021,7 @@ obtainMultipleStudies <- function(
 
     if( length(StudiesWithResults) < 1 ){
 
-      stop("No cancer study exists with ", desiredTechnique, " and/or uncorrupted data!")
+      stop("[cbaf: obtainMultipleStudies] No cancer study exists with ", desiredTechnique, " data or data for all studies are completely corrupted!")
 
     }
 
@@ -1178,6 +1182,8 @@ obtainMultipleStudies <- function(
       )
 
     }
+
+    # message("[cbaf: obtainMultipleStudies] Finished.")
 
   }
 

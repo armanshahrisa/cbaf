@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.1 \cr
-#' Date: \tab 2020-12-07 \cr
+#' Version: \tab 1.13.2 \cr
+#' Date: \tab 2020-12-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -56,7 +56,7 @@ availableData <- function(excelFileName){
 
   if(!is.character(excelFileName)){
 
-    stop("'excelFileName' must be entered as a character string.")
+    stop("[availableData] 'excelFileName' must be a character string!")
 
   }
 
@@ -64,7 +64,9 @@ availableData <- function(excelFileName){
 
   if(file.exists(paste(excelFileName, ".xlsx", sep = ""))){
 
-    choiceYesNo <- readline(prompt = "An excel file with the given name already exists. Rewrite? (yes/no):      ")
+    message("[cbaf: availableData] Warning! '", excelFileName, ".xlsx", "' already exists!")
+
+    choiceYesNo <- readline(prompt = "[cbaf: availableData] Overwrite the file? (yes/no): ")
 
     if(choiceYesNo == "yes"){
 
@@ -76,7 +78,7 @@ availableData <- function(excelFileName){
 
     }else{
 
-      stop("please type 'yes' or 'no'!")
+      stop("[availableData] please type 'yes' or 'no'!")
 
     }
 
@@ -101,7 +103,7 @@ availableData <- function(excelFileName){
 
 
 
-    message("Cheching the available data for every cancer study")
+    message("[cbaf: availableData] Checking all cancer studies")
 
 
     # create progress bar
@@ -394,9 +396,13 @@ availableData <- function(excelFileName){
 
       )
 
+    # message("[cbaf: availableData] Finished.")
+
+    message(c("[cbaf: availableData] The output was stored as '",  excelFileName, ".xlsx","'."))
+
   }else{
 
-    message("--- Function 'availableData()' was skipped. ---")
+    message("[cbaf: availableData] Function was haulted!")
 
   }
 

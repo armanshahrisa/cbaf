@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.1 \cr
-#' Date: \tab 2020-12-07 \cr
+#' Version: \tab 1.13.2 \cr
+#' Date: \tab 2020-12-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -82,17 +82,17 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   # Check submissionName
 
-  if(exists("submissionName")){
+  if(!missing(submissionName)){
 
     if(!is.character(submissionName)){
 
-      stop("'submissionName' must be entered as a character string for naming the process")
+      stop("[cbaf: xlsxOutput] 'submissionName' must be a character string!")
 
     }
 
   } else{
 
-    stop("'submissionName' must be entered as a character string for naming the process")
+    stop("[cbaf: xlsxOutput] 'submissionName' must be a character string!")
 
   }
 
@@ -100,7 +100,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(!is.logical(transposeResults)){
 
-    stop("'transposeResults' must be entered as a logical value: TRUE or FALSE")
+    stop("[cbaf: xlsxOutput] 'transposeResults' must be either TRUE or FALSE!")
 
   }
 
@@ -119,7 +119,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(!dir.exists(database)){
 
-    stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function first")
+    stop("[cbaf: xlsxOutput] Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first, and then the automatedStatistics() function!")
 
   } else if(dir.exists(database)){
 
@@ -133,7 +133,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
     if(!nrow(bfcquery(bfc, c("Parameters for automatedStatistics()"))) == 1){
 
-      stop("Please run the automatedStatistics() function first")
+      stop("[cbaf: xlsxOutput] Please run the automatedStatistics() function first!")
 
     }
 
@@ -168,7 +168,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(desiredTechnique == "methylation"){
 
-    cutoff.phrase <- "average of relevant locations cutoff"
+    cutoff.phrase <- "Mean methylation cutoff"
 
   } else{
 
@@ -245,7 +245,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(!is.list(statisticsData)){
 
-    stop("Input database must be a list.")
+    stop("[cbaf: xlsxOutput] Input database must be a list!")
 
   }
 
@@ -286,7 +286,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   # Report
 
-  message("***", " Preparing the requested excel file(s) for ", submissionName, " ***")
+  message("[cbaf: xlsxOutput] ", "Preparing excel file(s)")
 
 
 
@@ -523,11 +523,11 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(skipped > 0 & skipped != 1){
 
-    message("--- ", as.character(skipped), " out of ", as.character(total.number), " excel files were skipped: They already exist. ---")
+    message("[cbaf: xlsxOutput] ", as.character(skipped), " out of ", as.character(total.number), " excel files were skipped, because they already exist!")
 
   } else if(skipped > 0 & skipped == 1){
 
-    message("--- ", as.character(skipped), " out of ", as.character(total.number), " excel file was skipped: It already exists. ---")
+    message("[cbaf: xlsxOutput] ", as.character(skipped), " out of ", as.character(total.number), " excel file was skipped, because it already exists!")
 
   }
 
@@ -567,5 +567,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
   # change directory to parent directory
 
   setwd(parent.directory)
+
+  # message("[cbaf: xlsxOutput] Finished.")
 
 }

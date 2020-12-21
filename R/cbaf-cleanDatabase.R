@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.1 \cr
-#' Date: \tab 2020-12-07 \cr
+#' Version: \tab 1.13.2 \cr
+#' Date: \tab 2020-12-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -54,6 +54,8 @@ cleanDatabase <- function(databaseNames = NULL){
 
   # List all folders in extdata folder of cbaf package
 
+  message("[cbaf: cleanDatabase] Checking for the local data sets")
+
   package.path <- system.file("extdata", package = "cbaf")
 
   just.names <- sapply(
@@ -82,13 +84,15 @@ cleanDatabase <- function(databaseNames = NULL){
 
   if(is.null(databaseNames) & length(removable.directories) != 0){
 
+    message("[cbaf: cleanDatabase] List of removable data set(s):")
+
     print(removable.directories)
 
     writeLines("")
 
-    message("Please enter the folder names you wish to remove, seperated by comma. For instance, 'test' and 'test2' must be enterd as: test, test2")
+    message("[cbaf: cleanDatabase] Please enter the name of data set(s) you want to remove. Example: test, test2")
 
-    input <- readline(prompt = "Enter the name of folders: ")
+    input <- readline(prompt = "Your choice(s): ")
 
     input <- as.character(unlist(strsplit(input, ", ")))
 
@@ -98,11 +102,11 @@ cleanDatabase <- function(databaseNames = NULL){
 
   }else if(length(removable.directories) == 0){
 
-    message("No removable directory was found.")
+    message("[cbaf: cleanDatabase] No removable data set was found.")
 
   }else{
 
-    stop("Incorrect database name!")
+    stop("[cbaf: cleanDatabase] Incorrect name of data set(s)!")
 
   }
 
@@ -136,18 +140,20 @@ cleanDatabase <- function(databaseNames = NULL){
 
     if(number.of.correct.directories  == 1){
 
-      message("1 database was removed")
+      message("[cbaf: cleanDatabase] 1 data set was removed.")
 
     }else if((number.of.correct.directories  > 1)){
 
-      message(sum(!dir.exists(full.path.of.correct.directories)), " databases were removed")
+      message("[cbaf: cleanDatabase] " ,sum(!dir.exists(full.path.of.correct.directories)), " data set(s) were removed.")
 
     }
 
   }else if(length(removable.directories) != 0){
 
-    message("0 database was removed")
+    message("[cbaf: cleanDatabase] 0 data set was removed.")
 
   }
+
+  # message("[cbaf: cleanDatabase] Finished.")
 
 }

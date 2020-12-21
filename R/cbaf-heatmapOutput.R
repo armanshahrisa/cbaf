@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.1 \cr
-#' Date: \tab 2020-12-07 \cr
+#' Version: \tab 1.13.2 \cr
+#' Date: \tab 2020-12-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -191,17 +191,17 @@ heatmapOutput <- function(
 
   # Check submissionName
 
-  if(exists("submissionName")){
+  if(!missing(submissionName)){
 
     if(!is.character(submissionName)){
 
-      stop("'submissionName' must be entered as a character string for naming the process")
+      stop("[cbaf: heatmapOutput] 'submissionName' must be a character string!")
 
     }
 
   } else{
 
-    stop("'submissionName' must be entered as a character string for naming the process")
+    stop("[cbaf: heatmapOutput] 'submissionName' is mandatory!")
 
   }
 
@@ -211,7 +211,7 @@ heatmapOutput <- function(
 
   if(!is.logical(shortenStudyNames)){
 
-    stop("'shortenStudyNames' can only accept logical values: TRUE or FALSE .")
+    stop("[cbaf: heatmapOutput] 'shortenStudyNames' must be either TRUE or FALSE!")
 
   }
 
@@ -221,7 +221,7 @@ heatmapOutput <- function(
 
   if(!geneLimit == FALSE & !is.numeric(geneLimit)){
 
-    stop("'geneLimit' specifies the maximum number of genes on the heatmap(s). If you don't want any restrictions please type FALSE.")
+    stop("[cbaf: heatmapOutput] 'geneLimit' must either specify the maximum number of genes on the heatmap(s) or be FALSE.")
 
   }
 
@@ -231,7 +231,7 @@ heatmapOutput <- function(
 
   if(!rankingMethod %in% c("variation", "highValue")){
 
-    stop("'rankingMethod' is one of the two supported method: 'variation' or 'highValue'")
+    stop("[cbaf: heatmapOutput] 'rankingMethod' must be either 'variation' or 'highValue'!")
 
   }
 
@@ -241,7 +241,7 @@ heatmapOutput <- function(
 
   if(!(heatmapFileFormat %in% c("TIFF", "PNG", "JPG", "BMP"))){
 
-    stop("'heatmapFileFormat' must be one of the supported image formats: 'TIFF', 'PNG', 'JPG', or 'BMP'")
+    stop("[cbaf: heatmapOutput] 'heatmapFileFormat' must be one of these formats: 'TIFF', 'PNG', 'JPG', or 'BMP'")
 
   }
 
@@ -251,7 +251,7 @@ heatmapOutput <- function(
 
   if(!is.numeric(resolution)){
 
-    stop("'resolution' must be a number!")
+    stop("[cbaf: heatmapOutput] 'resolution' must be a number!")
 
   }
 
@@ -263,7 +263,7 @@ heatmapOutput <- function(
 
      is.numeric(RowCex) & ! (RowCex >= 0 & RowCex <= 2)){
 
-    stop("'RowCex' must be a number between 0 and 2.")
+    stop("[cbaf: heatmapOutput] 'RowCex' must be a number between 0 and 2!")
 
   }
 
@@ -275,7 +275,7 @@ heatmapOutput <- function(
 
      is.numeric(ColCex) & ! (ColCex >= 0 & ColCex <= 2)){
 
-    stop("'ColCex' must be a number between 0 and 2.")
+    stop("[cbaf: heatmapOutput] 'ColCex' must be a number between 0 and 2!")
 
   }
 
@@ -289,7 +289,7 @@ heatmapOutput <- function(
 
       if(!heatmapMargines == "auto"){
 
-        stop("'heatmapMargines' must be a numerical vector containing two numbers, otherwise it must be set as 'auto'")
+        stop("[cbaf: heatmapOutput] 'heatmapMargines' must be either a numerical vector of two numbers or be 'auto'!")
 
       } else{
 
@@ -299,7 +299,7 @@ heatmapOutput <- function(
 
     }else{
 
-      stop("'heatmapMargines' must be a numerical vector containing two numbers, otherwise it must be set as 'auto'")
+      stop("[cbaf: heatmapOutput] 'heatmapMargines' must be either a numerical vector of two numbers or be 'auto'!")
 
     }
 
@@ -307,7 +307,7 @@ heatmapOutput <- function(
 
     if(! length(heatmapMargines) == 2){
 
-      stop("'heatmapMargines' must be a numerical vector containing two numbers, otherwise it must be set as 'auto'")
+      stop("[cbaf: heatmapOutput] 'heatmapMargines' must be either a numerical vector of two numbers or be 'auto'!")
 
     } else{
 
@@ -327,7 +327,7 @@ heatmapOutput <- function(
 
      ! (rowLabelsAngle >= 0 & rowLabelsAngle <= 360)){
 
-    stop("'rowLabelsAngle' must be entered as 'auto' or a number corresponding to an angle ranging from 0 to 360.")
+    stop("[cbaf: heatmapOutput] 'rowLabelsAngle' must be either 'auto' or a number ranging from 0 to 360.")
 
   }
 
@@ -341,7 +341,7 @@ heatmapOutput <- function(
 
      ! (columnLabelsAngle >= 0 & columnLabelsAngle <= 360)){
 
-    stop("'columnLabelsAngle'  must be entered as 'auto' or a number corresponding to an angle ranging from 0 to 360.")
+    stop("[cbaf: heatmapOutput] 'columnLabelsAngle' must be either 'auto' or a number ranging from 0 to 360.")
 
   }
 
@@ -363,7 +363,7 @@ heatmapOutput <- function(
 
                           "BrBG")){
 
-    stop("The entered 'heatmapColor' is not supported.")
+    stop("[cbaf: heatmapOutput] The entered 'heatmapColor' is not supported!")
 
   }
 
@@ -373,7 +373,7 @@ heatmapOutput <- function(
 
   if(!is.logical(reverseColor)){
 
-    stop("'reverseColor' can only accept logical values: TRUE or FALSE .")
+    stop("[cbaf: heatmapOutput] 'reverseColor' must be either TRUE or FALSE!")
 
   }
 
@@ -383,7 +383,7 @@ heatmapOutput <- function(
 
   if(!is.logical(transposedHeatmap)){
 
-    stop("'transposedHeatmap' can only accept logical values: TRUE or FALSE .")
+    stop("[cbaf: heatmapOutput] 'transposedHeatmap' must be either TRUE or FALSE!")
 
   }
 
@@ -395,7 +395,7 @@ heatmapOutput <- function(
 
   if(!simplifyBy == FALSE & !is.numeric(simplifyBy)){
 
-    stop("'simplify' must be set as FALSE or a be a numeric value.")
+    stop("[cbaf: heatmapOutput] 'simplify' must be either FALSE or a numerical value!")
 
   }
 
@@ -407,7 +407,7 @@ heatmapOutput <- function(
 
   if(!genesToDrop == FALSE & !is.character(genesToDrop)){
 
-    stop("'genesToDrop' must be a character vector containing desired gene names that will be omitted from the heatmap(s).")
+    stop("[cbaf: heatmapOutput] 'genesToDrop' must be a character vector of desired gene names!")
 
   }
 
@@ -424,7 +424,7 @@ heatmapOutput <- function(
 
   if(!dir.exists(database)){
 
-    stop("Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions and then the automatedStatistics() function first")
+    stop("[cbaf: heatmapOutput] Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first, and then the automatedStatistics() function!")
 
   } else if(dir.exists(database)){
 
@@ -438,7 +438,7 @@ heatmapOutput <- function(
 
     if(!nrow(bfcquery(bfc, c("Parameters for automatedStatistics()"))) == 1){
 
-      stop("Please run the automatedStatistics() function first")
+      stop("[cbaf: heatmapOutput] Please run the automatedStatistics() function first!")
 
     }
 
@@ -471,7 +471,7 @@ heatmapOutput <- function(
 
   if(desiredTechnique == "methylation"){
 
-    cutoff.phrase <- "average of relevant locations cutoff"
+    cutoff.phrase <- "Mean methylation cutoff"
 
   } else{
 
@@ -576,7 +576,7 @@ heatmapOutput <- function(
 
   if(!is.list(statisticsData)){
 
-    stop("Input database must be a list.")
+    stop("[cbaf: heatmapOutput] Input database must be a list!")
 
   }
 
@@ -595,11 +595,11 @@ heatmapOutput <- function(
 
   # Report
 
-  message("***", " Preparing the requested heatmaps for ", submissionName, " ***")
+  message("[cbaf: heatmapOutput] Preparing heatmap(s)")
 
   if(is.numeric(simplifyBy)){
 
-    warning("--- Only significant results will be used to draw heatmaps ---")
+    message("[cbaf: heatmapOutput] Only significant results will be shown on heatmap(s)!")
 
   }
 
@@ -682,7 +682,7 @@ heatmapOutput <- function(
 
         if(!is.character(genesToDrop)){
 
-          stop("Please enter the desired genes as a character vector to omit them from the heatmap.")
+          stop("[cbaf: heatmapOutput] 'genesToDrop' must be a character vector of desired genes!")
 
         } else{
 
@@ -828,7 +828,7 @@ heatmapOutput <- function(
 
             } else{
 
-              stop("Please type gene number limit or if whole genes are desired please type none")
+              stop("[cbaf: heatmapOutput] 'geneLimit' must be either a numerical value or FALSE!")
 
             }
 
@@ -1239,11 +1239,11 @@ heatmapOutput <- function(
 
   if(skipped > 0 & skipped != 1){
 
-    message("--- ", as.character(skipped), " out of ", as.character(total.number)," heatmaps were skipped: They already exist. ---")
+    message("[cbaf: heatmapOutput] ", as.character(skipped), " out of ", as.character(total.number)," heatmaps were skipped, because they already exist!")
 
   } else if(skipped > 0 & skipped == 1){
 
-    message("--- ", as.character(skipped), " out of ", as.character(total.number)," heatmaps was skipped: It already exist. ---")
+    message("[cbaf: heatmapOutput] ", as.character(skipped), " out of ", as.character(total.number)," heatmaps was skipped, because it already exists!")
 
   }
 
@@ -1283,5 +1283,7 @@ heatmapOutput <- function(
   # change directory to parent directory
 
   setwd(parent.directory)
+
+  # message("[cbaf: heatmapOutput] Finished.")
 
 }
