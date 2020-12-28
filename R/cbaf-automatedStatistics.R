@@ -12,8 +12,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.2 \cr
-#' Date: \tab 2020-12-22 \cr
+#' Version: \tab 1.13.3 \cr
+#' Date: \tab 2020-12-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -142,7 +142,7 @@ automatedStatistics<- function(
 
   if(!is.character(submissionName)){
 
-    stop("[cbaf: automatedStatistics] 'submissionName' must be a character string!")
+    stop("[automatedStatistics] 'submissionName' must be a character string!")
 
   }
 
@@ -168,7 +168,7 @@ automatedStatistics<- function(
 
   } else{
 
-    stop("[cbaf: automatedStatistics] 'obtainedDataType' must be either 'multiple studies' or 'single study'!")
+    stop("[automatedStatistics] 'obtainedDataType' must be either 'multiple studies' or 'single study'!")
 
   }
 
@@ -188,13 +188,13 @@ automatedStatistics<- function(
 
        ){
 
-      stop("[cbaf: automatedStatistics] 'calculate' must consist of one or more of these terms: 'frequencyPercentage', 'frequencyRatio', 'meanValue' and/or 'medianValue'!")
+      stop("[automatedStatistics] 'calculate' must consist of one or more of these terms: 'frequencyPercentage', 'frequencyRatio', 'meanValue' and/or 'medianValue'!")
 
     }
 
   }else{
 
-    stop("[cbaf: automatedStatistics] 'calculate' must be a character string!")
+    stop("[automatedStatistics] 'calculate' must be a character string!")
 
   }
 
@@ -204,7 +204,7 @@ automatedStatistics<- function(
 
   if(!is.logical(topGenes)){
 
-    stop("[cbaf: automatedStatistics] 'topGenes' must be either TRUE or FALSE!")
+    stop("[automatedStatistics] 'topGenes' must be either TRUE or FALSE!")
 
   }
 
@@ -214,7 +214,7 @@ automatedStatistics<- function(
 
   if(!is.null(cutoff) & !is.numeric(cutoff)){
 
-    stop("[cbaf: automatedStatistics] 'cutoff' must be either NULL or a numeric value!")
+    stop("[automatedStatistics] 'cutoff' must be either NULL or a numeric value!")
 
   }
 
@@ -224,7 +224,7 @@ automatedStatistics<- function(
 
   if(!is.logical(round)){
 
-    stop("[cbaf: automatedStatistics] 'round' must be either TRUE or FALSE!")
+    stop("[automatedStatistics] 'round' must be either TRUE or FALSE!")
 
   }
 
@@ -241,7 +241,7 @@ automatedStatistics<- function(
 
   if(!dir.exists(database)){
 
-    stop("[cbaf: automatedStatistics] Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first!")
+    stop("[automatedStatistics] Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first!")
 
   } else if(dir.exists(database)){
 
@@ -255,7 +255,7 @@ automatedStatistics<- function(
 
     if(!nrow(bfcquery(bfc, previousParamName)) == 1){
 
-      stop("[cbaf: automatedStatistics] Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first!")
+      stop("[automatedStatistics] Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first!")
 
     }
 
@@ -371,13 +371,13 @@ automatedStatistics<- function(
 
         if(submissionName %in% c("test", "test2")){
 
-          message("[cbaf: automatedStatistics] Please choose a name other than 'test' and 'test2'.")
+          message("[automatedStatistics] Please choose a name other than 'test' and 'test2'.")
 
         }
 
-        message("[cbaf: automatedStatistics] The requested data already exist locally.")
+        message("[automatedStatistics] The requested data already exist locally.")
 
-        message("[cbaf: automatedStatistics] The function was haulted!")
+        message("[automatedStatistics] The function was haulted!")
 
       } else{
 
@@ -411,7 +411,7 @@ automatedStatistics<- function(
 
     if(!is.list(sourceDataList)){
 
-      stop("[cbaf: automatedStatistics] Input database must be a list!")
+      stop("[automatedStatistics] Input database must be a list!")
 
     }
 
@@ -432,7 +432,7 @@ automatedStatistics<- function(
 
     # Report
 
-    message("[cbaf: automatedStatistics] Calculating statistics")
+    message("[automatedStatistics] Calculating statistics.")
 
 
 
@@ -1577,6 +1577,6 @@ automatedStatistics<- function(
 
   }
 
-  # message("[cbaf: obtainMultipleStudies] Finished.")
+  # message("[obtainMultipleStudies] Finished.")
 
 }

@@ -8,14 +8,14 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.2 \cr
-#' Date: \tab 2020-12-22 \cr
+#' Version: \tab 1.13.3 \cr
+#' Date: \tab 2020-12-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
 #'
 #'
-#' @importFrom xlsx write.xlsx
+#' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
 #'
 #' @importFrom BiocFileCache bfcnew bfcquery bfcpath
 #'
@@ -86,13 +86,13 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
     if(!is.character(submissionName)){
 
-      stop("[cbaf: xlsxOutput] 'submissionName' must be a character string!")
+      stop("[xlsxOutput] 'submissionName' must be a character string!")
 
     }
 
   } else{
 
-    stop("[cbaf: xlsxOutput] 'submissionName' must be a character string!")
+    stop("[xlsxOutput] 'submissionName' must be a character string!")
 
   }
 
@@ -100,7 +100,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(!is.logical(transposeResults)){
 
-    stop("[cbaf: xlsxOutput] 'transposeResults' must be either TRUE or FALSE!")
+    stop("[xlsxOutput] 'transposeResults' must be either TRUE or FALSE!")
 
   }
 
@@ -119,7 +119,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(!dir.exists(database)){
 
-    stop("[cbaf: xlsxOutput] Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first, and then the automatedStatistics() function!")
+    stop("[xlsxOutput] Please run one of the obtainSingleStudy() or obtainMultipleStudies() functions first, and then the automatedStatistics() function!")
 
   } else if(dir.exists(database)){
 
@@ -133,7 +133,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
     if(!nrow(bfcquery(bfc, c("Parameters for automatedStatistics()"))) == 1){
 
-      stop("[cbaf: xlsxOutput] Please run the automatedStatistics() function first!")
+      stop("[xlsxOutput] Please run the automatedStatistics() function first!")
 
     }
 
@@ -245,7 +245,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(!is.list(statisticsData)){
 
-    stop("[cbaf: xlsxOutput] Input database must be a list!")
+    stop("[xlsxOutput] Input database must be a list!")
 
   }
 
@@ -286,7 +286,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   # Report
 
-  message("[cbaf: xlsxOutput] ", "Preparing excel file(s)")
+  message("[xlsxOutput] Preparing excel file(s).")
 
 
 
@@ -408,11 +408,13 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
     if(continue & file.exists(name.of.excel.file)){
 
-      file.remove(name.of.excel.file)
+      xo <- createWorkbook()
 
       hault <- FALSE
 
     }else if(continue | !continue & !file.exists(name.of.excel.file)){
+
+      xo <- createWorkbook()
 
       hault <- FALSE
 
@@ -459,48 +461,50 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
         # Saving the expression profile
 
+        ## Replacing dots with space in sheet name
+
+        currentSheetName = gsub(
+
+          x = name.statistics.data,
+
+          pattern = "\\.",
+
+          replacement = " "
+
+        )
+
+        ## Fixing the Max length of 31 characters for openxlsx package
+
+        currentSheetName = gsub(
+
+          x = currentSheetName,
+
+          pattern = "Top Genes of Frequency Percentage",
+
+          replacement = "Top Genes of Frequency Percenta"
+
+        )
+
+        ## Save xlsx file
+
         if(!transposeResults){
 
-          write.xlsx(
+          addWorksheet(xo, sheetName = currentSheetName)
 
-            statistics.data,
+          writeData(xo, sheet = currentSheetName, x = statistics.data,
 
-            file = name.of.excel.file,
+                    rowNames = TRUE)
 
-            sheetName = gsub(
-
-              x = name.statistics.data,
-
-              pattern = "\\.",
-
-              replacement = " "
-
-            ),
-
-            append = TRUE)
 
         } else if(transposeResults){
 
-          write.xlsx(
+          addWorksheet(xo, sheetName = currentSheetName)
 
-            t(statistics.data),
+          writeData(xo, sheet = currentSheetName, x = t(statistics.data),
 
-            file = name.of.excel.file,
-
-            sheetName = gsub(
-
-              x = name.statistics.data,
-
-              pattern = "\\.",
-
-              replacement = " "
-
-            ),
-
-            append = TRUE)
+                    rowNames = TRUE)
 
         }
-
 
 
       }
@@ -513,6 +517,14 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
     }
 
+    if(file.exists(name.of.excel.file)){
+
+      file.remove(name.of.excel.file)
+
+    }
+
+    saveWorkbook(xo, name.of.excel.file)
+
   }
 
   # Close progressbar
@@ -523,11 +535,11 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   if(skipped > 0 & skipped != 1){
 
-    message("[cbaf: xlsxOutput] ", as.character(skipped), " out of ", as.character(total.number), " excel files were skipped, because they already exist!")
+    message("[xlsxOutput] ", as.character(skipped), " out of ", as.character(total.number), " excel files were skipped, because they already exist!")
 
   } else if(skipped > 0 & skipped == 1){
 
-    message("[cbaf: xlsxOutput] ", as.character(skipped), " out of ", as.character(total.number), " excel file was skipped, because it already exists!")
+    message("[xlsxOutput] ", as.character(skipped), " out of ", as.character(total.number), " excel file was skipped, because it already exists!")
 
   }
 
@@ -568,6 +580,6 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
   setwd(parent.directory)
 
-  # message("[cbaf: xlsxOutput] Finished.")
+  # message("[xlsxOutput] Finished.")
 
 }

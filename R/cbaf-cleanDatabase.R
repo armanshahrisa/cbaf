@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.2 \cr
-#' Date: \tab 2020-12-22 \cr
+#' Version: \tab 1.13.3 \cr
+#' Date: \tab 2020-12-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -54,7 +54,7 @@ cleanDatabase <- function(databaseNames = NULL){
 
   # List all folders in extdata folder of cbaf package
 
-  message("[cbaf: cleanDatabase] Checking for the local data sets")
+  message("[cleanDatabase] Checking for the local data sets.")
 
   package.path <- system.file("extdata", package = "cbaf")
 
@@ -84,13 +84,13 @@ cleanDatabase <- function(databaseNames = NULL){
 
   if(is.null(databaseNames) & length(removable.directories) != 0){
 
-    message("[cbaf: cleanDatabase] List of removable data set(s):")
+    message("[cleanDatabase] List of removable data set(s):")
 
     print(removable.directories)
 
     writeLines("")
 
-    message("[cbaf: cleanDatabase] Please enter the name of data set(s) you want to remove. Example: test, test2")
+    message("[cleanDatabase] Please enter the name of data set(s) you want to remove. Example: test, test2")
 
     input <- readline(prompt = "Your choice(s): ")
 
@@ -102,11 +102,11 @@ cleanDatabase <- function(databaseNames = NULL){
 
   }else if(length(removable.directories) == 0){
 
-    message("[cbaf: cleanDatabase] No removable data set was found.")
+    message("[cleanDatabase] No removable data set was found.")
 
   }else{
 
-    stop("[cbaf: cleanDatabase] Incorrect name of data set(s)!")
+    stop("[cleanDatabase] Incorrect name of data set(s)!")
 
   }
 
@@ -140,20 +140,20 @@ cleanDatabase <- function(databaseNames = NULL){
 
     if(number.of.correct.directories  == 1){
 
-      message("[cbaf: cleanDatabase] 1 data set was removed.")
+      message("[cleanDatabase] 1 data set was removed.")
 
     }else if((number.of.correct.directories  > 1)){
 
-      message("[cbaf: cleanDatabase] " ,sum(!dir.exists(full.path.of.correct.directories)), " data set(s) were removed.")
+      message("[cleanDatabase] " ,sum(!dir.exists(full.path.of.correct.directories)), " data set(s) were removed.")
 
     }
 
   }else if(length(removable.directories) != 0){
 
-    message("[cbaf: cleanDatabase] 0 data set was removed.")
+    message("[cleanDatabase] 0 data set was removed.")
 
   }
 
-  # message("[cbaf: cleanDatabase] Finished.")
+  # message("[cleanDatabase] Finished.")
 
 }

@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.13.2 \cr
-#' Date: \tab 2020-12-22 \cr
+#' Version: \tab 1.13.3 \cr
+#' Date: \tab 2020-12-28 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -17,7 +17,7 @@
 #'
 #' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData
 #'
-#' @importFrom xlsx write.xlsx
+#' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
 #'
 #' @importFrom utils head setTxtProgressBar txtProgressBar
 #'
@@ -64,11 +64,15 @@ availableData <- function(excelFileName){
 
   if(file.exists(paste(excelFileName, ".xlsx", sep = ""))){
 
-    message("[cbaf: availableData] Warning! '", excelFileName, ".xlsx", "' already exists!")
+    message("[availableData] Warning! '", excelFileName, ".xlsx", "' already exists!")
 
-    choiceYesNo <- readline(prompt = "[cbaf: availableData] Overwrite the file? (yes/no): ")
+    choiceYesNo <- readline(prompt = "[availableData] Overwrite the file? (yes/no): ")
 
     if(choiceYesNo == "yes"){
+
+      # Remove the previous file
+
+      file.remove(paste(excelFileName, ".xlsx", sep = ""))
 
       continue <- TRUE
 
@@ -103,7 +107,7 @@ availableData <- function(excelFileName){
 
 
 
-    message("[cbaf: availableData] Checking all cancer studies")
+    message("[availableData] Checking all cancer studies")
 
 
     # create progress bar
@@ -390,19 +394,29 @@ availableData <- function(excelFileName){
 
     rownames(combined_list_dataframe) <- seq_len(nrow(combined_list))
 
-    write.xlsx(
+    # Store Xlsx file
 
-      combined_list_dataframe, file=paste(excelFileName, ".xlsx", sep = "")
+    ad <- createWorkbook()
 
-      )
+    addWorksheet(ad, sheetName = "Available Data")
 
-    # message("[cbaf: availableData] Finished.")
+    writeData(ad,
 
-    message(c("[cbaf: availableData] The output was stored as '",  excelFileName, ".xlsx","'."))
+              sheet = "Available Data",
+
+              x = combined_list_dataframe,
+
+              rowNames = TRUE)
+
+    saveWorkbook(ad, file=paste(excelFileName, ".xlsx", sep = ""))
+
+    # message("[availableData] Finished.")
+
+    message(c("[availableData] The output was stored as '",  excelFileName, ".xlsx","'."))
 
   }else{
 
-    message("[cbaf: availableData] Function was haulted!")
+    message("[availableData] Function was haulted!")
 
   }
 

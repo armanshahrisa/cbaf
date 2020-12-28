@@ -19,30 +19,6 @@ vignette: >
 
 # Package Installation
 
-## Prerequisites
-
-The package itself doesn't need anything outside of R, but one of the dependant packages `rjava` needs some prerequisites. Since preparing the prerequisites may be complicated sometimes, they are briefly described in this section.
-
-In a __32 bit windows__, 32 bit version of _Java Runtime Environment_ must be installed first. In a __64 bit windows__, it is highly recommended that both 32 and 64 bit versions of _Java Runtime Environment_ be installed.
-
-In __ubuntu__, run the following commands in terminal in the same order as specified:
-
-```
-sudo apt-get install default-jdk
-
-sudo R CMD javareconf
-
-sudo apt-get install r-cran-rjava
-
-sudo apt-get install libgdal1-dev libproj-dev
-
-export LD_LIBRARY_PATH=/usr/lib/jvm/jre/lib/amd64:/usr/lib/jvm/jre/lib/amd64/default
-
-sudo apt-get install libcurl4-openssl-dev libssl-dev
-```
-
-## Installation and Loading
-
 The package can be installed via `BiocManager::install`:
 
 ```{r, eval = FALSE}
