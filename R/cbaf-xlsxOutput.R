@@ -381,6 +381,9 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
     setwd(paste(parent.directory, child.directory, sep = "/"))
 
 
+    # Initiating excel file creation
+
+    xo <- createWorkbook()
 
     # determine ourput file name
 
@@ -406,15 +409,7 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
     # Check if excel file already exists
 
-    if(continue & file.exists(name.of.excel.file)){
-
-      xo <- createWorkbook()
-
-      hault <- FALSE
-
-    }else if(continue | !continue & !file.exists(name.of.excel.file)){
-
-      xo <- createWorkbook()
+    if(continue | !continue & !file.exists(name.of.excel.file)){
 
       hault <- FALSE
 
@@ -517,13 +512,22 @@ xlsxOutput <- function(submissionName, transposeResults = FALSE){
 
     }
 
-    if(file.exists(name.of.excel.file)){
+    # Avoid removing previos xlsx file
+
+    if(file.exists(name.of.excel.file) & length(names(xo)) != 0){
 
       file.remove(name.of.excel.file)
 
     }
 
-    saveWorkbook(xo, name.of.excel.file)
+    # Avoid storing empty workbook
+
+    if(length(names(xo)) != 0){
+
+      saveWorkbook(xo, name.of.excel.file)
+
+    }
+
 
   }
 
