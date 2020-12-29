@@ -24,7 +24,7 @@
 #' @usage processMultipleStudies(genesList, submissionName, studiesNames,
 #'   desiredTechnique, cancerCode = FALSE, validateGenes = TRUE, calculate =
 #'   c("frequencyPercentage", "frequencyRatio", "meanValue"), cutoff=NULL,
-#'   round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, geneLimit = FALSE,
+#'   round=TRUE, topGenes = TRUE, shortenStudyNames = TRUE, geneLimit = 50,
 #'   rankingMethod = "variation", heatmapFileFormat = "TIFF", resolution = 600,
 #'   RowCex = "auto", ColCex = "auto", heatmapMargines = "auto",
 #'   rowLabelsAngle = 0, columnLabelsAngle = 45, heatmapColor = "RdBu",
@@ -105,7 +105,7 @@
 #' this option can be used to limit the number of genes that are shown on
 #' heatmap. For instance, \code{geneLimit=50} will limit the heatmap to 50 genes
 #'  showing the most variation across multiple study / study subgroups. The
-#'  default value is \code{FALSE}.
+#'  default value is \code{50}.
 #'
 #' @param rankingMethod a character value that determines how genes will be
 #' ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
@@ -230,7 +230,7 @@ processMultipleStudies <- function(
 
   shortenStudyNames = TRUE,
 
-  geneLimit = FALSE,
+  geneLimit = 50,
 
   rankingMethod = "variation",
 

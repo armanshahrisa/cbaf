@@ -5,7 +5,7 @@
 \title{Generate heatmaps for various studies/subgroups of a study.}
 \usage{
 heatmapOutput(submissionName, shortenStudyNames = TRUE,
-  geneLimit = FALSE, rankingMethod = "variation", heatmapFileFormat = "TIFF",
+  geneLimit = 50, rankingMethod = "variation", heatmapFileFormat = "TIFF",
   resolution = 600, RowCex = "auto", ColCex = "auto",
   heatmapMargines = "auto", rowLabelsAngle = 0, columnLabelsAngle = 45,
   heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
@@ -24,7 +24,7 @@ group that has conducted the experiment.}
 this option can be used to limit the number of genes that are shown on
 heatmap. For instance, \code{geneLimit=50} will limit the heatmap to 50 genes
 that show the most variation across multiple study / study subgroups. The
-default value is \code{FALSE}.}
+default value is \code{50}.}
 
 \item{rankingMethod}{a character value that determines how genes will be
 ranked prior to drawing heatmap. \code{"variation"} orders the genes based on

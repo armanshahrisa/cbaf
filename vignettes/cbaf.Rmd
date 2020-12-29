@@ -119,7 +119,7 @@ Function also contains nineteen other options:
 
 - __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
 
-- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `FALSE`.
+- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `50`.
 
 - __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
 unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `geneLimit`.
@@ -199,7 +199,7 @@ Function also contains nineteen other options:
 
 - __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
 
-- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `FALSE`.
+- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `50`.
 
 - __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
 unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `geneLimit`.
@@ -376,7 +376,7 @@ Function also contains thirteen other options:
 
 - __shortenStudyNames__ a logical value that causes the function to remove the last part of cancer names aiming to shorten them. The removed segment usually contains the name of scientific group that has conducted the experiment.
 
-- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `FALSE`.
+- __geneLimit__ if large number of genes exist in at least one gene group, this option can be used to limit the number of genes that are shown on heatmap. For instance, `geneLimit=50` will limit the heatmap to 50 genes that show the most variation across multiple study / study subgroups. The default value is `50`.
 
 - __rankingMethod__ determines the method by which genes will be ranked prior to drawing heatmap. `variation` orders the genes based on 
 unique values in one or few cancer studies while `highValue` ranks the genes when they cotain high values in multiple / many cancer studies. This option is useful when number of genes are too much so that user has to limit the number of genes on heatmap by `geneLimit`.

@@ -37,7 +37,7 @@
 #'
 #'
 #' @usage heatmapOutput(submissionName, shortenStudyNames = TRUE,
-#'   geneLimit = FALSE, rankingMethod = "variation", heatmapFileFormat = "TIFF",
+#'   geneLimit = 50, rankingMethod = "variation", heatmapFileFormat = "TIFF",
 #'   resolution = 600, RowCex = "auto", ColCex = "auto",
 #'   heatmapMargines = "auto", rowLabelsAngle = 0, columnLabelsAngle = 45,
 #'   heatmapColor = "RdBu", reverseColor = TRUE, transposedHeatmap = FALSE,
@@ -57,7 +57,7 @@
 #' this option can be used to limit the number of genes that are shown on
 #' heatmap. For instance, \code{geneLimit=50} will limit the heatmap to 50 genes
 #' that show the most variation across multiple study / study subgroups. The
-#' default value is \code{FALSE}.
+#' default value is \code{50}.
 #'
 #' @param rankingMethod a character value that determines how genes will be
 #' ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
@@ -157,7 +157,7 @@ heatmapOutput <- function(
 
   shortenStudyNames = TRUE,
 
-  geneLimit = FALSE,
+  geneLimit = 50,
 
   rankingMethod = "variation",
 
@@ -829,11 +829,13 @@ heatmapOutput <- function(
 
             # Limiting the number of genes in heatmap to get better resolution
 
-            if(geneLimit==FALSE | geneLimit > ncol(heatmap.data)){
+            if(geneLimit==FALSE | is.numeric(geneLimit) &
+
+               geneLimit > nrow(heatmap.data)){
 
               heatmap.data <- heatmap.data
 
-            } else if(is.numeric(geneLimit) & geneLimit <= ncol(heatmap.data) &
+            } else if(is.numeric(geneLimit) & geneLimit <= nrow(heatmap.data) &
 
                       rankingMethod == "variation"){
 
@@ -841,7 +843,7 @@ heatmapOutput <- function(
 
               heatmap.data <- heatmap.data[ordering[seq_len(geneLimit)],]
 
-            } else if(is.numeric(geneLimit) & geneLimit <= ncol(heatmap.data) &
+            } else if(is.numeric(geneLimit) & geneLimit <= nrow(heatmap.data) &
 
                       rankingMethod == "highValue"){
 
