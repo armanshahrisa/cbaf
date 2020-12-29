@@ -1,7 +1,7 @@
 Package: cbaf
 biocViews: Software, AssayDomain, DNAMethylation, GeneExpression, Transcription, ResearchField, BiomedicalInformatics, ComparativeGenomics, Epigenetics, Genetics, Transcriptomics
 Title: Automated functions for comparing various omic data from cbioportal.org
-Version: 1.13.3
+Version: 1.13.4
 Authors@R: c(person("Arman", "Shahrisa", role = c("aut", "cre", "cph"),
                      email = "shahrisa.arman@hotmail.com"),
             person("Maryam", "Tahmasebi Birgani", role = "aut",
