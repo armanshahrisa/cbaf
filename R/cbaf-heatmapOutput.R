@@ -246,7 +246,7 @@ heatmapOutput <- function(
 
   } else if(heatmapFileFormat == "PDF"){
 
-    message("[heatmapOutput] PDF format for heatmap(s) is chosen: ignoring 'resolution'")
+    message("[heatmapOutput] 'resolution' is not applicable in PDF files.")
 
   }
 
