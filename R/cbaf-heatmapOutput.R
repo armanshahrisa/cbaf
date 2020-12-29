@@ -944,6 +944,15 @@ heatmapOutput <- function(
             }
 
 
+            # Equalizing RowCex and ColCex
+
+            minCex <- min(c(d.ColCex, d.RowCex))
+
+            d.ColCex <- minCex
+
+            d.RowCex <- minCex
+
+
             # Check whether heatmapMargines is "auto"
 
             if(heatMapMode == "algorithm"){
@@ -1023,7 +1032,7 @@ heatmapOutput <- function(
 
               longest.study <-
 
-                  lengthDeterminant(colnames(heatmap.data))*unitSize + 3.0
+                  lengthDeterminant(colnames(heatmap.data))*unitSize + 7.0
 
               longest.study.effect <-
 
@@ -1040,7 +1049,7 @@ heatmapOutput <- function(
 
               longest.gene <-
 
-                lengthDeterminant(rownames(heatmap.data))*unitSize + 3.0
+                lengthDeterminant(rownames(heatmap.data))*unitSize + 7.0
 
               longest.gene.effect <-
 
