@@ -110,13 +110,14 @@
 #' @param rankingMethod a character value that determines how genes will be
 #' ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
 #' unique values in one or few cancer studies while \code{"highValue"} ranks the
-#'  genes when they cotain high values in multiple / many cancer studies. This
+#'  genes when they contain high values in multiple / many cancer studies. This
 #'  option is useful when number of genes are too much so that user has to limit
 #'  the number of genes on heatmap by \code{geneLimit}.
 #'
 #' @param heatmapFileFormat This option enables the user to select the desired
 #' image file format of the heatmaps. The default value is \code{"TIFF"}. Other
-#' suppoeted formats include \code{"BMP"}, \code{"JPG"}, and \code{"PNG"}.
+#' supported formats include \code{"JPG"}, \code{"BMP"}, \code{"PNG"}, and
+#' \code{"PDF"}.
 #'
 #' @param resolution a number. This option can be used to adjust the resolution
 #' of the output heatmaps as 'dot per inch'. The defalut value is 600.

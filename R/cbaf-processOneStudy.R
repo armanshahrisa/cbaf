@@ -114,7 +114,8 @@
 #'
 #' @param heatmapFileFormat This option enables the user to select the desired
 #' image file format of the heatmaps. The default value is \code{"TIFF"}. Other
-#' suppoeted formats include \code{"PNG"}, \code{"BMP"}, and \code{"JPG"}.
+#' supported formats include \code{"JPG"}, \code{"BMP"}, \code{"PNG"}, and
+#' \code{"PDF"}.
 #'
 #' @param resolution a number. This option can be used to adjust the resolution
 #' of the output heatmaps as 'dot per inch'. The defalut value is 600.

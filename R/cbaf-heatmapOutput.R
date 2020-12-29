@@ -23,7 +23,7 @@
 #'
 #' @importFrom BiocFileCache bfcnew bfcquery bfcpath
 #'
-#' @importFrom grDevices colorRampPalette dev.off tiff png bmp jpeg
+#' @importFrom grDevices colorRampPalette dev.off tiff png bmp jpeg pdf
 #'
 #' @importFrom utils head setTxtProgressBar txtProgressBar
 #'
@@ -62,13 +62,14 @@
 #' @param rankingMethod a character value that determines how genes will be
 #' ranked prior to drawing heatmap. \code{"variation"} orders the genes based on
 #' unique values in one or few cancer studies while \code{"highValue"} ranks the
-#'  genes when they cotain high values in multiple / many cancer studies. This
+#'  genes when they contain high values in multiple / many cancer studies. This
 #'  option is useful when number of genes are too much so that user has to limit
 #'  the number of genes on heatmap by \code{geneLimit}.
 #'
 #' @param heatmapFileFormat This option enables the user to select the desired
 #' image file format of the heatmaps. The default value is \code{"TIFF"}. Other
-#' suppoeted formats include \code{"PNG"}, \code{"BMP"}, and \code{"JPG"}.
+#' supported formats include \code{"JPG"}, \code{"BMP"}, \code{"PNG"}, and
+#' \code{"PDF"}.
 #'
 #' @param resolution a number. This option can be used to adjust the resolution
 #' of the output heatmaps as 'dot per inch'. The defalut value is 600.
@@ -239,9 +240,13 @@ heatmapOutput <- function(
 
   # Check heatmap image file format
 
-  if(!(heatmapFileFormat %in% c("TIFF", "PNG", "JPG", "BMP"))){
+  if(!(heatmapFileFormat %in% c("TIFF", "JPG", "BMP", "PNG", "PDF"))){
 
-    stop("[heatmapOutput] 'heatmapFileFormat' must be one of these formats: 'TIFF', 'PNG', 'JPG', or 'BMP'")
+    stop("[heatmapOutput] 'heatmapFileFormat' must be one of these formats: 'TIFF', 'JPG', 'BMP' ,'PNG' or 'PDF'")
+
+  } else if(heatmapFileFormat == "PDF"){
+
+    message("[heatmapOutput] PDF format for heatmap(s) is chosen: ignoring 'resolution'")
 
   }
 
@@ -749,6 +754,10 @@ heatmapOutput <- function(
 
           ".bmp"
 
+        }else if(heatmapFileFormat == "PDF"){
+
+          ".pdf"
+
         }
 
       )
@@ -1069,11 +1078,11 @@ heatmapOutput <- function(
 
               tiff(
 
-                filename=paste(getwd(), output.file.name, sep="/"),
+                filename = paste(getwd(), output.file.name, sep="/"),
 
-                width=11,
+                width = 11,
 
-                height= 11,
+                height = 11,
 
                 units = "in",
 
@@ -1089,15 +1098,15 @@ heatmapOutput <- function(
 
               png(
 
-                filename=paste(getwd(), output.file.name, sep="/"),
+                filename = paste(getwd(), output.file.name, sep="/"),
 
-                width=11,
+                width = 11,
 
-                height= 11,
+                height = 11,
 
                 units = "in",
 
-                res=resolution
+                res = resolution
 
               )
 
@@ -1107,15 +1116,15 @@ heatmapOutput <- function(
 
               bmp(
 
-                filename=paste(getwd(), output.file.name, sep="/"),
+                filename = paste(getwd(), output.file.name, sep="/"),
 
-                width=11,
+                width = 11,
 
-                height= 11,
+                height = 11,
 
                 units = "in",
 
-                res=resolution
+                res = resolution
 
               )
 
@@ -1127,13 +1136,27 @@ heatmapOutput <- function(
 
                 filename=paste(getwd(), output.file.name, sep="/"),
 
-                width=11,
+                width = 11,
 
-                height= 11,
+                height = 11,
 
                 units = "in",
 
-                res=resolution
+                res = resolution
+
+              )
+
+
+            }else if(heatmapFileFormat == "PDF"){
+
+
+              pdf(
+
+                file=paste(getwd(), output.file.name, sep="/"),
+
+                width = 11,
+
+                height = 11
 
               )
 

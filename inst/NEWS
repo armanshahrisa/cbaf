@@ -3,10 +3,11 @@ cbaf 1.14.0 - 2020-12-22
 
 New Features
 
-- log z-scores provided by cgdsr are used instead of z-scores.
+- Heatmaps can now be stored as PDF files.
 - Functions now show shorter and more clearer messages.
-- Package no longer requires Java Runtime Environment and is compatible with
-  older 32 bit operating systems.
+- Package no longer requires Java Runtime Environment for storing excel files
+  and is compatible with older 32 bit operating systems.
+- log z-scores provided by cgdsr are used instead of z-scores.
 
 
 
