@@ -29,6 +29,12 @@ RNA.Seq_L2.terms <-
 
     "mRNA expression z-Scores relative to all samples (log RNA Seq V2 RSEM)",
 
+    "mRNA expression z-scores relative to all samples (log RNA Seq V2 RESM)",
+
+    "mRNA expression z-Scores relative to all samples (log RNA Seq read counts)",
+
+    "mRNA expression z-scores relative to all samples (log RNA Seq TMM).",
+
     "mRNA expression z-scores relative to all samples (log RNA Seq FPKM)",
 
     "mRNA expression z-Scores relative to all samples (log RNA-Seq RPKM)",

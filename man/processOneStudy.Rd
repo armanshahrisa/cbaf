@@ -169,8 +169,8 @@ ratio, mean value and median value of samples greather than specific value in
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.13.4 \cr
-Date: \tab 2020-12-30 \cr
+Version: \tab 1.14.0 \cr
+Date: \tab 2021-04-28 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
