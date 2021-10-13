@@ -45,6 +45,8 @@ RNA.Seq_L2.terms <-
 
     "mRNA expression z-Scores relative to all samples (log RNA Seq CPM)",
 
+    "mRNA expression z-scores relative to all samples (log RNA Seq CPM)",
+
     "mRNA expression z-Scores relative to all samples (log RNA-Seq TPM)",
 
     "mRNA expression z-scores relative to all samples (log RNA Seq TPM)" #,
