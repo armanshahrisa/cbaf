@@ -49,7 +49,11 @@ RNA.Seq_L2.terms <-
 
     "mRNA expression z-Scores relative to all samples (log RNA-Seq TPM)",
 
-    "mRNA expression z-scores relative to all samples (log RNA Seq TPM)" #,
+    "mRNA expression z-scores relative to all samples (log RNA Seq TPM)",
+
+    "Z-scores of mRNA expression (log2 RPKM)",
+
+    "Z-scores of mRNA expression (FPKM)"#,
 
     # "mRNA expression z-scores relative to all samples (RNA Seq RPKM)",
 
@@ -72,6 +76,13 @@ RNA.Seq_L2.terms <-
   )
 
 
+RNA.Seq_rtn_L2.terms <-
+
+  c("mRNA expression z-scores relative to normal samples (log RNA Seq V2 RSEM)"
+
+  )
+
+
 #########################
 ### microRNA-Seq data ###
 #########################
@@ -82,13 +93,27 @@ microRNA.Seq_L1.terms <-
 
     "Tumors with microRNA data (microRNA-Seq)",
 
-    "Samples with microRNA data (microRNA-Seq)")
+    "Samples with microRNA data (microRNA-Seq)",
+
+    "Samples with miRNA expression data"
+
+    )
 
 microRNA.Seq_L2.terms <-
 
   c("microRNA expression Z-scores",
 
-    "mRNA Expression Z-Scores vs Normals")
+    "mRNA Expression Z-Scores vs Normals",
+
+    "Z-scores of miRNA expression (FPKM-UQ)",
+
+    # "Z-scores of miRNA expression (log2 TPM)",
+
+    # "miRNA expression z-scores (log UQ normalized)",
+
+    "Z-scores of miRNA expression (TPM)"
+
+    )
 
 
 #################################

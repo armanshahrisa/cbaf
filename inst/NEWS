@@ -1,3 +1,15 @@
+cbaf 1.18.0 - 2022-02-02
+-------------------------
+
+New Features
+
+- Package now supports RNA-seq data with z-scores relative to normal samples.
+- Terms updated.
+
+
+
+
+
 cbaf 1.16.0 - 2021-10-14
 -------------------------
 

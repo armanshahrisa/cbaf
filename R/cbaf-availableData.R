@@ -155,6 +155,13 @@ availableData <- function(excelFileName){
           ),
 
 
+          RNA.Seq.RTN = as.character(
+
+            any(RNA.Seq_L1.terms %in% description)
+
+          ),
+
+
           microRNA.Seq = as.character(
 
             any(microRNA.Seq_L1.terms %in% description)
@@ -188,6 +195,8 @@ availableData <- function(excelFileName){
 
           c(RNA.Seq = "FALSE",
 
+            RNA.Seq.RTN = "FALSE",
+
             microRNA.Seq = "FALSE",
 
             microarray_with_mRNA_data = "FALSE",
@@ -202,6 +211,8 @@ availableData <- function(excelFileName){
       }else{
 
         c(RNA.Seq = "FALSE",
+
+          RNA.Seq.RTN = "FALSE",
 
           microRNA.Seq = "FALSE",
 
@@ -251,6 +262,13 @@ availableData <- function(excelFileName){
             ),
 
 
+            RNA.Seq.RTN = as.character(
+
+              any(RNA.Seq_rtn_L2.terms %in% description)
+
+            ),
+
+
             microRNA.Seq = as.character(
 
               any(microRNA.Seq_L2.terms %in% description)
@@ -284,6 +302,8 @@ availableData <- function(excelFileName){
 
             c(RNA.Seq = "FALSE",
 
+              RNA.Seq.RTN = "FALSE",
+
               microRNA.Seq = "FALSE",
 
               microarray_with_mRNA_data = "FALSE",
@@ -298,6 +318,8 @@ availableData <- function(excelFileName){
         }else{
 
           c(RNA.Seq = "FALSE",
+
+            RNA.Seq.RTN = "FALSE",
 
             microRNA.Seq = "FALSE",
 
@@ -361,17 +383,19 @@ availableData <- function(excelFileName){
 
     combined_list <- cbind(list_of_studies[,"cancer_study_id"],
 
-                           list_of_studies[,"name"], t(list_of_available_data_L1),
+                           list_of_studies[,"name"],
+
+                           t(list_of_available_data_L1),
 
                            list_of_studies[,"description"])
 
     colnames(combined_list) <-
 
-      c("cancer_study_id", "cancer_study_name", "RNA.Seq", "microRNA.Seq",
+      c("cancer_study_id", "cancer_study_name", "RNA.Seq", "RNA.Seq.RTN",
 
-        "microarray_with_mRNA_data" , "microarray_with_microRNA_data", "methylation",
+        "microRNA.Seq", "microarray_with_mRNA_data" ,
 
-        "description")
+        "microarray_with_microRNA_data", "methylation", "description")
 
     rownames(combined_list) <- seq_len(nrow(combined_list))
 
@@ -391,6 +415,10 @@ availableData <- function(excelFileName){
     colnames(combined_list_dataframe) <-
 
       gsub("\\.", "-", colnames(combined_list_dataframe))
+
+    colnames(combined_list_dataframe) <-
+
+      gsub("\\-RTN", " (RTN)", colnames(combined_list_dataframe))
 
     rownames(combined_list_dataframe) <- seq_len(nrow(combined_list))
 

@@ -13,8 +13,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.15.1 \cr
-#' Date: \tab 2021-10-14 \cr
+#' Version: \tab 1.17.1 \cr
+#' Date: \tab 2022-02-16 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -44,8 +44,9 @@
 #'  \code{"Acute Myeloid Leukemia (TCGA, NEJM 2013)"}.
 #'
 #' @param desiredTechnique a character string that is one of the following
-#' techniques: \code{"RNA-Seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
-#' , \code{"microarray.microRNA"} or \code{"methylation"}.
+#' techniques: \code{"RNA-Seq"}, \code{"RNA-SeqRTN"}, \code{"microRNA-Seq"},
+#' \code{"microarray.mRNA"}, \code{"microarray.microRNA"} or
+#' \code{"methylation"}.
 #'
 #' @param desiredCaseList a numeric vector that contains the index of desired
 #' cancer subgroups, assuming the user knows index of desired subgroups. If not,

@@ -49,7 +49,7 @@ It is recommended that users only work with two low-level functions - `available
 
 ### availableData()
 
-This function scans all the cancer studies to examine presence of _RNA-Seq_, _microRNA-Seq_, _microarray_ and _methylation_ data. It requires a name to label the output excel file. In the following example, the entered name is `"list.2020-05-05"`.
+This function scans all the cancer studies to examine presence of _RNA-Seq_, _RNA-SeqRelativeToNormalSapmles_, _microRNA-Seq_, _microarray_ and _methylation_ data. It requires a name to label the output excel file. In the following example, the entered name is `"list.2020-05-05"`.
 
 ```{r, eval = FALSE}
 availableData("list.2020-05-05")
@@ -101,7 +101,7 @@ It requires at least four arguments. All function arguments are the same as low-
 
 - __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that exists on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
 
-- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-Seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
+- __desiredTechnique__, one of the five supported high-throughput studies. RNA-Seq data can be accessed either as relative to all samples or relative to normal samples: `RNA-Seq`, `RNA-SeqRTN`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
 
 Function also contains nineteen other options:
 
@@ -181,7 +181,7 @@ It requires at least four arguments. All function arguments are the same as low-
 
 - __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that exists on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
 
-- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-Seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
+- __desiredTechnique__, one of the five supported high-throughput studies. RNA-Seq data can be accessed either as relative to all samples or relative to normal samples: `RNA-Seq`, `RNA-SeqRTN`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
 
 Function also contains nineteen other options:
 
@@ -264,7 +264,7 @@ It requires at least four arguments:
 
 - __studyName__, a character string showing the desired cancer name. It is an standard cancer study name that exists on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`.
 
-- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-Seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
+- __desiredTechnique__, one of the five supported high-throughput studies. RNA-Seq data can be accessed either as relative to all samples or relative to normal samples: `RNA-Seq`, `RNA-SeqRTN`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
 
 Function also contains two other options:
 
@@ -297,7 +297,7 @@ It requires at least four arguments:
 
 - __cancernames__, a character vector or a matrix possessing names of desired cancer studies. The character vector contains standard cancer names that can be found on cbioportal.org, such as `Acute Myeloid Leukemia (TCGA, NEJM 2013)`. Alternatively, a matrix can be used if user prefers user-defined cancer names. In this case, the first column of matrix comprises the standard cancer names while the second column must contain the desired cancer names.
 
-- __desiredTechnique__, one of the five supported high-throughput studies: `RNA-Seq`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
+- __desiredTechnique__, one of the five supported high-throughput studies. RNA-Seq data can be accessed either as relative to all samples or relative to normal samples: `RNA-Seq`, `RNA-SeqRTN`, `microRNA-Seq`, `microarray.mRNA`, `microarray.microRNA` or `methylation`.
 
 Function also contains two other options:
 

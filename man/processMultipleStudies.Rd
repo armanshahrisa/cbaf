@@ -29,8 +29,9 @@ cancer names. The character vector containes standard names of cancer studies
  column must contain the desired cancer names.}
 
 \item{desiredTechnique}{a character string that is one of the following
-techniques: \code{"RNA-Seq"}, \code{"microRNA-Seq"}, \code{"microarray.mRNA"}
-, \code{"microarray.microRNA"} or \code{"methylation"}.}
+techniques: \code{"RNA-Seq"}, \code{"RNA-SeqRTN"}, \code{"microRNA-Seq"},
+\code{"microarray.mRNA"}, \code{"microarray.microRNA"} or
+\code{"methylation"}.}
 
 \item{cancerCode}{a logical value that tells the function to use cbioportal
 abbreviated cancer names instead of complete cancer names, if set to be
@@ -171,8 +172,8 @@ highest values in each cancer study.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.15.1 \cr
-Date: \tab 2021-10-14 \cr
+Version: \tab 1.17.1 \cr
+Date: \tab 2022-02-16 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
