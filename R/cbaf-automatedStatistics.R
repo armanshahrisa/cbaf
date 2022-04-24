@@ -294,7 +294,7 @@ automatedStatistics<- function(
 
     if(is.null(cutoff)){
 
-      cutoff <- 0.5
+      cutoff <- 2.0
 
     }
 

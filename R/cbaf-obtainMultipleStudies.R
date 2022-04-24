@@ -517,7 +517,7 @@ obtainMultipleStudies <- function(
 
     # List of cancers lacking approprate data
 
-    nname <- NULL
+    cancersLackingData <- NULL
 
 
 
