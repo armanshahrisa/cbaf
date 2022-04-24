@@ -8,14 +8,14 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.15.1 \cr
-#' Date: \tab 2021-10-14 \cr
+#' Version: \tab 1.18.0 \cr
+#' Date: \tab 2022-04-24 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
 #'
 #'
-#' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData
+#' @importFrom cBioPortalData cBioPortal getStudies sampleLists molecularProfiles
 #'
 #' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
 #'
@@ -101,9 +101,19 @@ availableData <- function(excelFileName){
 
     # Prerequisites for cBioportal
 
-    mycgds = CGDS("http://www.cbioportal.org/")
+    cbio <- cBioPortal()
 
-    list_of_studies <- getCancerStudies(mycgds)
+    studies <- getStudies(cbio)
+
+    # Converting new format to the old format
+
+    colnames(studies)[colnames(studies) == "studyId"] <- "cancer_study_id"
+
+    list_of_studies <- studies
+
+    #! mycgds = CGDS("http://www.cbioportal.org/")
+
+    #! list_of_studies <- getCancerStudies(mycgds)
 
 
 
@@ -125,11 +135,23 @@ availableData <- function(excelFileName){
 
     list_of_available_data_L1 <- sapply(
 
-      list_of_studies[, "cancer_study_id"], function(cs, cgds) {
+      list_of_studies$cancer_study_id, function(cs, cbio_api) {
+
 
       # Obtain available techniques
 
-      available_options_1 <- getCaseLists(cgds, cs)
+      samp <- sampleLists(cbio_api, cs)
+
+
+      # Converting new format to the old format
+
+      colnames(samp)[colnames(samp) == "sampleListId"] <- "case_list_id"
+
+      colnames(samp)[colnames(samp) == "name"] <- "case_list_name"
+
+      available_options_1 <- samp
+
+      #! available_options_1 <- getCaseLists(cgds, cs)
 
 
 
@@ -145,7 +167,7 @@ availableData <- function(excelFileName){
         if(any(colnames(available_options_1) == "case_list_name")){
 
 
-          description <- available_options_1[, "case_list_name"]
+          description <- available_options_1$case_list_name
 
 
           c(RNA.Seq = as.character(
@@ -225,18 +247,30 @@ availableData <- function(excelFileName){
       }
 
 
-    }, mycgds)
+    }, cbio ) #! mycgds
 
 
     # looking for supported techniques at level 2
 
     list_of_available_data_L2 <- sapply(
 
-      list_of_studies[, "cancer_study_id"], function(cs, cgds) {
+      list_of_studies$cancer_study_id, function(cs, cbio_api) {
 
         # Obtain available techniques
 
-        available_options_2 <- getGeneticProfiles(cgds, cs)
+        mols <- molecularProfiles(cbio_api, cs)
+
+        # Converting new format to the old format
+
+        colnames(mols)[colnames(mols) == "name"] <- "genetic_profile_name"
+
+        colnames(mols)[colnames(mols) == "molecularProfileId"] <-
+
+                                                    "genetic_profile_id"
+
+        available_options_2 <- mols
+
+        #! available_options_2 <- getGeneticProfiles(cgds, cs)
 
 
 
@@ -252,7 +286,7 @@ availableData <- function(excelFileName){
           if(any(colnames(available_options_2) == "genetic_profile_name")){
 
 
-            description <- available_options_2[, "genetic_profile_name"]
+            description <- available_options_2$genetic_profile_name
 
 
             c(RNA.Seq = as.character(
@@ -332,7 +366,7 @@ availableData <- function(excelFileName){
         }
 
 
-      }, mycgds)
+      }, cbio) #! mycgds
 
 
     # close progressbar
@@ -387,15 +421,21 @@ availableData <- function(excelFileName){
 
                            t(list_of_available_data_L1),
 
+                           list_of_studies[,"allSampleCount"],
+
+                           list_of_studies[,"pmid"],
+
                            list_of_studies[,"description"])
 
     colnames(combined_list) <-
 
-      c("cancer_study_id", "cancer_study_name", "RNA.Seq", "RNA.Seq.RTN",
+      c("Cancer_Study_ID", "Cancer_Study_Name", "RNA.Seq", "RNA.Seq.RTN",
 
         "microRNA.Seq", "microarray_with_mRNA_data" ,
 
-        "microarray_with_microRNA_data", "methylation", "description")
+        "microarray_with_microRNA_data", "methylation", "Number of All Samples",
+
+        "PMID", "Description")
 
     rownames(combined_list) <- seq_len(nrow(combined_list))
 

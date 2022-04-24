@@ -1,10 +1,12 @@
-cbaf 1.18.0 - 2022-02-02
+cbaf 1.18.0 - 2022-04-24
 -------------------------
 
 New Features
 
+- Packge now uses cBioPortalData package to communicate with cBioPorta, as cgdsr package is deprecated.
 - Package now supports RNA-seq data with z-scores relative to normal samples.
 - Terms updated.
+- Minor improvemets
 
 
 

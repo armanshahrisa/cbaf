@@ -8,14 +8,14 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.17.1 \cr
-#' Date: \tab 2022-02-16 \cr
+#' Version: \tab 1.18.0 \cr
+#' Date: \tab 2022-04-24 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
 #'
 #'
-#' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData
+#' @importFrom cBioPortalData cBioPortal getStudies sampleLists molecularProfiles getDataByGenes
 #'
 #' @importFrom BiocFileCache BiocFileCache bfcnew bfcquery bfcpath
 #'
@@ -252,16 +252,22 @@ obtainMultipleStudies <- function(
   ########## Decide whether function should stops now!
 
   # Set cgdsr, stop if submissionName is either "test" or "test2" to
-  # improve package test speed
+  # improving package test speed
 
   if(!(submissionName %in% c("test", "test2"))){
 
-    mycgds = CGDS("http://www.cbioportal.org/")
+    cbio <- cBioPortal()
+
+    #! mycgds = CGDS("http://www.cbioportal.org/")
 
 
     # Getting cancer names
 
-    supportedCancers <- getCancerStudies(mycgds)
+    studies <- getStudies(cbio)
+
+    supportedCancers <- studies
+
+    #! supportedCancers_old <- getCancerStudies(mycgds)
 
   }
 
@@ -270,9 +276,9 @@ obtainMultipleStudies <- function(
 
   if(!(submissionName %in% c("test", "test2"))){
 
-    if(any(studiesNames %in% supportedCancers[,2])){
+    if(any(studiesNames %in% supportedCancers$name)){
 
-      studiesNames <- studiesNames[studiesNames %in% supportedCancers[,2]]
+      studiesNames <- studiesNames[studiesNames %in% supportedCancers$name]
 
     }else{
 
@@ -431,9 +437,9 @@ obtainMultipleStudies <- function(
 
         cancer.studies.idx <-
 
-          which(getCancerStudies(mycgds)[,2] %in% as.character(studiesNames))
+          which(supportedCancers$name %in% as.character(studiesNames))
 
-        groupNames <- getCancerStudies(mycgds)[cancer.studies.idx,1]
+        groupNames <- supportedCancers$studyId[cancer.studies.idx]
 
       } else if(!cancerCode){
 
@@ -511,7 +517,7 @@ obtainMultipleStudies <- function(
 
     # List of cancers lacking approprate data
 
-    cancersLackingData <- NULL
+    nname <- NULL
 
 
 
@@ -552,29 +558,41 @@ obtainMultipleStudies <- function(
       # Find cancer abbreviated name
 
       CancerStudies.idx <-
-        which(supportedCancers[,2] == as.character(studiesNames[c]))
+        which(supportedCancers$name == as.character(studiesNames[c]))
 
-      mycancerstudy = supportedCancers[CancerStudies.idx, 1]
+      mycancerstudy = as.character(
+        supportedCancers[CancerStudies.idx, "studyId"]
+        )
 
 
 
       # Finding the first characteristics of data in the cancer
 
-      AvailableDataTypes <- getCaseLists(mycgds, mycancerstudy)
+      AvailableDataTypes <- sampleLists(cbio, mycancerstudy)
+
+      #! AvailableDataTypes_old <- getCaseLists(mycgds, mycancerstudy)
 
       if(length(AvailableDataTypes) > 1){
 
-        existing.L1.charac <- AvailableDataTypes[,2] %in% L1.characteristics
+        # Available terms and priotizing based on cbaf-constants.R
 
-        f.condition <- (AvailableDataTypes[,2])[existing.L1.charac]
+        match_index_1 <- match(L1.characteristics, AvailableDataTypes$name)
+
+        f.condition <- AvailableDataTypes$name[match_index_1]
+
+        f.condition <- f.condition[!is.na(f.condition)]
 
         if(length(f.condition) >= 1){
 
           f.condition <- f.condition[1]
 
-          f.condition.idx <- which(AvailableDataTypes[,2] == f.condition)
+          f.condition.idx <- which(AvailableDataTypes$name == f.condition)
 
-          mycaselist = AvailableDataTypes[f.condition.idx ,1]
+          mycaselist <- as.character(
+
+            AvailableDataTypes[f.condition.idx ,"sampleListId"]
+
+            )
 
 
           CancerPossessData <- TRUE
@@ -616,21 +634,29 @@ obtainMultipleStudies <- function(
 
         if(CancerPossessData){
 
-          AvailableDataFormats <- getGeneticProfiles(mycgds, mycancerstudy)
+          AvailableDataFormats <- molecularProfiles(cbio, mycancerstudy)
 
-          existing.L2.charac <- AvailableDataFormats[,2] %in% L2.characteristics
+          #! AvailableDataFormats_old <- getGeneticProfiles(mycgds, mycancerstudy)
 
-          s.condition <- (AvailableDataFormats[,2])[existing.L2.charac]
+          match_index_2 <- match(L2.characteristics, AvailableDataFormats$name)
+
+          s.condition <- AvailableDataFormats$name[match_index_2]
+
+          s.condition <- s.condition[!is.na(s.condition)]
+
 
 
           if(length(s.condition) >= 1){
 
             s.condition <- s.condition[1]
 
-            s.condition.idx <- which(AvailableDataFormats[,2] == s.condition)
+            s.condition.idx <- which(AvailableDataFormats$name == s.condition)
 
-            mygeneticprofile <- AvailableDataFormats[s.condition.idx ,1]
+            mygeneticprofile <- as.character(
 
+               AvailableDataFormats[s.condition.idx ,"molecularProfileId"]
+
+               )
 
             CancerPossessData <- TRUE
 
@@ -676,7 +702,7 @@ obtainMultipleStudies <- function(
 
 
 
-        # Obtaining Expression x-scores fore the requested genes
+        # Obtaining Expression z-scores for the requested genes
 
         # Check number of genes first
 
@@ -686,17 +712,89 @@ obtainMultipleStudies <- function(
 
             if(CancerPossessData){
 
-              ProfileData <- getProfileData(
+              #! ProfileData_old <- getProfileData(
 
-                mycgds,
+              #!  mycgds,
 
-                genesNames[order(genesNames)],
+              #!  genesNames[order(genesNames)],
 
-                mygeneticprofile,
+              #!  mygeneticprofile,
 
-                mycaselist
+              #!  mycaselist
 
-              )
+              #! )
+
+              # Obtaining Gene Data
+
+              Unprocessed_ProfileData_list <-
+
+                getDataByGenes(
+
+                  cbio,
+
+                  studyId = mycancerstudy,
+
+                  genes = genesNames[order(genesNames)],
+
+                  by = "hugoGeneSymbol",
+
+                  sampleListId = mycaselist,
+
+                  molecularProfileIds = mygeneticprofile
+                )
+
+              # Extracting data.frame from List
+
+              Unprocessed_ProfileData <- Unprocessed_ProfileData_list[[1]]
+
+              # Subseting data.frame to contain the needed Columns
+
+              Filtered_Unprocessed_ProfileData <-
+
+                Unprocessed_ProfileData[,c("sampleId", "value", "hugoGeneSymbol")]
+
+              # Spliting data.frame by sampleId
+
+              patient_genes_list <- split(Filtered_Unprocessed_ProfileData,
+
+                                          Filtered_Unprocessed_ProfileData$sampleId)
+
+              # Making each table in the list a one column table
+
+              for(hugo in seq_len(length(patient_genes_list))){
+
+
+                present_gene_table <- patient_genes_list[[hugo]]
+
+                present_gene_table_2 <-
+
+                  present_gene_table[,"value", drop = FALSE]
+
+                # Converting to matrix
+                present_gene_matrix <- as.matrix(present_gene_table_2)
+
+                # Giving gene names and patient id to the values
+                colnames(present_gene_matrix) <-
+
+                  names(patient_genes_list)[hugo]
+
+                rownames(present_gene_matrix) <-
+
+                  present_gene_table$hugoGeneSymbol
+
+                patient_genes_list[[hugo]] <- t(present_gene_matrix)
+
+
+              }
+
+
+              # Generating old ProfileData format by collapsing the list
+              ProfileData <- do.call(rbind, patient_genes_list)
+
+              # Sorting the ProfileData by column and rown names
+              ProfileData <- ProfileData[,order(colnames(ProfileData))]
+
+              ProfileData <- ProfileData[order(rownames(ProfileData)),]
 
             }
 
@@ -723,17 +821,90 @@ obtainMultipleStudies <- function(
 
           for(operational in seq_along(operational_gene_number)){
 
-            separated_results[[operational]] <- getProfileData(
+            #! separated_results[[operational]] <- getProfileData(
 
-              mycgds,
+            #!   mycgds,
 
-              operational_gene_number[[operational]],
+            #!   operational_gene_number[[operational]],
 
-              mygeneticprofile,
+            #!   mygeneticprofile,
 
-              mycaselist
+            #!   mycaselist
 
-            )
+            #! )
+
+            Unprocessed_ProfileData_list <-
+
+              getDataByGenes(
+
+                cbio,
+
+                studyId = mycancerstudy,
+
+                genes = operational_gene_number[[operational]],
+
+                by = "hugoGeneSymbol",
+
+                sampleListId = mycaselist,
+
+                molecularProfileIds = mygeneticprofile
+              )
+
+            # Extracting data.frame from List
+
+            Unprocessed_ProfileData <- Unprocessed_ProfileData_list[[1]]
+
+            # Subseting data.frame to contain the needed Columns
+
+            Filtered_Unprocessed_ProfileData <-
+
+              Unprocessed_ProfileData[,c("sampleId", "value", "hugoGeneSymbol")]
+
+            # Spliting data.frame by sampleId
+
+            patient_genes_list <- split(Filtered_Unprocessed_ProfileData,
+
+                                        Filtered_Unprocessed_ProfileData$sampleId)
+
+            # Making each table in the list a one column table
+
+            for(hugo in seq_len(length(patient_genes_list))){
+
+
+              present_gene_table <- patient_genes_list[[hugo]]
+
+              present_gene_table_2 <-
+
+                present_gene_table[,"value", drop = FALSE]
+
+              # Converting to matrix
+              present_gene_matrix <- as.matrix(present_gene_table_2)
+
+              # Giving gene names and patient id to the values
+              colnames(present_gene_matrix) <-
+
+                names(patient_genes_list)[hugo]
+
+              rownames(present_gene_matrix) <-
+
+                present_gene_table$hugoGeneSymbol
+
+              patient_genes_list[[hugo]] <- t(present_gene_matrix)
+
+
+            }
+
+
+            # Generating old ProfileData format by collapsing the list
+            ProfileData <- do.call(rbind, patient_genes_list)
+
+            # Sorting the ProfileData by column and rown names
+            ProfileData <- ProfileData[,order(colnames(ProfileData))]
+
+            ProfileData <- ProfileData[order(rownames(ProfileData)),]
+
+            separated_results[[operational]] <- ProfileData
+
 
           }
 
@@ -789,11 +960,86 @@ obtainMultipleStudies <- function(
 
               for(ab in seq_along(absentGenes)){
 
-                absent.gene.profile.data <- getProfileData(
+                #! absent.gene.profile.data <- getProfileData(
 
-                  mycgds, absentGenes[ab], mygeneticprofile, mycaselist
+                #!   mycgds, absentGenes[ab], mygeneticprofile, mycaselist
 
-                )
+                #!)
+
+                Unprocessed_ProfileData_list <-
+
+                  getDataByGenes(
+
+                    cbio,
+
+                    studyId = mycancerstudy,
+
+                    genes = absentGenes[ab],
+
+                    by = "hugoGeneSymbol",
+
+                    sampleListId = mycaselist,
+
+                    molecularProfileIds = mygeneticprofile
+                  )
+
+                # Extracting data.frame from List
+
+                Unprocessed_ProfileData <- Unprocessed_ProfileData_list[[1]]
+
+                # Subseting data.frame to contain the needed Columns
+
+                Filtered_Unprocessed_ProfileData <-
+
+                  Unprocessed_ProfileData[,c("sampleId", "value", "hugoGeneSymbol")]
+
+                # Spliting data.frame by sampleId
+
+                patient_genes_list <- split(Filtered_Unprocessed_ProfileData,
+
+                                            Filtered_Unprocessed_ProfileData$sampleId)
+
+                # Making each table in the list a one column table
+
+                for(hugo in seq_len(length(patient_genes_list))){
+
+
+                  present_gene_table <- patient_genes_list[[hugo]]
+
+                  present_gene_table_2 <-
+
+                    present_gene_table[,"value", drop = FALSE]
+
+                  # Converting to matrix
+                  present_gene_matrix <- as.matrix(present_gene_table_2)
+
+                  # Giving gene names and patient id to the values
+                  colnames(present_gene_matrix) <-
+
+                    names(patient_genes_list)[hugo]
+
+                  rownames(present_gene_matrix) <-
+
+                    present_gene_table$hugoGeneSymbol
+
+                  patient_genes_list[[hugo]] <- t(present_gene_matrix)
+
+
+                }
+
+
+                # Generating old ProfileData format by collapsing the list
+                absent.gene.profile.data <- do.call(rbind, patient_genes_list)
+
+                # Sorting the ProfileData by column and rown names
+                absent.gene.profile.data <-
+
+                  absent.gene.profile.data[,order(colnames(absent.gene.profile.data))]
+
+                absent.gene.profile.data <-
+
+                  absent.gene.profile.data[order(rownames(absent.gene.profile.data)),]
+
 
 
                 absentGeneProfileData <- colnames(
