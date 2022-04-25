@@ -60,7 +60,7 @@ The default input is \code{calculate = c("frequencyPercentage",
 "frequencyRatio", "meanValue")}.}
 
 \item{cutoff}{a number used to limit samples to those that are greather than
-specific number (cutoff). The default value for methylation data is 0.6 while
+specific number (cutoff). The default value for methylation data is 0.8 while
  gene expression studies use default value of 2. For methylation studies, it
  is \code{average of relevant locations}, for the rest, it is
  \code{"log z-score"}. To change the cutoff to any desired number, change the

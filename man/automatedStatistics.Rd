@@ -43,7 +43,7 @@ get all the three data.frames, "frequencyPercentage", "meanValue" and
 "MedianValue" must have been included for \code{calculate}.}
 
 \item{cutoff}{a number used to limit samples to those that are greather than
-this number (cutoff). The default value for methylation data is \code{0.6}
+this number (cutoff). The default value for methylation data is \code{0.8}
 while gene expression studies use default value of \code{2}. For methylation
 studies, it is \code{average of relevant locations}, for the rest, it is
 \code{"log z-score"}. To change the cutoff to any desired number, change the
