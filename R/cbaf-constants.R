@@ -97,7 +97,7 @@ microRNA.Seq_L1.terms <-
 
     "Samples with miRNA expression data"
 
-    )
+  )
 
 microRNA.Seq_L2.terms <-
 
@@ -113,7 +113,7 @@ microRNA.Seq_L2.terms <-
 
     "Z-scores of miRNA expression (TPM)"
 
-    )
+  )
 
 
 #################################
@@ -220,3 +220,10 @@ methylation_L2.terms <-
     "Methylation (hm27)",
 
     "Methylation")
+
+
+##########################
+### Constitutive Genes ###
+##########################
+
+constitutive_genes <- c("GAPDH", "POLR2A", "RPL17", "TRA-AGC23-1")
