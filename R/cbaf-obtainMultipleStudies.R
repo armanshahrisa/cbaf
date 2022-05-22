@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.18.0 \cr
-#' Date: \tab 2022-04-24 \cr
+#' Version: \tab 1.18.1 \cr
+#' Date: \tab 2022-05-22 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -459,6 +459,7 @@ obtainMultipleStudies <- function(
     }
 
 
+
     ############################################################################
     ########## Core segment
 
@@ -558,10 +559,13 @@ obtainMultipleStudies <- function(
       # Find cancer abbreviated name
 
       CancerStudies.idx <-
+
         which(supportedCancers$name == as.character(studiesNames[c]))
 
       mycancerstudy = as.character(
+
         supportedCancers[CancerStudies.idx, "studyId"]
+
         )
 
 
@@ -696,17 +700,26 @@ obtainMultipleStudies <- function(
 
         # Chose one group of genes
 
-        genesNames <- genesList[[group]]
+        genesNames <- unique(genesList[[group]])
 
         numberOfGenes <- length(genesNames)
 
+        # Merging four constitutive genes with data in case all genes are NA
+
+        geneNames_plus_constitutive_genes <- c(genesNames, constitutive_genes)
+
+        order_index <- order(geneNames_plus_constitutive_genes)
+
+        ordered_genesNames <- geneNames_plus_constitutive_genes[order_index]
+
+        number_Of_OrderedGenes <- length(ordered_genesNames)
 
 
         # Obtaining Expression z-scores for the requested genes
 
         # Check number of genes first
 
-        if(numberOfGenes <= 250){
+        if(number_Of_OrderedGenes <= 250){
 
           if(!CancerPossessCorruptedData){
 
@@ -734,7 +747,7 @@ obtainMultipleStudies <- function(
 
                   studyId = mycancerstudy,
 
-                  genes = genesNames[order(genesNames)],
+                  genes = ordered_genesNames,
 
                   by = "hugoGeneSymbol",
 
@@ -806,7 +819,7 @@ obtainMultipleStudies <- function(
 
           operational_gene_number <- split(
 
-            genesNames[order(genesNames)], ceiling(seq_len(numberOfGenes)/250)
+            ordered_genesNames, ceiling(seq_len(numberOfOrderedGenes)/250)
 
           )
 
@@ -918,6 +931,33 @@ obtainMultipleStudies <- function(
         }
 
 
+        # Check if all requested genes are present and remove four constitutive genes
+
+        presence_index <- colnames(ProfileData) %in% constitutive_genes
+
+        number_of_present_constitutive_genes <- sum(presence_index)
+
+        # Determine the first constitutive gene for gene validation
+
+        first_constitutive_gene <- (colnames(ProfileData)[presence_index])[1]
+
+
+        if(ncol(ProfileData) <= number_of_present_constitutive_genes){
+
+          stop("None of the requested genes is in database!")
+
+        }else{
+
+          ProfileData <-
+
+            ProfileData[,!colnames(ProfileData) %in% constitutive_genes]
+
+        }
+
+
+
+
+
 
         if(!CancerPossessCorruptedData){
 
@@ -942,11 +982,13 @@ obtainMultipleStudies <- function(
 
             alteredGeneNames <- sort(gsub("-", ".", genesNames))
 
-            # Obtain name of genes that are absent in requested cancer
+            # Obtain unique name of genes that are absent in requested cancer
 
-            absentGenes <-
+            presence_index_2 <-
 
-              alteredGeneNames[!alteredGeneNames %in% colnames(this.segment)]
+              unique(alteredGeneNames) %in% colnames(this.segment)
+
+            absentGenes <- alteredGeneNames[!presence_index_2]
 
             # For loop for determining changed genes
 
@@ -966,6 +1008,11 @@ obtainMultipleStudies <- function(
 
                 #!)
 
+                OneAbsentGene_OneContutiveGenes <-
+
+                  c(absentGenes[ab], first_constitutive_gene)
+
+
                 Unprocessed_ProfileData_list <-
 
                   getDataByGenes(
@@ -974,7 +1021,7 @@ obtainMultipleStudies <- function(
 
                     studyId = mycancerstudy,
 
-                    genes = absentGenes[ab],
+                    genes = OneAbsentGene_OneContutiveGenes,
 
                     by = "hugoGeneSymbol",
 
@@ -1034,11 +1081,11 @@ obtainMultipleStudies <- function(
                 # Sorting the ProfileData by column and rown names
                 absent.gene.profile.data <-
 
-                  absent.gene.profile.data[,order(colnames(absent.gene.profile.data))]
+                  absent.gene.profile.data[,order(colnames(absent.gene.profile.data)), drop = FALSE]
 
                 absent.gene.profile.data <-
 
-                  absent.gene.profile.data[order(rownames(absent.gene.profile.data)),]
+                  absent.gene.profile.data[order(rownames(absent.gene.profile.data)),, drop = FALSE]
 
 
 
@@ -1048,16 +1095,20 @@ obtainMultipleStudies <- function(
 
                 )
 
+                absentGeneProfileData_pure <-
 
-                # Check wheter gene has an alternative name or missed from the
+                  absentGeneProfileData[!absentGeneProfileData %in% constitutive_genes]
+
+
+                # Check whether gene has an alternative name or missed from the
 
                 # database
 
-                if(length(absentGeneProfileData) == 1){
+                if(length(absentGeneProfileData_pure) == 1){
 
-                  alternativeGeneNames[ab] <- absentGeneProfileData
+                  alternativeGeneNames[ab] <- absentGeneProfileData_pure
 
-                } else if(length(absentGeneProfileData) == 0){
+                } else if(length(absentGeneProfileData_pure) == 0){
 
                   alternativeGeneNames[ab] <- "-"
 
@@ -1111,7 +1162,7 @@ obtainMultipleStudies <- function(
 
               # Empty validation matrix
 
-              validationMatrix <- matrix(, ncol = ncol(this.segment), nrow = 1)
+              validationMatrix <- matrix(, ncol = numberOfGenes, nrow = 1)
 
               # Naming empty matrix
 

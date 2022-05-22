@@ -220,3 +220,10 @@ methylation_L2.terms <-
     "Methylation (hm27)",
 
     "Methylation")
+
+
+##########################
+### Constitutive Genes ###
+##########################
+
+constitutive_genes <- c("GAPDH", "POLR2A", "RPL17", "TRA-AGC23-1")
