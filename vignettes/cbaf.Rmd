@@ -51,6 +51,10 @@ It is recommended that users only work with two low-level functions - `available
 
 This function scans all the cancer studies to examine presence of _RNA-Seq_, _RNA-SeqRelativeToNormalSapmles_, _microRNA-Seq_, _microarray_ and _methylation_ data. It requires a name to label the output excel file. In the following example, the entered name is `"list.2020-05-05"`.
 
+It contains one optional argument:
+
+- __oneOfEach__, a character vector that contains name of a supported technique that includes `RNA-Seq`, `RNA-SeqRTN`, `microRNA-Seq`, `Microarray.mRNA`  `Microarray.microRNA` or `methylation`. The default value in FALSE. Note that, if this option is selected, the function will select one cancer of each type that contains the requested data. Output will also be printed on console instead of generating an excel file. Therefore, it is mandatory that user assigns the output to a variable of interest:  `cancer_names <- availableData("list.2020-05-05", oneOfEach = "RNA-Seq")`
+
 ```{r, eval = FALSE}
 availableData("list.2020-05-05")
 ```    

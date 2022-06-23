@@ -8,7 +8,7 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.19.1 \cr
+#' Version: \tab 1.19.2 \cr
 #' Date: \tab 2022-05-23 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
@@ -27,6 +27,13 @@
 #'
 #' @param excelFileName a character string that is required to name the output
 #' and, if requested, excel file.
+#'
+#' @param oneOfEach a character string that is used to alter the function's
+#' behavior to select unique one cancer of each type that contains data for the
+#' requested technique. The default value is \code{"FALSE"}. Supported
+#' techniques include \code{"RNA-Seq"}, \code{"RNA-SeqRTN"},
+#' \code{"microRNA-Seq"}, \code{"Microarray.mRNA"}, \code{"Microarray.mRNA"},
+#' and \code{"methylation"}.
 #'
 #'
 #' @return An excel file that contains all the cancer studies versus available
@@ -48,7 +55,7 @@
 ################################################################################
 ################################################################################
 
-availableData <- function(excelFileName){
+availableData <- function(excelFileName, oneOfEach = FALSE){
 
 
   ##############################################################################
@@ -61,36 +68,70 @@ availableData <- function(excelFileName){
   }
 
 
+  supported.techniques <- c("RNA-Seq",
 
-  if(file.exists(paste(excelFileName, ".xlsx", sep = ""))){
+                            "RNA-SeqRTN",
 
-    message("[availableData] Warning! '", excelFileName, ".xlsx", "' already exists!")
+                            "microRNA-Seq",
 
-    choiceYesNo <- readline(prompt = "[availableData] Overwrite the file? (yes/no): ")
+                            "Microarray.mRNA",
 
-    if(choiceYesNo == "yes"){
+                            "Microarray.microRNA",
 
-      # Remove the previous file
+                            "methylation")
 
-      file.remove(paste(excelFileName, ".xlsx", sep = ""))
+
+  if(! oneOfEach == FALSE){
+
+    if(! oneOfEach %in% supported.techniques){
+
+      stop("[availableData] 'oneOfEach' must be either 'RNA-Seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA', 'methylation', or simply FALSE !")
+
+    } else{
 
       continue <- TRUE
 
-    }else if(choiceYesNo == "no"){
+    }
 
-      continue <- FALSE
+  }
 
-    }else{
 
-      stop("[availableData] please type 'yes' or 'no'!")
+
+  if(oneOfEach == FALSE){
+
+    if(file.exists(paste(excelFileName, ".xlsx", sep = ""))){
+
+      message("[availableData] Warning! '", excelFileName, ".xlsx", "' already exists!")
+
+      choiceYesNo <- readline(prompt = "[availableData] Overwrite the file? (yes/no): ")
+
+      if(choiceYesNo == "yes"){
+
+        # Remove the previous file
+
+        file.remove(paste(excelFileName, ".xlsx", sep = ""))
+
+        continue <- TRUE
+
+      }else if(choiceYesNo == "no"){
+
+        continue <- FALSE
+
+      }else{
+
+        stop("[availableData] please type 'yes' or 'no'!")
+
+      }
+
+    } else{
+
+      continue <- TRUE
 
     }
 
-  } else{
-
-    continue <- TRUE
-
   }
+
+
 
 
 
@@ -462,25 +503,134 @@ availableData <- function(excelFileName){
 
     rownames(combined_list_dataframe) <- seq_len(nrow(combined_list))
 
-    # Store Xlsx file
 
-    ad <- createWorkbook()
 
-    addWorksheet(ad, sheetName = "Available Data")
+    if(oneOfEach == FALSE){
 
-    writeData(ad,
+      # Store Xlsx file
 
-              sheet = "Available Data",
+      ad <- createWorkbook()
 
-              x = combined_list_dataframe,
+      addWorksheet(ad, sheetName = "Available Data")
 
-              rowNames = TRUE)
+      writeData(ad,
 
-    saveWorkbook(ad, file=paste(excelFileName, ".xlsx", sep = ""))
+                sheet = "Available Data",
 
-    # message("[availableData] Finished.")
+                x = combined_list_dataframe,
 
-    message(c("[availableData] The output was stored as '",  excelFileName, ".xlsx","'."))
+                rowNames = TRUE)
+
+      saveWorkbook(ad, file=paste(excelFileName, ".xlsx", sep = ""))
+
+      # message("[availableData] Finished.")
+
+      message(c("[availableData] The output was stored as '",  excelFileName, ".xlsx","'."))
+
+    }else{
+
+      if(oneOfEach == "RNA-Seq"){
+
+        positive_index <- combined_list_dataframe$`RNA-Seq` == "available"
+
+      }else if(oneOfEach == "RNA-SeqRTN"){
+
+        positive_index <- combined_list_dataframe$`RNA-Seq (RTN)`== "available"
+
+      }else if(oneOfEach == "microRNA-Seq"){
+
+        positive_index <- combined_list_dataframe$`microRNA-Seq` == "available"
+
+      }else if(oneOfEach == "Microarray.mRNA"){
+
+        positive_index <-
+          combined_list_dataframe$`microarray with mRNA data` == "available"
+
+      }else if(oneOfEach == "Microarray.microRNA"){
+
+        positive_index <-
+          combined_list_dataframe$`microarray with microRNA data`== "available"
+
+      }
+
+      if(sum(positive_index) == 0){
+
+        stop("No '", oneOfEach,"' study is available!")
+
+      }else{
+
+        # Obtaining positive cancer studies
+
+        positive_list <-
+          combined_list_dataframe$`Cancer Study Name`[positive_index]
+
+
+        # Obtaining unique cancer types
+
+        unique_cancer_types <- sort(unique(gsub("\\(.*" ,"", positive_list)))
+
+        unique_studies <- vector("character", length = length(unique_cancer_types))
+
+
+        # Finding best studies
+
+        for(CSbest in seq_along(unique_cancer_types)){
+
+          positive_candidate_indices <- grep(unique_cancer_types[CSbest], positive_list)
+
+          positive_candidates <- positive_list[positive_candidate_indices]
+
+
+          # Filter overlapping unique Cancers
+
+          clean_names_positives <-
+
+            gsub("\\(.*" ,"", positive_candidates)
+
+
+          correct_positives_index <-
+
+            which(clean_names_positives == unique_cancer_types[CSbest])
+
+          positive_candidates <- positive_candidates[correct_positives_index]
+
+
+          if(length(positive_candidates) > 1){
+
+            tcga_indices <- grep("TCGA", positive_candidates)
+
+            if(length(tcga_indices) >= 1){
+
+              tcga_studies <- positive_candidates[tcga_indices]
+
+              final_candidate <- tcga_studies[length(tcga_studies)]
+
+            }else{
+
+              final_candidate <-
+
+                positive_candidates[length(positive_candidates)]
+
+            }
+
+            unique_studies[CSbest] <- final_candidate
+
+          } else {
+
+            unique_studies[CSbest] <- positive_candidates
+
+          }
+
+        }
+
+      }
+
+
+      message("[availableData] generating list of cancers studies ...")
+
+      print(sort(unique_studies))
+
+    }
 
   }else{
 
