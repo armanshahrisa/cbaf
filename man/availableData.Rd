@@ -9,6 +9,13 @@ availableData(excelFileName)
 \arguments{
 \item{excelFileName}{a character string that is required to name the output
 and, if requested, excel file.}
+
+\item{oneOfEach}{a character string that is used to alter the function's
+behavior to select unique one cancer of each type that contains data for the
+requested technique. The default value is \code{"FALSE"}. Supported
+techniques include \code{"RNA-Seq"}, \code{"RNA-SeqRTN"},
+\code{"microRNA-Seq"}, \code{"Microarray.mRNA"}, \code{"Microarray.mRNA"},
+and \code{"methylation"}.}
 }
 \value{
 An excel file that contains all the cancer studies versus available
@@ -23,8 +30,8 @@ microRNA-Seq, microarray(mRNA), microarray(miRNA) and methylation data.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.18.0 \cr
-Date: \tab 2022-04-24 \cr
+Version: \tab 1.19.2 \cr
+Date: \tab 2022-05-23 \cr
 License: \tab Artistic-2.0 \cr
 }
 }

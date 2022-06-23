@@ -23,7 +23,7 @@
 #'
 #'
 #'
-#' @usage availableData(excelFileName)
+#' @usage availableData(excelFileName, oneOfEach = FALSE)
 #'
 #' @param excelFileName a character string that is required to name the output
 #' and, if requested, excel file.
