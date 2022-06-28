@@ -703,7 +703,7 @@ obtainOneStudy <- function(
 
           operational_gene_number <- split(
 
-            ordered_genesNames, ceiling(seq_len(numberOfOrderedGenes)/250)
+            ordered_genesNames, ceiling(seq_len(number_Of_OrderedGenes)/250)
 
           )
 

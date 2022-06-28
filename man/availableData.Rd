@@ -4,7 +4,7 @@
 \alias{availableData}
 \title{Check which Data types are available for each cancer study.}
 \usage{
-availableData(excelFileName)
+availableData(excelFileName, oneOfEach = FALSE)
 }
 \arguments{
 \item{excelFileName}{a character string that is required to name the output
