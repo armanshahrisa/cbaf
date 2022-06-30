@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.19.2 \cr
-#' Date: \tab 2022-06-23 \cr
+#' Version: \tab 1.19.3 \cr
+#' Date: \tab 2022-06-30 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -827,13 +827,13 @@ obtainOneStudy <- function(
 
         if(ncol(ProfileData) <= number_of_present_constitutive_genes){
 
-          stop("None of the requested genes is in database!")
+          ProfileData <- NA
 
         }else{
 
           ProfileData <-
 
-            ProfileData[,!colnames(ProfileData) %in% constitutive_genes]
+            ProfileData[,!colnames(ProfileData) %in% constitutive_genes, drop = FALSE]
 
         }
 
@@ -855,7 +855,7 @@ obtainOneStudy <- function(
 
         # Alter c.genes to be compatible with gene names in cBioPortal output
 
-        alteredGeneNames <- sort(gsub("-", ".", genesNames))
+        alteredGeneNames <- toupper(sort(gsub("-", ".", genesNames)))
 
         # Obtain name of genes that are absent in requested cancer study
 
@@ -1054,9 +1054,11 @@ obtainOneStudy <- function(
 
           } else{
 
-            dimnames(validationMatrix) <-
+            dimnames(validationMatrix) <- list(
 
-              list(inputCases.names[i], colnames(this.segment))
+              inputCases.names[i],
+
+              colnames(this.segment))
 
           }
 

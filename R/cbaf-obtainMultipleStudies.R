@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.19.2 \cr
-#' Date: \tab 2022-06-23 \cr
+#' Version: \tab 1.19.3 \cr
+#' Date: \tab 2022-06-30 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -909,9 +909,11 @@ obtainMultipleStudies <- function(
 
 
             # Generating old ProfileData format by collapsing the list
+
             ProfileData <- do.call(rbind, patient_genes_list)
 
             # Sorting the ProfileData by column and rown names
+
             ProfileData <- ProfileData[,order(colnames(ProfileData))]
 
             ProfileData <- ProfileData[order(rownames(ProfileData)),]
@@ -944,13 +946,13 @@ obtainMultipleStudies <- function(
 
         if(ncol(ProfileData) <= number_of_present_constitutive_genes){
 
-          stop("None of the requested genes is in database!")
+          ProfileData <- NA
 
         }else{
 
           ProfileData <-
 
-            ProfileData[,!colnames(ProfileData) %in% constitutive_genes]
+            ProfileData[,!colnames(ProfileData) %in% constitutive_genes, drop = FALSE]
 
         }
 
@@ -980,7 +982,9 @@ obtainMultipleStudies <- function(
             # Alter c.genes to be compatible with gene names in cBioPortal
             # output
 
-            alteredGeneNames <- sort(gsub("-", ".", genesNames))
+            alteredGeneNames <-  toupper(sort(gsub("-", ".", genesNames)))
+
+
 
             # Obtain unique name of genes that are absent in requested cancer
 
@@ -1178,9 +1182,11 @@ obtainMultipleStudies <- function(
 
               } else{
 
-                dimnames(validationMatrix) <-
+                dimnames(validationMatrix) <- list(
 
-                  list(groupNames[c], colnames(this.segment))
+                  groupNames[c],
+
+                  colnames(this.segment))
 
               }
 
