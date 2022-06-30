@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.18.1 \cr
-#' Date: \tab 2022-05-22 \cr
+#' Version: \tab 1.18.2 \cr
+#' Date: \tab 2022-06-20 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -703,7 +703,7 @@ obtainOneStudy <- function(
 
           operational_gene_number <- split(
 
-            ordered_genesNames, ceiling(seq_len(numberOfOrderedGenes)/250)
+            ordered_genesNames, ceiling(seq_len(number_Of_OrderedGenes)/250)
 
             )
 
@@ -827,13 +827,13 @@ obtainOneStudy <- function(
 
         if(ncol(ProfileData) <= number_of_present_constitutive_genes){
 
-          stop("None of the requested genes is in database!")
+          ProfileData <- NA
 
         }else{
 
           ProfileData <-
 
-            ProfileData[,!colnames(ProfileData) %in% constitutive_genes]
+            ProfileData[,!colnames(ProfileData) %in% constitutive_genes, drop = FALSE]
 
         }
 
@@ -855,7 +855,7 @@ obtainOneStudy <- function(
 
         # Alter c.genes to be compatible with gene names in cBioPortal output
 
-        alteredGeneNames <- sort(gsub("-", ".", genesNames))
+        alteredGeneNames <- toupper(sort(gsub("-", ".", genesNames)))
 
         # Obtain name of genes that are absent in requested cancer study
 
