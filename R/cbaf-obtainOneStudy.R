@@ -828,9 +828,11 @@ obtainOneStudy <- function(
                 present_gene_table[,"value", drop = FALSE]
 
               # Converting to matrix
+
               present_gene_matrix <- as.matrix(present_gene_table_2)
 
               # Giving gene names and patient id to the values
+
               colnames(present_gene_matrix) <-
 
                 names(patient_genes_list)[hugo]
@@ -887,9 +889,11 @@ obtainOneStudy <- function(
 
 
             # Generating old ProfileData format by collapsing the list
+
             ProfileData <- do.call(rbind, patient_genes_list)
 
-            # Sorting the ProfileData by column and rown names
+            # Sorting the ProfileData by column and row names
+
             ProfileData <- ProfileData[,order(colnames(ProfileData))]
 
             ProfileData <- ProfileData[order(rownames(ProfileData)),]
@@ -1028,9 +1032,11 @@ obtainOneStudy <- function(
                 present_gene_table[,"value", drop = FALSE]
 
               # Converting to matrix
+
               present_gene_matrix <- as.matrix(present_gene_table_2)
 
               # Giving gene names and patient id to the values
+
               colnames(present_gene_matrix) <-
 
                 names(patient_genes_list)[hugo]
@@ -1046,9 +1052,11 @@ obtainOneStudy <- function(
 
 
             # Generating old ProfileData format by collapsing the list
+
             absent.gene.profile.data <- do.call(rbind, patient_genes_list)
 
-            # Sorting the ProfileData by column and rown names
+            # Sorting the ProfileData by column and row names
+
             absent.gene.profile.data <-
 
               absent.gene.profile.data[,order(colnames(absent.gene.profile.data)), drop = FALSE]
