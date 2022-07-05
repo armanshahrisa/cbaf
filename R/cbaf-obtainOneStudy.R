@@ -9,8 +9,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.18.2 \cr
-#' Date: \tab 2022-06-20 \cr
+#' Version: \tab 1.18.3 \cr
+#' Date: \tab 2022-07-05 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -648,13 +648,17 @@ obtainOneStudy <- function(
 
           Unprocessed_ProfileData <- Unprocessed_ProfileData_list[[1]]
 
-          # Subseting data.frame to contain the needed Columns
+          # Getting all gene names to later find NA genes for patients
+
+          complete_genes <- unique(Unprocessed_ProfileData$hugoGeneSymbol)
+
+          # Subsetting data.frame to contain the needed Columns
 
           Filtered_Unprocessed_ProfileData <-
 
             Unprocessed_ProfileData[,c("sampleId", "value", "hugoGeneSymbol")]
 
-          # Spliting data.frame by sampleId
+          # Splitting data.frame by sampleId
 
           patient_genes_list <- split(Filtered_Unprocessed_ProfileData,
 
@@ -683,16 +687,60 @@ obtainOneStudy <- function(
 
               present_gene_table$hugoGeneSymbol
 
-            patient_genes_list[[hugo]] <- t(present_gene_matrix)
+            hugo_output <- t(present_gene_matrix)
+
+            hugo_output <-
+
+              hugo_output[,order(colnames(hugo_output)), drop = FALSE]
+
+            # Account for missing genes (NA genes)
+
+            returned_genes <- colnames(hugo_output)
+
+            NA_genes <- complete_genes[! complete_genes %in% returned_genes]
+
+            if(length(NA_genes) > 0){
+
+              NA_matrix <- matrix(NA, ncol = 1, nrow = 1)
+
+              rownames(NA_matrix) <- rownames(hugo_output)
+
+              NA_list <- vector("list", length = length(NA_genes))
+
+              for(NA_gene in seq_along(NA_genes)){
+
+                colnames(NA_matrix) <- NA_genes[NA_gene]
+
+                NA_list[[NA_gene]] <- NA_matrix
+
+              }
+
+              NA_output <- do.call(cbind, NA_list)
+
+              hugo_output_2 <- cbind(hugo_output, NA_output)
+
+              hugo_output_2 <-
+
+                hugo_output_2[,order(colnames(hugo_output_2)), drop = FALSE]
+
+            } else{
+
+              hugo_output_2 <- hugo_output
+
+            }
+
+            patient_genes_list[[hugo]] <- hugo_output_2
 
 
           }
 
 
           # Generating old ProfileData format by collapsing the list
+
           ProfileData <- do.call(rbind, patient_genes_list)
 
-          # Sorting the ProfileData by column and rown names
+          # Sorting the ProfileData by column and row names
+
           ProfileData <- ProfileData[,order(colnames(ProfileData))]
 
           ProfileData <- ProfileData[order(rownames(ProfileData)),]
@@ -751,7 +799,11 @@ obtainOneStudy <- function(
 
             Unprocessed_ProfileData <- Unprocessed_ProfileData_list[[1]]
 
-            # Subseting data.frame to contain the needed Columns
+            # Getting all gene names to later find NA genes for patients
+
+            complete_genes <- unique(Unprocessed_ProfileData$hugoGeneSymbol)
+
+            # Subsetting data.frame to contain the needed Columns
 
             Filtered_Unprocessed_ProfileData <-
 
@@ -786,16 +838,60 @@ obtainOneStudy <- function(
 
                 present_gene_table$hugoGeneSymbol
 
-              patient_genes_list[[hugo]] <- t(present_gene_matrix)
+              hugo_output <- t(present_gene_matrix)
+
+              hugo_output <-
+
+                hugo_output[,order(colnames(hugo_output)), drop = FALSE]
+
+              # Account for missing genes (NA genes)
+
+              returned_genes <- colnames(hugo_output)
+
+              NA_genes <- complete_genes[! complete_genes %in% returned_genes]
+
+              if(length(NA_genes) > 0){
+
+                NA_matrix <- matrix(NA, ncol = 1, nrow = 1)
+
+                rownames(NA_matrix) <- rownames(hugo_output)
+
+                NA_list <- vector("list", length = length(NA_genes))
+
+                for(NA_gene in seq_along(NA_genes)){
+
+                  colnames(NA_matrix) <- NA_genes[NA_gene]
+
+                  NA_list[[NA_gene]] <- NA_matrix
+
+                }
+
+                NA_output <- do.call(cbind, NA_list)
+
+                hugo_output_2 <- cbind(hugo_output, NA_output)
+
+                hugo_output_2 <-
+
+                  hugo_output_2[,order(colnames(hugo_output_2)), drop = FALSE]
+
+              } else{
+
+                hugo_output_2 <- hugo_output
+
+              }
+
+              patient_genes_list[[hugo]] <- hugo_output_2
 
 
             }
 
 
             # Generating old ProfileData format by collapsing the list
+
             ProfileData <- do.call(rbind, patient_genes_list)
 
-            # Sorting the ProfileData by column and rown names
+            # Sorting the ProfileData by column and row names
+
             ProfileData <- ProfileData[,order(colnames(ProfileData))]
 
             ProfileData <- ProfileData[order(rownames(ProfileData)),]
