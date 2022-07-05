@@ -56,8 +56,8 @@ included in cancer studies and, if not, looks for the alternative gene names.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.19.2 \cr
-Date: \tab 2022-06-23 \cr
+Version: \tab 1.19.4 \cr
+Date: \tab 2022-07-05 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
