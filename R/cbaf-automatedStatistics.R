@@ -449,6 +449,150 @@ automatedStatistics<- function(
 
 
     ############################################################################
+    ########## Repetitive code section
+
+    if(topGenes){
+
+      default_top = 5
+
+      top_finder <- function(startingMatrix, topNumber = 5){
+
+
+        # Removing NaN and NA
+
+        startingMatrix[is.nan(startingMatrix) | is.na(startingMatrix)] <- 0
+
+
+
+        # Finding the top values
+
+        topGenes.values <-
+
+          head(unique(sort(startingMatrix, decreasing = TRUE)), n = topNumber)
+
+        # Creating empty list for iterations
+
+        complete.top.list <- vector("list", length(topGenes.values))
+
+
+        for(topV in seq_along(topGenes.values)){
+
+          topGene.name <-
+
+            colnames(startingMatrix)[startingMatrix %in% topGenes.values[topV]]
+
+          # check whether ttwo or more genes have the same rank
+
+          if(length(topGene.name) > 1){
+
+            topGene.name <- paste(topGene.name, collapse = ", ")
+
+          }
+
+          # rounding
+
+          if(round){
+
+            complete.top <- data.frame(
+
+              topGene = topGene.name,
+
+              topValue = round(topGenes.values[topV], digits = 2)
+
+              , stringsAsFactors = FALSE
+
+            )
+
+          } else{
+
+            complete.top <- data.frame(
+
+              topGene = topGene.name,
+
+              topValue = topGenes.values[topV],
+
+              stringsAsFactors = FALSE
+
+            )
+
+          }
+
+          # correcting column names
+
+          colnames(complete.top) <- c(paste(topV, "th ", "Gene", sep=""),
+
+                                      paste(topV, "th ", "Value", sep=""))
+
+          # complete list
+
+          complete.top.list[[topV]] <- complete.top
+
+        }
+
+        # Merge list to give post.topGenes
+
+        post.topGenes <- do.call("cbind", complete.top.list)
+
+        # correcting rowname
+
+        rownames(post.topGenes) <- source.data.subset.name
+
+
+        # fixing the problem caused by more thank one gene with same rank
+
+        if(length(topGenes.values) < topNumber){
+
+          # Repeat unit
+
+          fix.dataframe <- data.frame(
+
+            topGene = "-",
+
+            topValue = "-",
+
+            stringsAsFactors = FALSE
+
+          )
+
+          # number of new units
+
+          newUnits <- topNumber - length(topGenes.values)
+
+          # finding current number of units
+
+          oldUnits <- length(topGenes.values)
+
+          top_list <- vector("list", length = newUnits)
+
+          for(empty in seq_len(newUnits)){
+
+            colnames(fix.dataframe) <-
+
+              c(paste(oldUnits + empty, "th ", "Gene", sep = ""),
+
+                paste(oldUnits + empty, "th ", "Value", sep = ""))
+
+            rownames(fix.dataframe) <- rownames(post.topGenes)
+
+            top_list[[empty]] <- fix.dataframe
+
+          }
+
+          missing.tops <- do.call(cbind, top_list)
+
+          post.topGenes <- cbind(post.topGenes, missing.tops)
+
+        }
+
+        post.topGenes
+
+      }
+
+    }
+
+
+
+    ############################################################################
     ########## Core segment
 
     # calculating the first 'for' loop for different gene groups
@@ -659,131 +803,9 @@ automatedStatistics<- function(
 
           if(topGenes){
 
-            # Check if manual naming is requested
+            Top.Genes.of.Frequency.Percentage[[cs]] <-
 
-            pre.topGenes <- frequency.percentage.for.a.subset
-
-            # Removing NaN and NA
-
-            pre.topGenes[is.nan(pre.topGenes) | is.na(pre.topGenes)] <- 0
-
-
-
-            # Finding the top 5 values
-
-            topGenes.values <-
-
-              head(unique(sort(pre.topGenes, decreasing = TRUE)), n = 5)
-
-            # Creating empty list for iterations
-
-            complete.top.list <- vector("list", length(topGenes.values))
-
-
-            for(topV in seq_along(topGenes.values)){
-
-              topGene.name <-
-
-                colnames(pre.topGenes)[pre.topGenes %in% topGenes.values[topV]]
-
-              # check whether ttwo or more genes have the same rank
-
-              if(length(topGene.name) > 1){
-
-                topGene.name <- paste(topGene.name, collapse = ", ")
-
-              }
-
-              # rounding
-
-              if(round){
-
-                complete.top <- data.frame(
-
-                  topGene = topGene.name,
-
-                  topValue = round(topGenes.values[topV], digits = 2)
-
-                  , stringsAsFactors = FALSE
-
-                             )
-
-              } else{
-
-                complete.top <- data.frame(
-
-                  topGene = topGene.name,
-
-                  topValue = topGenes.values[topV],
-
-                  stringsAsFactors = FALSE
-
-                             )
-
-              }
-
-              # correcting column names
-
-              colnames(complete.top) <- c(paste(topV, "th ", "Gene", sep=""),
-
-                                          paste(topV, "th ", "Value", sep=""))
-
-              # complete list
-
-              complete.top.list[[topV]] <- complete.top
-
-            }
-
-            # Merge list to give post.topGenes
-
-            post.topGenes <- do.call("cbind", complete.top.list)
-
-            # correcting rowname
-
-            rownames(post.topGenes) <- source.data.subset.name
-
-
-            # fixing the problem caused by more thank one gene with same rank
-
-            if(length(topGenes.values) < 5){
-
-              # Repeat unit
-
-              fix.dataframe <- data.frame(
-
-                topGene = "-",
-
-                topValue = "-",
-
-                stringsAsFactors = FALSE
-
-                           )
-
-              # number of new units
-
-              newUnits <- 5 - length(topGenes.values)
-
-              # finding current number of units
-
-              oldUnits <- length(topGenes.values)
-
-              for(empty in seq_len(newUnits)){
-
-                colnames(fix.dataframe) <-
-
-                  c(paste(oldUnits + empty, "th ", "Gene", sep=""),
-
-                    paste(oldUnits + empty, "th ", "Value", sep=""))
-
-                post.topGenes <- cbind(post.topGenes, fix.dataframe)
-
-              }
-
-            }
-
-            # assigning the value to the second level list
-
-            Top.Genes.of.Frequency.Percentage[[cs]] <- post.topGenes
+              top_finder(frequency.percentage.for.a.subset, default_top)
 
           }
 
@@ -1042,132 +1064,9 @@ automatedStatistics<- function(
 
           if(topGenes){
 
-            # Check if manual naming is requested
+            Top.Genes.of.Mean.Value[[cs]] <-
 
-            pre.topGenes <- mean.value.for.a.subset
-
-            # Removing NaN and NA
-
-            pre.topGenes[is.nan(pre.topGenes) | is.na(pre.topGenes)] <- 0
-
-
-
-            # Finding the top 5 values
-
-            topGenes.values <-
-
-              head(unique(sort(pre.topGenes, decreasing = TRUE)), n = 5)
-
-            # Creating empty list for iterations
-
-            complete.top.list <- vector("list", length(topGenes.values))
-
-
-            for(topV in seq_along(topGenes.values)){
-
-              topGene.name <-
-
-                colnames(pre.topGenes)[pre.topGenes %in% topGenes.values[topV]]
-
-              # check whether ttwo or more genes have the same rank
-
-              if(length(topGene.name) > 1){
-
-                topGene.name <- paste(topGene.name, collapse = ", ")
-
-              }
-
-              # rounding
-
-              if(round){
-
-                complete.top <- data.frame(
-
-                  topGene = topGene.name,
-
-                  topValue = round(topGenes.values[topV], digits = 2)
-
-                  , stringsAsFactors = FALSE
-
-                )
-
-              } else{
-
-                complete.top <- data.frame(
-
-                  topGene = topGene.name,
-
-                  topValue = topGenes.values[topV],
-
-                  stringsAsFactors = FALSE
-
-                )
-
-              }
-
-              # correcting column names
-
-              colnames(complete.top) <- c(paste(topV, "th ", "Gene", sep=""),
-
-                                          paste(topV, "th ", "Value", sep=""))
-
-              # complete list
-
-              complete.top.list[[topV]] <- complete.top
-
-            }
-
-            # Merge list to give post.topGenes
-
-            post.topGenes <- do.call("cbind", complete.top.list)
-
-
-            # correcting rowname
-
-            rownames(post.topGenes) <- source.data.subset.name
-
-
-            # fixing the problem caused by more thank one gene with same rank
-
-            if(length(topGenes.values) < 5){
-
-              # Repeat unit
-
-              fix.dataframe <- data.frame(
-
-                  topGene = "-",
-
-                  topValue = "-",
-
-                  stringsAsFactors = FALSE
-
-                  )
-
-              # number of new units
-
-              newUnits <- 5 - length(topGenes.values)
-
-              # finding current number of units
-
-              oldUnits <- length(topGenes.values)
-
-              for(empty in seq_len(newUnits)){
-
-                colnames(fix.dataframe) <-
-
-                  c(paste(oldUnits + empty, "th ", "Gene", sep=""),
-
-                    paste(oldUnits + empty, "th ", "Value", sep=""))
-
-                post.topGenes <- cbind(post.topGenes, fix.dataframe)
-
-              }
-
-            }
-
-            # assigning the value to the second level list
-
-            Top.Genes.of.Mean.Value[[cs]] <- post.topGenes
+              top_finder(mean.value.for.a.subset, default_top)
 
           }
 
@@ -1306,132 +1205,9 @@ automatedStatistics<- function(
 
           if(topGenes){
 
-            # Check if manual naming is requested
+            Top.Genes.of.Median.Value[[cs]] <-
 
-            pre.topGenes <- median.value.for.a.subset
-
-            # Removing NaN and NA
-
-            pre.topGenes[is.nan(pre.topGenes) | is.na(pre.topGenes)] <- 0
-
-
-
-            # Finding the top 5 values
-
-            topGenes.values <-
-
-              head(unique(sort(pre.topGenes, decreasing = TRUE)), n = 5)
-
-            # Creating empty list for iterations
-
-            complete.top.list <- vector("list", length(topGenes.values))
-
-
-            for(topV in seq_along(topGenes.values)){
-
-              topGene.name <-
-
-                colnames(pre.topGenes)[pre.topGenes %in% topGenes.values[topV]]
-
-              # check whether ttwo or more genes have the same rank
-
-              if(length(topGene.name) > 1){
-
-                topGene.name <- paste(topGene.name, collapse = ", ")
-
-              }
-
-              # rounding
-
-              if(round){
-
-                complete.top <- data.frame(
-
-                  topGene = topGene.name,
-
-                  topValue = round(topGenes.values[topV], digits = 2)
-
-                  , stringsAsFactors = FALSE
-
-                )
-
-              } else{
-
-                complete.top <- data.frame(
-
-                  topGene = topGene.name,
-
-                  topValue = topGenes.values[topV],
-
-                  stringsAsFactors = FALSE
-
-                )
-
-              }
-
-              # correcting column names
-
-              colnames(complete.top) <- c(paste(topV, "th ", "Gene", sep=""),
-
-                                          paste(topV, "th ", "Value", sep=""))
-
-              # complete list
-
-              complete.top.list[[topV]] <- complete.top
-
-
-            }
-
-            # Merge list to give post.topGenes
-
-            post.topGenes <- do.call("cbind", complete.top.list)
-
-            # correcting rowname
-
-            rownames(post.topGenes) <- source.data.subset.name
-
-
-            # fixing the problem caused by more thank one gene with same rank
-
-            if(length(topGenes.values) < 5){
-
-              # Repeat unit
-
-              fix.dataframe <- data.frame(
-
-                topGene = "-",
-
-                topValue = "-",
-
-                stringsAsFactors = FALSE
-
-              )
-
-              # number of new units
-
-              newUnits <- 5 - length(topGenes.values)
-
-              # finding current number of units
-
-              oldUnits <- length(topGenes.values)
-
-              for(empty in seq_len(newUnits)){
-
-                colnames(fix.dataframe) <-
-
-                  c(paste(oldUnits + empty, "th ", "Gene", sep=""),
-
-                    paste(oldUnits + empty, "th ", "Value", sep=""))
-
-                post.topGenes <- cbind(post.topGenes, fix.dataframe)
-
-              }
-
-            }
-
-            # assigning the value to the second level list
-
-            Top.Genes.of.Median.Value[[cs]] <- post.topGenes
+              top_finder(median.value.for.a.subset, default_top)
 
           }
 
