@@ -628,7 +628,7 @@ availableData <- function(excelFileName, oneOfEach = FALSE){
 
       message("[availableData] generating list of cancers studies ...")
 
-      print(sort(unique_studies))
+      sort(unique_studies)
 
     }
 
