@@ -75,8 +75,8 @@ function.
 \tabular{lllll}{
 Package: \tab cbaf \cr
 Type: \tab Package \cr
-Version: \tab 1.19.4 \cr
-Date: \tab 2022-07-05 \cr
+Version: \tab 1.19.5 \cr
+Date: \tab 2022-07-14 \cr
 License: \tab Artistic-2.0 \cr
 }
 }
