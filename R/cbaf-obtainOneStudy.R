@@ -602,7 +602,7 @@ obtainOneStudy <- function(
 
         ProfileData <- do.call(rbind, patient_genes_list)
 
-        # Sorting the ProfileData by column and rown names
+        # Sorting the ProfileData by column and row names
 
         ProfileData <- ProfileData[,order(colnames(ProfileData)), drop = FALSE]
 

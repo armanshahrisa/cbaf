@@ -304,7 +304,7 @@ automatedStatistics<- function(
 
 
 
-  # Store the new parameteres
+  # Store the new parameters
 
   newParameters <-list()
 
@@ -599,8 +599,6 @@ automatedStatistics<- function(
 
     for(gg in seq_along(sourceDataList)){
 
-      geneNumber <- ncol(sourceDataList[[gg]][[1]])
-
       temList <- list()
 
 
@@ -665,6 +663,8 @@ automatedStatistics<- function(
       for(cs in seq_along(number.of.gene.groups)){
 
         # start working on one study
+
+        geneNumber <- ncol(sourceDataList[[gg]][[cs]])
 
         source.data.subset <- sourceDataList[[gg]][[cs]]
 
@@ -1221,7 +1221,12 @@ automatedStatistics<- function(
 
       }
 
-      # assign the statistics list fot a subgroup of processedList
+      # Accounting for variable number of availabe genes for each study
+
+
+
+
+      # assign the statistics list for a subgroup of processedList
 
       if("frequencyPercentage" %in% calculate){
 
