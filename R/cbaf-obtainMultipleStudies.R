@@ -520,6 +520,10 @@ obtainMultipleStudies <- function(
 
     cancersLackingData <- NULL
 
+    # Accounting for missing genes from different studies
+
+    genes_in_studies <- vector("list", length(studiesNames))
+
 
 
 
@@ -1052,6 +1056,16 @@ obtainMultipleStudies <- function(
 
         }
 
+        # Accounting for missing genes: obtaining existing genes
+
+        # assign genes if ProfileData is not NA
+
+        if(! length(ProfileData) == 1){
+
+          genes_in_studies[[c]] <- colnames(ProfileData)
+
+        }
+
 
 
 
@@ -1421,6 +1435,70 @@ obtainMultipleStudies <- function(
     # Closing progress bar
 
     close(obtainMultipleStudiesProgressBar)
+
+    # Accounting for missing genes in various cancers: finding unique genes
+
+    maximum_available_genes <-
+
+      unique(unlist(genes_in_studies, use.names = FALSE))
+
+    # Altering rawList to have equal number of genes for all studies
+
+    for(gene_group in seq_along(rawList)){
+
+      for(studies in seq_along(rawList[[gene_group]])){
+
+        current_raw_data <- rawList[[gene_group]][[studies]]
+
+        missing_index <-
+
+          ! maximum_available_genes %in% colnames(current_raw_data)
+
+        if(sum(missing_index) > 0){
+
+          missing_genes <- maximum_available_genes[missing_index]
+
+          missing_ProfileData <- vector("list", length = length(missing_genes))
+
+          sample_number <- nrow(current_raw_data)
+
+          NA_for_a_missing_gene <- rep(NA, sample_number)
+
+          dim(NA_for_a_missing_gene) <-
+
+            c(sample_number,1); rownames(NA_for_a_missing_gene) <-
+
+            rownames(current_raw_data)
+
+          for(missing in seq_along(missing_genes)){
+
+            colnames(NA_for_a_missing_gene) <- missing_genes[missing]
+
+            missing_ProfileData[[missing]] <- NA_for_a_missing_gene
+
+          }
+
+          missing_ProfileData_dataframe <- do.call(cbind, missing_ProfileData)
+
+          complete_ProfileData <-
+
+            cbind(current_raw_data, missing_ProfileData_dataframe)
+
+          col_index <- order(colnames(complete_ProfileData))
+
+          complete_ProfileData <- complete_ProfileData[,col_index, drop = FALSE]
+
+          row_index <- order(rownames(complete_ProfileData))
+
+          complete_ProfileData <- complete_ProfileData[row_index,, drop = FALSE]
+
+          rawList[[gene_group]][[studies]] <- complete_ProfileData
+
+        }
+
+      }
+
+    }
 
 
 
