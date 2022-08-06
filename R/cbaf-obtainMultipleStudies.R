@@ -690,7 +690,7 @@ obtainMultipleStudies <- function(
 
     cancersWithCorruptedData <- NULL
 
-    # List of cancers lacking approprate data
+    # List of cancers lacking appropriate data
 
     cancersLackingData <- NULL
 
@@ -854,24 +854,6 @@ obtainMultipleStudies <- function(
       }
 
 
-      # Updating cancers list
-
-      if(!CancerPossessData){
-
-        if(is.null(cancersLackingData)){
-
-          cancersLackingData <- studiesNames[c]
-
-        }else{
-
-          cancersLackingData <-
-            c(cancersLackingData, studiesNames[c])
-
-        }
-
-      }
-
-
 
       # obtaining data for every genegroup
 
@@ -933,11 +915,32 @@ obtainMultipleStudies <- function(
 
           ProfileData <- NA
 
+          CancerPossessData <- FALSE
+
         }else{
 
           ProfileData <-
 
             ProfileData[,!colnames(ProfileData) %in% constitutive_genes, drop = FALSE]
+
+        }
+
+
+        # Updating cancers list
+
+        if(!CancerPossessData){
+
+          if(is.null(cancersLackingData)){
+
+            cancersLackingData <- studiesNames[c]
+
+          }else{
+
+            cancersLackingData <-
+
+              c(cancersLackingData, studiesNames[c])
+
+          }
 
         }
 
@@ -1209,6 +1212,19 @@ obtainMultipleStudies <- function(
     # Closing progress bar
 
     close(obtainMultipleStudiesProgressBar)
+
+
+    # Remove NA studies
+
+    for(missingStudies in seq_along(rawList)){
+
+      current_gene_group <- rawList[[missingStudies]]
+
+      current_gene_group2 <- Filter(Negate(is.null), current_gene_group)
+
+      rawList[[missingStudies]] <- current_gene_group2
+
+    }
 
 
     # Accounting for missing genes in various cancers: finding unique genes
