@@ -130,6 +130,10 @@ obtainMultipleStudies <- function(
 
   }
 
+  # Convert genes to Upper Level
+
+  genesList <- lapply(genesList, toupper)
+
 
 
   # Check submissionName
