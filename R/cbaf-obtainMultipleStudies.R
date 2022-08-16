@@ -124,7 +124,7 @@ obtainMultipleStudies <- function(
 
     if(is.vector(genesList)){
 
-      genesList <- list(a = genesList)
+      genesList <- list(anonymous = genesList)
 
     }
 
