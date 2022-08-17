@@ -806,7 +806,7 @@ heatmapOutput <- function(
 
         not.just.na <- apply(heatmap.data, 1, function(x) any(!is.na(x)==TRUE))
 
-        heatmap.data <- heatmap.data[not.just.na,]
+        heatmap.data <- heatmap.data[not.just.na,, drop = FALSE]
 
         # Removing NaN
 
@@ -816,452 +816,486 @@ heatmapOutput <- function(
 
         if(is.matrix(heatmap.data)){
 
-          heatmap.data <- heatmap.data[rowSums(heatmap.data, na.rm = TRUE)!=0,]
+          heatmap.data <-
+
+            heatmap.data[rowSums(heatmap.data, na.rm = TRUE)!=0,,drop= FALSE]
 
         }
 
         if(is.matrix(heatmap.data)){
 
-          if(nrow(heatmap.data) > 1 & ncol(heatmap.data) > 1){
+          heatmap.Oddity <- NULL
+
+          if(nrow(heatmap.data) == 1){
+
+            heatmap.data <- rbind(heatmap.data, heatmap.data)
+
+            heatmap.Oddity <- "rows"
+
+          }else if(ncol(heatmap.data) == 1){
+
+            heatmap.data <- cbind(heatmap.data, heatmap.data)
+
+            heatmap.Oddity <- "columns"
+
+          }
 
 
 
 
-            # Limiting the number of genes in heatmap to get better resolution
+          # Limiting the number of genes in heatmap to get better resolution
 
-            if(geneLimit==FALSE | is.numeric(geneLimit) &
+          if(geneLimit==FALSE | is.numeric(geneLimit) &
 
-               geneLimit > nrow(heatmap.data)){
+             geneLimit > nrow(heatmap.data)){
 
-              heatmap.data <- heatmap.data
+            heatmap.data <- heatmap.data
 
-            } else if(is.numeric(geneLimit) & geneLimit <= nrow(heatmap.data) &
+          } else if(is.numeric(geneLimit) & geneLimit <= nrow(heatmap.data) &
 
-                      rankingMethod == "variation"){
+                    rankingMethod == "variation"){
 
-              ordering <- order(abs(rowVars(heatmap.data)), decreasing=TRUE)
+            ordering <- order(abs(rowVars(heatmap.data)), decreasing=TRUE)
 
-              heatmap.data <- heatmap.data[ordering[seq_len(geneLimit)],]
+            heatmap.data <- heatmap.data[ordering[seq_len(geneLimit)],]
 
-            } else if(is.numeric(geneLimit) & geneLimit <= nrow(heatmap.data) &
+          } else if(is.numeric(geneLimit) & geneLimit <= nrow(heatmap.data) &
 
-                      rankingMethod == "highValue"){
+                    rankingMethod == "highValue"){
 
-              ordering <- order(abs(rowSums(heatmap.data)), decreasing=TRUE)
+            ordering <- order(abs(rowSums(heatmap.data)), decreasing=TRUE)
 
-              heatmap.data <- heatmap.data[ordering[seq_len(geneLimit)],]
+            heatmap.data <- heatmap.data[ordering[seq_len(geneLimit)],]
 
-            } else{
+          } else{
 
-              stop("[heatmapOutput] 'geneLimit' must be either a numerical value or FALSE!")
+            stop("[heatmapOutput] 'geneLimit' must be either a numerical value or FALSE!")
+
+          }
+
+
+
+
+          if(is.numeric(simplifyBy)){
+
+            heatmap.data[heatmap.data < simplifyBy] <- 0
+
+          }
+
+
+
+
+          # Heatmap color
+
+          if(reverseColor){
+
+            if(heatmapColor == "RdGr"){
+
+              hmcol <- rev(redgreen(75))
+
+            } else {
+
+              hmcol <- rev(colorRampPalette(brewer.pal(9, heatmapColor))(100))
 
             }
 
 
+          } else if(!reverseColor){
 
+            if(heatmapColor == "RdGr"){
 
-            if(is.numeric(simplifyBy)){
+              hmcol <- redgreen(75)
 
-              heatmap.data[heatmap.data < simplifyBy] <- 0
+            } else {
 
-            }
-
-
-
-
-            # Heatmap color
-
-            if(reverseColor){
-
-              if(heatmapColor == "RdGr"){
-
-                hmcol <- rev(redgreen(75))
-
-              } else {
-
-                hmcol <- rev(colorRampPalette(brewer.pal(9, heatmapColor))(100))
-
-              }
-
-
-            } else if (!reverseColor){
-
-              if(heatmapColor == "RdGr"){
-
-                hmcol <- redgreen(75)
-
-              } else {
-
-                hmcol <- colorRampPalette(brewer.pal(9, heatmapColor))(100)
-
-              }
+              hmcol <- colorRampPalette(brewer.pal(9, heatmapColor))(100)
 
             }
 
+          }
 
 
 
 
-            ######  automatic parameters determination   ######
 
-            if(ColCex == "auto"){
+          ######  automatic parameters determination   ######
 
-              if(ncol(heatmap.data) <= 18){
+          if(ColCex == "auto"){
 
-                d.ColCex <- 1.8 - ncol(heatmap.data) * 0.0333333333
+            if(ncol(heatmap.data) <= 18){
 
-              }else{
-
-                d.ColCex <- 1 - ((ncol(heatmap.data) - 18)) * 0.0166666666
-
-              }
+              d.ColCex <- 1.8 - ncol(heatmap.data) * 0.0333333333
 
             }else{
 
-              d.ColCex <- ColCex
+              d.ColCex <- 1 - ((ncol(heatmap.data) - 18)) * 0.0166666666
 
             }
 
+          }else{
+
+            d.ColCex <- ColCex
+
+          }
 
 
 
-            if(RowCex == "auto"){
 
-              if(nrow(heatmap.data) <= 18){
+          if(RowCex == "auto"){
 
-                d.RowCex <- 1.8 - nrow(heatmap.data) * 0.0333333333
+            if(nrow(heatmap.data) <= 18){
 
-              }else{
-
-                d.RowCex <- 1 - ((nrow(heatmap.data) - 18)) * 0.0166666666
-
-              }
+              d.RowCex <- 1.8 - nrow(heatmap.data) * 0.0333333333
 
             }else{
 
-              d.RowCex <- RowCex
+              d.RowCex <- 1 - ((nrow(heatmap.data) - 18)) * 0.0166666666
 
             }
 
+          }else{
 
-            # Equalizing RowCex and ColCex
+            d.RowCex <- RowCex
 
-            minCex <- min(c(d.ColCex, d.RowCex))
-
-            d.ColCex <- minCex
-
-            d.RowCex <- minCex
+          }
 
 
-            # Check whether heatmapMargines is "auto"
+          # Equalizing RowCex and ColCex
 
-            if(heatMapMode == "algorithm"){
+          minCex <- min(c(d.ColCex, d.RowCex))
 
-              unitSize <- 1.19
+          d.ColCex <- minCex
 
-
-              lengthDeterminant <- function(vector){
-
-                relativeLengthVector <- vector("numeric", length = length(vector))
+          d.RowCex <- minCex
 
 
-                for(vNames in seq_along(vector)){
+          # Check whether heatmapMargines is "auto"
 
-                  currentName <- vector[vNames]
+          if(heatMapMode == "algorithm"){
 
-                  vectorLetters <- unlist(strsplit(currentName, ""))
-
-                  startingSize <- 0
+            unitSize <- 1.19
 
 
-                  for(vLetters in seq_along(vectorLetters)){
+            lengthDeterminant <- function(vector){
 
-                    currentLetter <- vectorLetters[vLetters]
+              relativeLengthVector <- vector("numeric", length = length(vector))
 
-                    if(currentLetter %in% c("a", "b", "c", "d", "e", "g", "h",
-                                            "k", "n", "o", "p", "q", "s", "u",
-                                            "v", "x", "y", "z", "2", "3", "4",
-                                            "5", "6", "8", "9", "0", " ")){
 
-                      startingSize <- startingSize + 0.855
+              for(vNames in seq_along(vector)){
 
-                    } else if(currentLetter %in% c("f", "r", "j", "t", "7", "1")
-                              ){
+                currentName <- vector[vNames]
 
-                      startingSize <- startingSize + 0.73
+                vectorLetters <- unlist(strsplit(currentName, ""))
 
-                    } else if(currentLetter %in% c("i", "l", "I")){
+                startingSize <- 0
 
-                      startingSize <- startingSize + 0.25
 
-                    } else if(currentLetter %in% c("m", "w")){
+                for(vLetters in seq_along(vectorLetters)){
 
-                      startingSize <- startingSize + 1.20
+                  currentLetter <- vectorLetters[vLetters]
 
-                    } else if(currentLetter %in% c("B", "C", "D", "E", "F", "H",
-                                                   "J", "K", "L", "N", "O", "P",
-                                                   "Q", "R", "S", "T", "U", "V",
-                                                   "X", "Y", "Z")){
+                  if(currentLetter %in% c("a", "b", "c", "d", "e", "g", "h",
+                                          "k", "n", "o", "p", "q", "s", "u",
+                                          "v", "x", "y", "z", "2", "3", "4",
+                                          "5", "6", "8", "9", "0", " ")){
 
-                      startingSize <- startingSize + 0.98
+                    startingSize <- startingSize + 0.855
 
-                    } else if(currentLetter %in% c("A", "G", "M")){
+                  } else if(currentLetter %in% c("f", "r", "j", "t", "7", "1")
+                  ){
 
-                      startingSize <- startingSize + 1.10
+                    startingSize <- startingSize + 0.73
 
-                    } else if(currentLetter %in% c("W")){
+                  } else if(currentLetter %in% c("i", "l", "I")){
 
-                      startingSize <- startingSize + 1.25
+                    startingSize <- startingSize + 0.25
 
-                    }
+                  } else if(currentLetter %in% c("m", "w")){
+
+                    startingSize <- startingSize + 1.20
+
+                  } else if(currentLetter %in% c("B", "C", "D", "E", "F", "H",
+                                                 "J", "K", "L", "N", "O", "P",
+                                                 "Q", "R", "S", "T", "U", "V",
+                                                 "X", "Y", "Z")){
+
+                    startingSize <- startingSize + 0.98
+
+                  } else if(currentLetter %in% c("A", "G", "M")){
+
+                    startingSize <- startingSize + 1.10
+
+                  } else if(currentLetter %in% c("W")){
+
+                    startingSize <- startingSize + 1.25
 
                   }
 
-                  relativeLengthVector[vNames] <- startingSize
-
                 }
 
-                max(relativeLengthVector)
+                relativeLengthVector[vNames] <- startingSize
 
               }
 
-
-              # determining the best margin for column names
-
-              # y = ax + b
-
-              longest.study <-
-
-                  lengthDeterminant(colnames(heatmap.data))*unitSize + 7.0
-
-              longest.study.effect <-
-
-                longest.study*abs(sin(columnLabelsAngle*0.0174532925))
-
-
-              colMargin <- longest.study.effect * d.ColCex * 0.4278074866
-
-
-
-              # determining the best margin for row names
-
-              # y = ax + b
-
-              longest.gene <-
-
-                lengthDeterminant(rownames(heatmap.data))*unitSize + 7.0
-
-              longest.gene.effect <-
-
-                longest.gene*abs(cos(rowLabelsAngle*0.0174532925))
-
-
-              rowMargin <- longest.gene.effect * d.RowCex * 0.4278074866
-
-
-
-              # determining which margine influence the final vector
-
-              largestMargine <- max(colMargin, rowMargin)
-
-              d.heatmapMargines <- c(largestMargine, largestMargine)
-
-
-
-            }else if(heatMapMode == "manual"){
-
-              d.heatmapMargines <- heatmapMargines
+              max(relativeLengthVector)
 
             }
 
 
+            # determining the best margin for column names
 
-            ###################################################
+            # y = ax + b
 
+            longest.study <-
 
+              lengthDeterminant(colnames(heatmap.data))*unitSize + 7.0
 
+            longest.study.effect <-
 
+              longest.study*abs(sin(columnLabelsAngle*0.0174532925))
 
-            # Drawing heatmap
 
-            if(heatmapFileFormat == "TIFF"){
+            colMargin <- longest.study.effect * d.ColCex * 0.4278074866
 
 
-              tiff(
 
-                filename = paste(getwd(), output.file.name, sep="/"),
+            # determining the best margin for row names
 
-                width = 11,
+            # y = ax + b
 
-                height = 11,
+            longest.gene <-
 
-                units = "in",
+              lengthDeterminant(rownames(heatmap.data))*unitSize + 7.0
 
-                res = resolution,
+            longest.gene.effect <-
 
-                compression = "lzw"
+              longest.gene*abs(cos(rowLabelsAngle*0.0174532925))
 
-              )
 
+            rowMargin <- longest.gene.effect * d.RowCex * 0.4278074866
 
-            }else if(heatmapFileFormat == "PNG"){
 
 
-              png(
+            # determining which margine influence the final vector
 
-                filename = paste(getwd(), output.file.name, sep="/"),
+            largestMargine <- max(colMargin, rowMargin)
 
-                width = 11,
+            d.heatmapMargines <- c(largestMargine, largestMargine)
 
-                height = 11,
 
-                units = "in",
 
-                res = resolution
+          }else if(heatMapMode == "manual"){
 
-              )
+            d.heatmapMargines <- heatmapMargines
 
+          }
 
-            }else if(heatmapFileFormat == "BMP"){
 
 
-              bmp(
+          ###################################################
 
-                filename = paste(getwd(), output.file.name, sep="/"),
 
-                width = 11,
 
-                height = 11,
 
-                units = "in",
 
-                res = resolution
+          # Drawing heatmap
 
-              )
+          if(heatmapFileFormat == "TIFF"){
 
 
-            }else if(heatmapFileFormat == "JPG"){
+            tiff(
 
+              filename = paste(getwd(), output.file.name, sep="/"),
 
-              jpeg(
+              width = 11,
 
-                filename=paste(getwd(), output.file.name, sep="/"),
+              height = 11,
 
-                width = 11,
+              units = "in",
 
-                height = 11,
+              res = resolution,
 
-                units = "in",
-
-                res = resolution
-
-              )
-
-
-            }else if(heatmapFileFormat == "PDF"){
-
-
-              pdf(
-
-                file=paste(getwd(), output.file.name, sep="/"),
-
-                width = 11,
-
-                height = 11
-
-              )
-
-
-            }
-
-
-
-
-
-            # detemining the oriantation of heatmap
-
-            if(!transposedHeatmap){
-
-                heatmap.input.matrix <- heatmap.data
-
-                labCol <- colnames(heatmap.data)
-
-
-            } else if(transposedHeatmap){
-
-                heatmap.input.matrix <- t(heatmap.data)
-
-                labCol <- rownames(heatmap.data)
-
-
-            }
-
-
-
-            # Draw heatmap
-
-            heatmap.2(
-
-              heatmap.input.matrix,
-
-              labCol=labCol,
-
-              na.color= "light gray",
-
-              trace="none",
-
-              symbreaks = TRUE,
-
-              col= hmcol,
-
-              cexRow = d.RowCex,
-
-              cexCol= d.ColCex,
-
-              margins = d.heatmapMargines,
-
-              srtRow = rowLabelsAngle,
-
-              srtCol = columnLabelsAngle
+              compression = "lzw"
 
             )
 
 
-
-            dev.off()
-
+          }else if(heatmapFileFormat == "PNG"){
 
 
-            # Crop margines of the stored image
+            png(
 
-            # cropped.image <- image_read(output.file.name)
+              filename = paste(getwd(), output.file.name, sep="/"),
 
-            # cropped.image <- image_crop(cropped.image, "1000x1500+500")
+              width = 11,
 
-            # image_write(cropped.image,
+              height = 11,
 
-            #             path = output.file.name,
+              units = "in",
 
-            #             format = if(heatmapFileFormat == "TIFF"){
+              res = resolution
 
-            #               "tiff"
+            )
 
-            #             }else if(heatmapFileFormat == "PNG"){
 
-            #               "png"
+          }else if(heatmapFileFormat == "BMP"){
 
-            #             }else if(heatmapFileFormat == "JPG"){
 
-            #               "jpg"
+            bmp(
 
-            #             }else if(heatmapFileFormat == "BMP"){
+              filename = paste(getwd(), output.file.name, sep="/"),
 
-            #               "bmp"
+              width = 11,
 
-            #            })
+              height = 11,
+
+              units = "in",
+
+              res = resolution
+
+            )
+
+
+          }else if(heatmapFileFormat == "JPG"){
+
+
+            jpeg(
+
+              filename=paste(getwd(), output.file.name, sep="/"),
+
+              width = 11,
+
+              height = 11,
+
+              units = "in",
+
+              res = resolution
+
+            )
+
+
+          }else if(heatmapFileFormat == "PDF"){
+
+
+            pdf(
+
+              file=paste(getwd(), output.file.name, sep="/"),
+
+              width = 11,
+
+              height = 11
+
+            )
 
 
           }
+
+
+
+
+
+          # determining the orientation of heatmap
+
+          if(!transposedHeatmap){
+
+            heatmap.input.matrix <- heatmap.data
+
+            labCol <- colnames(heatmap.input.matrix)
+
+            if(heatmap.Oddity == "rows"){
+
+              labRow <- ""
+
+            }else{
+
+              labRow <- rownames(heatmap.input.matrix)
+
+            }
+
+
+          } else if(transposedHeatmap){
+
+            heatmap.input.matrix <- t(heatmap.data)
+
+            if(heatmap.Oddity == "columns"){
+
+              labCol <- ""
+
+            }else{
+
+              labCol <- colnames(heatmap.input.matrix)
+
+            }
+
+            labRow <- rownames(heatmap.input.matrix)
+
+          }
+
+
+
+          # Drawing heatmap
+
+          heatmap.2(
+
+            heatmap.input.matrix,
+
+            labCol = labCol,
+
+            labRow = labRow,
+
+            na.color = "light gray",
+
+            trace = "none",
+
+            symbreaks = TRUE,
+
+            col= hmcol,
+
+            cexRow = d.RowCex,
+
+            cexCol= d.ColCex,
+
+            margins = d.heatmapMargines,
+
+            srtRow = rowLabelsAngle,
+
+            srtCol = columnLabelsAngle
+
+          )
+
+
+
+          dev.off()
+
+
+
+          # Crop margines of the stored image
+
+          # cropped.image <- image_read(output.file.name)
+
+          # cropped.image <- image_crop(cropped.image, "1000x1500+500")
+
+          # image_write(cropped.image,
+
+          #             path = output.file.name,
+
+          #             format = if(heatmapFileFormat == "TIFF"){
+
+          #               "tiff"
+
+          #             }else if(heatmapFileFormat == "PNG"){
+
+          #               "png"
+
+          #             }else if(heatmapFileFormat == "JPG"){
+
+          #               "jpg"
+
+          #             }else if(heatmapFileFormat == "BMP"){
+
+          #               "bmp"
+
+          #            })
 
         }
 
