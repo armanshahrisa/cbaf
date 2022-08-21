@@ -85,7 +85,7 @@ availableData <- function(excelFileName, oneOfEach = FALSE){
 
     if(! oneOfEach %in% supported.techniques){
 
-      stop("[availableData] 'oneOfEach' must be either 'RNA-Seq', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA', 'methylation', or simply FALSE !")
+      stop("[availableData] 'oneOfEach' must be either 'RNA-Seq', 'RNA-SeqRTN', 'microRNA-Seq', 'microarray.mRNA', 'microarray.microRNA', 'methylation', or simply FALSE !")
 
     } else{
 
@@ -171,8 +171,6 @@ availableData <- function(excelFileName, oneOfEach = FALSE){
 
     ############################################################################
     ## core segment
-
-    # looking for supported techniques at level 1
 
     list_of_available_data_L1 <- sapply(
 

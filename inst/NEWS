@@ -7,7 +7,7 @@ New Features
   availableData() to return one study for each cancer type that
   contain a technique of interest, instead of storing all the data in an excel
   file.
-- Heatmaps for a single gene can now be generated.
+- It is now possible to generate Heatmap for a single gene.
 
 
 
