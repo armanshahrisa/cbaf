@@ -1202,9 +1202,13 @@ heatmapOutput <- function(
 
             labCol <- colnames(heatmap.input.matrix)
 
-            if(heatmap.Oddity == "rows"){
+            if(!is.null(heatmap.Oddity)){
 
-              labRow <- ""
+              if(heatmap.Oddity == "rows"){
+
+                labRow <- ""
+
+              }
 
             }else{
 
@@ -1217,9 +1221,13 @@ heatmapOutput <- function(
 
             heatmap.input.matrix <- t(heatmap.data)
 
-            if(heatmap.Oddity == "columns"){
+            if(!is.null(heatmap.Oddity)){
 
-              labCol <- ""
+              if(heatmap.Oddity == "columns"){
+
+                labCol <- ""
+
+              }
 
             }else{
 
