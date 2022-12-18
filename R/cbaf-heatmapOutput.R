@@ -1208,9 +1208,19 @@ heatmapOutput <- function(
 
                 labRow <- ""
 
+                labcol <- colnames(heatmap.input.matrix)
+
+              }else if(heatmap.Oddity == "columns"){
+
+                labCol <- ""
+
+                labRow <- rownames(heatmap.input.matrix)
+
               }
 
             }else{
+
+              labcol <- colnames(heatmap.input.matrix)
 
               labRow <- rownames(heatmap.input.matrix)
 
@@ -1227,15 +1237,23 @@ heatmapOutput <- function(
 
                 labCol <- ""
 
+                labRow <- rownames(heatmap.input.matrix)
+
+              }else if(heatmap.Oddity == "rows"){
+
+                labRow <- ""
+
+                labCol <- colnames(heatmap.input.matrix)
+
               }
 
             }else{
 
               labCol <- colnames(heatmap.input.matrix)
 
-            }
+              labRow <- rownames(heatmap.input.matrix)
 
-            labRow <- rownames(heatmap.input.matrix)
+            }
 
           }
 
