@@ -8,8 +8,8 @@
 #' \tabular{lllll}{
 #' Package: \tab cbaf \cr
 #' Type: \tab Package \cr
-#' Version: \tab 1.27.4 \cr
-#' Date: \tab 2024-06-30 \cr
+#' Version: \tab 1.30.1 \cr
+#' Date: \tab 2025-04-30 \cr
 #' License: \tab Artistic-2.0 \cr
 #' }
 #'
@@ -802,11 +802,15 @@ heatmapOutput <- function(
 
         heatmap.data <- t(statistics.data)
 
-        # Removing NA
+        #### Replace existing NA/NaN handling
+        heatmap.data[is.na(heatmap.data)] <- 0
+        heatmap.data[is.nan(heatmap.data)] <- 0
+        heatmap.data[is.infinite(heatmap.data)] <- max(heatmap.data[is.finite(heatmap.data)]) * sign(heatmap.data[is.infinite(heatmap.data)])
 
-        not.just.na <- apply(heatmap.data, 1, function(x) any(!is.na(x)==TRUE))
+        # Old Procedure
+        # not.just.na <- apply(heatmap.data, 1, function(x) any(!is.na(x)==TRUE))
 
-        heatmap.data <- heatmap.data[not.just.na,, drop = FALSE]
+        # heatmap.data <- heatmap.data[not.just.na,, drop = FALSE]
 
         # Removing NaN
 
@@ -1200,26 +1204,7 @@ heatmapOutput <- function(
 
             heatmap.input.matrix <- heatmap.data
 
-            labCol <- colnames(heatmap.input.matrix)
-
-            if(!is.null(heatmap.Oddity)){
-
-              if(heatmap.Oddity == "rows"){
-
-                labRow <- ""
-
-              }
-
-            }else{
-
-              labRow <- rownames(heatmap.input.matrix)
-
-            }
-
-
-          } else if(transposedHeatmap){
-
-            heatmap.input.matrix <- t(heatmap.data)
+            labRow <- rownames(heatmap.input.matrix)
 
             if(!is.null(heatmap.Oddity)){
 
@@ -1235,7 +1220,26 @@ heatmapOutput <- function(
 
             }
 
-            labRow <- rownames(heatmap.input.matrix)
+
+          } else if(transposedHeatmap){
+
+            heatmap.input.matrix <- t(heatmap.data)
+
+            labCol <- colnames(heatmap.input.matrix)
+
+            if(!is.null(heatmap.Oddity)){
+
+              if(heatmap.Oddity == "rows"){
+
+                labRow <- ""
+
+              }
+
+            }else{
+
+              labRow <- rownames(heatmap.input.matrix)
+
+            }
 
           }
 
